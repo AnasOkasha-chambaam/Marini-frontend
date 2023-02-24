@@ -8,6 +8,7 @@ import {
   LIST_ALL_USERS,
   LIST_ALL_ACTIVITIES,
   LIST_ALL_PROERTIES,
+  LIST_ALL_PROGRAM_LEVELS,
   // EDIT_UNIVERSITIE,
   VIEW_UNIVERSITY_DETAILS,
   VIEW_LEAD_DETAILS,
@@ -33,6 +34,16 @@ export const listUniversities = (qs) => async (dispatch) => {
   console.log("data.data of list uni nn action file", data);
   dispatch({
     type: LIST_ALL_UNIVERSITIES,
+    payload: data.data,
+  });
+export const listProgramLevels = (qs) => async (dispatch) => {
+  console.log("api url in action file", ENV.baseUrl);
+  const data = await axios.get(
+    `${ENV.baseUrl}/programlevel/listProgramLevels?${qs}`
+  );
+  console.log("data.data of list uni nn action file", data);
+  dispatch({
+    type: LIST_ALL_PROGRAM_LEVELS,
     payload: data.data,
   });
 };
