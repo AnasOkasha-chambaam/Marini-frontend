@@ -110,7 +110,7 @@ export function Settings() {
                   >
                     Action
                   </th>
-                  <tr scope="col" className="w-[200px] px-6 py-3" />
+                  <th scope="col" className="w-[200px] px-6 py-3" />
                   <th
                     scope="col"
                     className="w-[113px] px-6 py-3 text-left text-base font-medium text-[#92929D]"

@@ -160,14 +160,15 @@ export function ApplicationByDate() {
                       </td>
                       <td>
                         <p
-                          className="mx-auto w-fit rounded-2xl px-5 py-2 text-center text-xs font-medium normal-case"
+                          className="neumorphism mx-auto w-fit rounded-2xl rounded-lg bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                           style={{
                             color:
                               ApplicationDetail?.ApplicationModuleStatus?.Color,
                             backgroundColor: `${ApplicationDetail?.ApplicationModuleStatus?.Color}10`,
                           }}
                         >
-                          {ApplicationDetail?.ApplicationModuleStatus?.name}
+                          {ApplicationDetail?.ApplicationModuleStatus?.name ||
+                            "No status"}
                         </p>
                       </td>
                     </tr>
