@@ -1,6 +1,6 @@
 export const ENV = {
-  baseUrl: "http://127.0.0.1:8080/v1/front",
-  imageUrl: "http://127.0.0.1:8080/images/",
+  baseUrl: "https://qetcbackend.projects.anasite.me/v1/front",
+  imageUrl: "https://qetcbackend.projects.anasite.me/images/",
 
   decimalNumberValidator: function (e) {
     // Allow: backspace, delete, tab, escape, enter and .
