@@ -1061,7 +1061,8 @@ export function Currency() {
                                 backgroundColor: `${color}10`,
                               }}
                             >
-                              {ele?.status}
+                              {/* {console.log('statuss')} */}
+                              {ele?.status === 0 ? "Inactive" : "Active"}
                             </p>
                           </td>
                           <td className="px-8">
@@ -1358,9 +1359,9 @@ export function Currency() {
                     disabled={isViewMode}
                   >
                     <option>Select Status</option>
-                    <option value={"active"}>Active</option>
+                    <option value={1}>Active</option>
                     <option
-                      value={"inactive"}
+                      value={0}
                       style={{ color: "red", border: "1px solid red" }}
                     >
                       Inactive
