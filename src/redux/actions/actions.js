@@ -55,6 +55,22 @@ import {
   DELETE_COMMISSION_INVOICE,
   EDIT_COMMISSION_INVOICE,
   //
+  // Module: Accounting (Sale)
+  VIEW_SALE,
+  LIST_ALL_SALES,
+  //
+  // Module: Accounting (CostOfSale)
+  VIEW_COST_OF_SALE,
+  LIST_ALL_COST_OF_SALES,
+  //
+  // Module: Accounting (Expenses)
+  LIST_ALL_EXPENSES,
+  VIEW_EXPENSE,
+  //
+  // Module: Accounting (DepitAndCredit)
+  LIST_ALL_DEPIT_AND_CREDITS,
+  VIEW_DEPIT_AND_CREDIT,
+  //
 } from "./actionType";
 import axios from "axios";
 import { ENV } from "@/config";
@@ -328,6 +344,112 @@ export const viewCommissionInvoice = (id) => async (dispatch) => {
   });
 };
 // The Edit and Delete will be on the module page itself
+//
+// Module: Accounting (CostOfSale)
+export const listCostOfSales = (qs) => async (dispatch) => {
+  console.log("api url in action file", ENV.baseUrl);
+  const data = await axios.get(`${ENV.baseUrl}/CostOfSales/list?${qs}`);
+  console.log(
+    "data.data of list invoice module status CostOfSale in action file",
+    data
+  );
+  dispatch({
+    type: LIST_ALL_COST_OF_SALES,
+    payload: data.data,
+  });
+};
+export const viewCostOfSale = (id) => async (dispatch) => {
+  console.log(" CostOfSale param id in action method", id);
+  // console.log(" Umni param action in action method", action);
+
+  const data = await axios.get(
+    `${ENV.baseUrl}/CostOfSales/get/${id}`
+    //
+  );
+  console.log("data of view CostOfSale in action", data);
+  dispatch({
+    type: VIEW_COST_OF_SALE,
+    payload: data.data,
+  });
+};
+//
+// Module: Accounting (Sale)
+export const listSales = (qs) => async (dispatch) => {
+  console.log("api url in action file", ENV.baseUrl);
+  const data = await axios.get(`${ENV.baseUrl}/Sales/list?${qs}`);
+  console.log(
+    "data.data of list invoice module status Sale in action file",
+    data
+  );
+  dispatch({
+    type: LIST_ALL_SALES,
+    payload: data.data,
+  });
+};
+export const viewSale = (id) => async (dispatch) => {
+  console.log(" Sale param id in action method", id);
+  // console.log(" Umni param action in action method", action);
+
+  const data = await axios.get(
+    `${ENV.baseUrl}/Sales/get/${id}`
+    //
+  );
+  console.log("data of view Sale in action", data);
+  dispatch({
+    type: VIEW_SALE,
+    payload: data.data,
+  });
+};
+//
+// Module: Accounting (Expenses)
+export const listExpenses = (qs) => async (dispatch) => {
+  console.log("api url in action file", ENV.baseUrl);
+  const data = await axios.get(`${ENV.baseUrl}/Expenses/list?${qs}`);
+  console.log("data.data of list Expense in Accounting file", data);
+  dispatch({
+    type: LIST_ALL_EXPENSES,
+    payload: data.data,
+  });
+};
+export const viewExpense = (id) => async (dispatch) => {
+  console.log(" Expense param id in accounting method", id);
+  // console.log(" Umni param action in action method", action);
+
+  const data = await axios.get(
+    `${ENV.baseUrl}/Expenses/get/${id}`
+    //
+  );
+  console.log("data of view Expense in action", data);
+  dispatch({
+    type: VIEW_EXPENSE,
+    payload: data.data,
+  });
+};
+//
+// Module: Accounting (DepitAndCredit)
+export const listDepitAndCredits = (qs) => async (dispatch) => {
+  console.log("api url in action file", ENV.baseUrl);
+  const data = await axios.get(`${ENV.baseUrl}/DepitAndCredit/list?${qs}`);
+  console.log("data.data of list DepitAndCredit in Accounting file", data);
+  dispatch({
+    type: LIST_ALL_DEPIT_AND_CREDITS,
+    payload: data.data,
+  });
+};
+export const viewDepitAndCredit = (id) => async (dispatch) => {
+  console.log(" DepitAndCredit param id in accounting method", id);
+  // console.log(" Umni param action in action method", action);
+
+  const data = await axios.get(
+    `${ENV.baseUrl}/DepitAndCredit/get/${id}`
+    //
+  );
+  console.log("data of view DepitAndCredit in action", data);
+  dispatch({
+    type: VIEW_DEPIT_AND_CREDIT,
+    payload: data.data,
+  });
+};
 //
 // END
 export const listUniversities = (qs) => async (dispatch) => {

@@ -242,21 +242,23 @@ export function CreateUniversity() {
         {/* {console.log("campusValues", campusValues)} */}
         <div className="my-10">
           <div className="mr-8 flex items-center justify-between">
-            <p className=" text-4xl font-semibold text-[#280559]">
-              {params.action == 1
-                ? "View University"
-                : params.action == 2
-                ? "Edit University"
-                : "Create University"}
-              <span className="font block text-base text-[#9898A3]">
-                {/* Create or edit university */}
+            <div className="my-10 grid grid-cols-1">
+              <p className=" mb-2 text-4xl font-semibold text-[#280559]">
                 {params.action == 1
-                  ? "view University"
+                  ? "View University"
                   : params.action == 2
                   ? "Edit University"
-                  : "create University"}
-              </span>
-            </p>
+                  : "Create University"}
+              </p>
+              <p className="font block text-base text-[#9898A3]">
+                {/* Create or edit university */}
+                {params.action == 1
+                  ? "View University"
+                  : params.action == 2
+                  ? "Edit University"
+                  : "Create University"}
+              </p>
+            </div>
 
             {/* <NavLink to="university"> */}
             {isViewMode ? (
