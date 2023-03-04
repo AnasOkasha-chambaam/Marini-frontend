@@ -19,6 +19,8 @@ import Branch from "@/pages/settings/branch";
 import System from "@/pages/systembackup/system";
 import User from "@/pages/settings/user";
 import AddProperty from "@/pages/settings/AddProperty";
+import Properties from "@/pages/settings/properties";
+import SettingsManagement from "@/pages/settings/SettingsManagement";
 // importi
 // import Acad
 // import Academi
@@ -142,7 +144,7 @@ export function Dashboard() {
           <Route path="/university_module/:id" element={<University />} />
           <Route path="/Leadsmodule/:action/:id" element={<CreateLead />} />
           <Route
-            path="/settingsManagement/property/:action/:id"
+            path="/settingsManagement/property/:action/:id/:title"
             element={<AddProperty />}
           />
           ,
@@ -158,10 +160,18 @@ export function Dashboard() {
             path="/settingsManagement/branch/:action/:id"
             element={<Branch />}
           />
+          <Route
+            path="/settingsManagement/:id"
+            element={<SettingsManagement />}
+          />
           {/* <Route path="/settingsManagement/branch" element={<Branch />} /> */}
           <Route
             path="/settingsManagement/user/:action/:id"
             element={<User />}
+          />
+          <Route
+            path="/settingsManagement/property"
+            element={<Properties />}
           />
           {/* CreateLead */}
           <Route

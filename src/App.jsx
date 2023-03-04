@@ -4,6 +4,7 @@ import { SignIn } from "./pages/auth";
 import { createContext, useState, useEffect } from "react";
 import useWindowSize from "./hooks/useWindowSize";
 import ApplicantDashboard from "./layouts/ApplicantDashboard";
+import SettingsManagement from "./pages/settings/SettingsManagement";
 
 export const NavbarCtx = createContext();
 const initialStatusColor = {

@@ -4,7 +4,7 @@ import { Button } from "@material-tailwind/react/components/Button";
 import plus from "../../../public/img/plus.svg";
 import saveIcon from "../../../public/img/saveIcon.svg";
 import StatusData from "@/data/status-props";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ENV } from "../../config";
 import { toast } from "react-toastify";
@@ -18,11 +18,11 @@ export function AddProperty() {
   const [color, setColor] = useState("#000000");
 
   const params = useParams();
-
+  const navigate = useNavigate()
+  // var browserHistory = ReactRouter.browserHistory;
   const handleSubmit = async (e) => {
     console.log("submit", e);
     setIsLoading(true);
-
     const formData = new FormData();
     formData.append("name", property);
     formData.append("Color", color);
@@ -39,7 +39,8 @@ export function AddProperty() {
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
     };
-
+    const url0 = params.id.split("_")
+    const url = `${url0[0]}${url0[1]}`
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
       `${ENV.baseUrl}/${params.id}/${params.action == 2 ? "edit" : "create"}`,
       formData,
@@ -56,40 +57,49 @@ export function AddProperty() {
         hideProgressBar: false,
         autoClose: 3000,
       });
+      // setIsLoading(true);
+      const module = params.title.split(" ")
+      const isStatus = module[1]
+      if (isStatus == 'Module') {
+        navigate("/dashboard/settingsManagement/3")
+      } else {
+        navigate("/dashboard/settingsManagement/4")
+      }
+      // browserHistory.goBack
     }
-    // navigate("university")
   };
+
   return (
     <>
       <form>
         <div
-          className={`mb-10 flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
-            statusstate ? "hidden" : ""
-          }`}
+          className={`mb-10 flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${statusstate ? "hidden" : ""
+            }`}
         >
           <div className="my-5">
             <p className=" mb-2 text-4xl font-semibold text-[#280559]">
-              Create {params.id}
+
+              Create {params.title}
             </p>
             <p className=" font text-base text-[#9898A3]">
-              Create or edit {params.id}
+              Create or edit {params.title}
             </p>
           </div>
           <div className="rounded-[34px] bg-white p-[39px]">
             <p className="mb-8 text-2xl font-semibold text-[#333333]">
-              {params.id} Details
+              {params.title} Details
             </p>
 
             <div className="mt-4 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  {params.id} Name
+                  {params.title} Name
                 </label>
                 <input
                   onChange={(e) => setProperty(e.target.value)}
                   type="text"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder={params.id + " Name"}
+                  placeholder={params.title + " Name"}
                   required
                 />
               </div>

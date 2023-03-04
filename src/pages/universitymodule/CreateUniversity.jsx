@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 // import { viewUniversity } from "@/redux/actions/actions";
 import { viewUniversity, listUniversityTypes } from "@/redux/actions/actions";
 import AddField from "@/helpers/Addfield";
+import AddCampus from "@/helpers/AddCampus";
 
 export function CreateUniversity() {
   /*{ toAdd, setToAdd,  open,close,  setOpenAddModal,  formsData,  setFormsData,  handleFormsDataChange,  section,} */
@@ -166,7 +167,7 @@ export function CreateUniversity() {
   };
 
   const handlefileChange = (file) => {
-    console.log("file image", file);
+    // console.log("file image", file);
     setFile(file);
 
     let reader = new FileReader();
@@ -174,8 +175,8 @@ export function CreateUniversity() {
       let output = document.getElementById("university-logo");
       output.src = reader.result;
     };
-    if (file[0]) {
-      reader.readAsDataURL(file[0]);
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
     }
   };
 
@@ -208,7 +209,7 @@ export function CreateUniversity() {
     formData.append("addmissionFee", addmissionFee);
     formData.append("qetcFee", qetcFee);
     formData.append("commisionDuration", commisionDuration);
-    formData.append("logo", file && file[0] ? file[0] : "");
+    formData.append("logo", file[0]);
 
     const config = {
       headers: { "content-type": "multipart/form-data" },
@@ -230,7 +231,7 @@ export function CreateUniversity() {
         key: "_" + Math.random() * 1000000 + "_" + Math.random() * 1000000,
       });
     }
-    // navigate("university")
+    navigate(-1)
   };
 
   console.log(formValues);
@@ -415,7 +416,7 @@ export function CreateUniversity() {
               <input
                 type="tel"
                 className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                placeholder="+91 123 456 789"
+                placeholder="+60123456789"
                 // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                 name="phone" //
                 value={formValues?.phone}
@@ -526,7 +527,7 @@ export function CreateUniversity() {
                 <input
                   type="tel"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="+91 123 456 789"
+                  placeholder="+60123456789"
                   // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                   name="phone0" //
                   defaultValue={campusValues[0].phone}
@@ -596,7 +597,7 @@ export function CreateUniversity() {
                   defaultValue={campusValues[1].name}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  required
+                  
                 />
               </div>
               <div>
@@ -611,7 +612,7 @@ export function CreateUniversity() {
                   defaultValue={campusValues[1].address1}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  required
+                  
                 />
               </div>
               <div>
@@ -626,7 +627,7 @@ export function CreateUniversity() {
                   defaultValue={campusValues[1].address2}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  required
+                  
                 />
               </div>
               <div>
@@ -636,13 +637,13 @@ export function CreateUniversity() {
                 <input
                   type="tel"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="+91 123 456 789"
+                  placeholder="+60123456789"
                   // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                   name="phone1" //
                   defaultValue={campusValues[1].phone}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  required
+                  
                 />
               </div>
               <div>
@@ -657,7 +658,7 @@ export function CreateUniversity() {
                   defaultValue={campusValues[1].email}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  required
+                  
                 />
               </div>
               {isViewMode ? (
@@ -692,7 +693,7 @@ export function CreateUniversity() {
             ""
           ) : (
             <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
-              <AddField
+              <AddCampus
                 open={openFourthCreateUniversityAddModal}
                 close={() => setOpenFourthCreateUniversityAddModal(false)}
                 toAdd={FourthCreateUniversityNewFields}

@@ -49,14 +49,15 @@ export function Leads() {
   useEffect(() => {
     disptach(listLeads(""));
 
-    if (leadsData?.success == true) {
-      let { message } = leadsData;
-      toast.success(message, {
-        position: toast.POSITION.TOP_RIGHT,
-        hideProgressBar: false,
-        autoClose: 3000,
-      });
-    }
+    // if (leadsData?.success == true) {
+    //   let { message } = leadsData;
+    //   toast.success(message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //     hideProgressBar: false,
+    //     autoClose: 3000,
+    //   });
+    // }
+
   }, []);
 
   const onConfirmation = async () => {

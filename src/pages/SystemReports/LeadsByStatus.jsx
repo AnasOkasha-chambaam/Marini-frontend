@@ -170,8 +170,7 @@ export function LeadsByStatus() {
                           backgroundColor: `${lead?.ProgrameDetail?.LeadsManagmentModuleStatus?.Color}10`,
                         }}
                       >
-                        {lead?.ProgrameDetail?.LeadsManagmentModuleStatus
-                          ?.name || "No status"}
+                        {lead?.ProgrameDetail?.LeadsManagmentModuleStatus?.name}
                       </p>
                     </td>
                   </tr>

@@ -112,6 +112,8 @@ export function User() {
         hideProgressBar: false,
         autoClose: 3000,
       });
+      setUserstate(true)
+      dispatch(listUsers());
     }
   };
   useEffect(() => {
@@ -501,7 +503,7 @@ export function User() {
                 <input
                   type="tel"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="+91 0123 456 789"
+                  placeholder="+60123456789"
                   name="number"
                   value={formValues.number}
                   onChange={handleChange}
@@ -521,12 +523,13 @@ export function User() {
                   disabled={isViewMode}
                 >
                   <option value={""}>Select Role</option>
-                  <option value={"manager"}>Manager</option>
-                  <option value={"superadmin hq"}>Superadmin HQ</option>
-                  <option value={"admin hq"}>Admin HQ</option>
-                  <option value={"Boss"}>Boss</option>
-                  <option value={"Counselor HQ"}>Counselor HQ</option>
-                  <option value={"Accountant HQ"}>Accountant HQ</option>
+                  <option value={"SuperAdmin"}>Super Admin</option>
+                  <option value={"AdminHQ"}>Admin HQ</option>
+                  <option value={"CounselorHQ"}>Counselor HQ</option>
+                  <option value={"AccountantHQ"}>Accountant HQ</option>
+                  <option value={"AdminBranch"}>Admin Branch</option>
+                  <option value={"CounselorBranch"}>Counselor Branch</option>
+                  <option value={"AccountantBranch"}>Accountant Branch</option>
                 </select>
               </div>
               {formValues.role.toLowerCase() === "superadmin hq" ||

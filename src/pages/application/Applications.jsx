@@ -43,14 +43,14 @@ export function Applications() {
   useEffect(() => {
     disptach(listApplications());
 
-    if (applicationsData?.success == true) {
-      let { message } = applicationsData;
-      toast.success(message, {
-        position: toast.POSITION.TOP_RIGHT,
-        hideProgressBar: false,
-        autoClose: 3000,
-      });
-    }
+    // if (applicationsData?.success == true) {
+    //   let { message } = applicationsData;
+    //   toast.success(message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //     hideProgressBar: false,
+    //     autoClose: 3000,
+    //   });
+    // }
   }, []);
 
   const onConfirmation = async () => {

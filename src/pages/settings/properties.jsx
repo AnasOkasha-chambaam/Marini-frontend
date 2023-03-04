@@ -91,18 +91,7 @@ export function Properties() {
               <p className=" text-4xl font-semibold text-[#280559]">
                 Property Management
               </p>
-              <div className="hidden md:block">
-                <NavLink to="">
-                  <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
-                    <div className="flex flex-row items-center justify-center">
-                      <img src={saveIcon} alt="..." />
-                      <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                        Save Changes
-                      </p>
-                    </div>
-                  </Button>
-                </NavLink>
-              </div>
+              
             </div>
             <p className=" font text-base text-[#9898A3]">
               Property Management
