@@ -279,6 +279,14 @@ export function Leads() {
                               className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
                               // id="dropdownDefaultButton"
                               // data-dropdown-toggle="dropdown"
+                              onClick={() => {
+                                // ***
+                                const dropdown = document.getElementById(
+                                  `dropdown${ind}`
+                                );
+                                dropdown.classList.toggle("hidden");
+                                dropdown.classList.toggle("block");
+                              }}
                               type="button"
                               id={`dropdownDefaultButton${ind}`}
                               data-dropdown-toggle={`dropdown${ind}`}

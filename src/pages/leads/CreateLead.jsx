@@ -717,16 +717,18 @@ export function CreateLead() {
   }, [leadData?.lead?.programmeDetails]);
 
   const handlefileChange = (file) => {
-    // console.log("file", file);
+    console.log("file", file);
     setFile(file);
     //
     let reader = new FileReader();
     reader.onload = function () {
       let output = document.getElementById("university-logo");
       output.src = reader.result;
+      console.log("fileSRc", reader.result);
     };
     if (file[0]) {
       reader.readAsDataURL(file[0]);
+      console.log("reader", reader);
     }
   };
 
@@ -914,7 +916,7 @@ export function CreateLead() {
                   )}
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
                   Generated ID
                 </label>
@@ -927,7 +929,7 @@ export function CreateLead() {
                   // isViewMode={true}
                   //  required
                 />
-              </div>
+              </div> */}
             </div>
             {/* <form> */}
             <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
