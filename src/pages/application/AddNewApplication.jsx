@@ -22,6 +22,7 @@ import {
 } from "@/redux/actions/actions";
 import {
   listApplications,
+  listLeads,
   listInterestedPrograms,
   listQualificationTypes,
   listUniversities,
@@ -39,11 +40,13 @@ export function AddNewApplication() {
     universities,
     interestedPrograms,
     applicationModuleStatuss,
+    leads,
   } = useSelector((state) =>
     state?.universitiesReducer ? state?.universitiesReducer : {}
   );
   useEffect(() => {
     dispatch(listInterestedPrograms("limit=100000"));
+    dispatch(listLeads("limit=100000"));
     dispatch(listQualificationTypes("limit=100000"));
     dispatch(listUniversities("limit=100000"));
     dispatch(listProgramLevels("limit=100000"));
@@ -81,6 +84,7 @@ export function AddNewApplication() {
     "applications datta in create application module",
     applicationsData
   );
+  console.log("Leads datta in create application module", leads);
   // list all applications
   useEffect(() => {
     dispatch(listApplications());
@@ -277,25 +281,30 @@ export function AddNewApplication() {
     // Anasite - Edits: showing applicant info.
     let newFormValues = { ...formValues, [name]: value };
     let newAppDetailValues = { ...appDetailValues };
-    fetch(`${ENV.baseUrl}/applicants/get/${value}`)
+    fetch(`${ENV.baseUrl}/lead/get/${value}`)
       .then((res) => res.json())
       .then((data) => {
-        const { applicant } = data;
+        const { lead } = data;
+        console.log("dataaa", data);
         Object.keys(newFormValues).forEach((key) => {
           newFormValues[key] =
-            applicant[key] !== undefined && applicant[key] !== null
-              ? applicant[key]
-              : "";
+            lead[key] !== undefined && lead[key] !== null ? lead[key] : "";
         });
-        setFormValues(newFormValues);
+        setFormValues({
+          ...newFormValues,
+          fullName: lead["name"],
+          phoneNumber: lead["phoneNo"],
+        });
         Object.keys(newAppDetailValues).forEach((key) => {
+          console.log("newAppDetailValues KEY", key);
           newAppDetailValues[key] =
-            (applicant["programmeDetails"][key] !== undefined) &
-            (applicant["programmeDetails"][key] !== null)
-              ? applicant["programmeDetails"][key]
+            (lead["programmeDetails"][key] !== undefined) &
+            (lead["programmeDetails"][key] !== null)
+              ? lead["programmeDetails"][key]
               : "";
         });
-        setAppDetailValue(newAppDetailValues);
+
+        setAppDetailValue({ ...newAppDetailValues, leadID: lead["id"] });
       })
       .catch((err) => {
         //
@@ -356,13 +365,13 @@ export function AddNewApplication() {
                   data-index={formValues?.index}
                 >
                   <option value="">Select Option</option>
-                  {applicantData?.data?.faqs?.map((ele, ind) => (
+                  {leads?.data?.faqs?.map((ele, ind) => (
                     <option
-                      key={ele?.fullName + ind}
+                      key={ele?.name + ind + ele?.id}
                       value={ele?.id}
                       data-index={ind}
                     >
-                      {ele?.fullName}
+                      {ele?.name}
                     </option>
                   ))}
                 </select>

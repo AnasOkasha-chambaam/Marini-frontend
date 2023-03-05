@@ -25,6 +25,7 @@ import { listUsers, listBranches } from "@/redux/actions/actions";
 import { viewUser, viewBranch } from "@/redux/actions/actions";
 import { ENV } from "@/config";
 import Paginate from "@/paginate";
+import Modal from "../universitymodule/Modal";
 export function User() {
   /*{ toAdd, setToAdd,  open,close,  setOpenAddModal,  formsData,  setFormsData,  handleFormsDataChange,  section,} */
   // const [openModal, setOpenModal] = useState(false);
@@ -143,10 +144,48 @@ export function User() {
     }
   }, [params.id, params.action]);
 
+  // Anasite - Edits: for 'edit'/'delete'
+
+  const [idToDelete, setIdToDelete] = useState("");
+  const [dropdownID, setDropdownID] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const onConfirmation = async () => {
+    // here we will delete call
+    console.log("User deleted");
+    console.log(params.id);
+    const data = await axios.delete(
+      `${ENV.baseUrl}/users/delete/${idToDelete}`
+    );
+    console.log("deleted data", data);
+    // // alert("whppp");
+    // here we will delete call
+    dispatch(listUsers(pagination));
+    setDropdownID("");
+    // // alert("whppp");
+  };
+  const toggleDropdown = (ind) => {
+    // console.log("toggle dropdown ", dropdownID, " _ ", ind);
+
+    // ***
+    return () => {
+      // const dropdown = document.getElementById(`dropdown${ind}`);
+      // dropdown.classList.toggle("hidden");
+      // dropdown.classList.toggle("block");
+      if (ind === dropdownID) return setDropdownID("");
+      setDropdownID(ind);
+    };
+  };
+  // END
   return (
     <>
       {isLoading && <FullPageLoader />}
 
+      <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        onConfirmation={onConfirmation}
+      />
       <div
         className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${userstate ? "" : "hidden"
           }`}
@@ -324,6 +363,7 @@ export function User() {
                           id={`dropdownDefaultButton${ind}`}
                           data-dropdown-toggle={`dropdown${ind}`}
                           type="button"
+                          onClick={toggleDropdown(ele?.id)}
                         >
                           <svg
                             className="h-8 w-8 fill-current"
@@ -337,7 +377,10 @@ export function User() {
                         <div
                           // id="dropdown"
                           id={`dropdown${ind}`}
-                          className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                          className={
+                            "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                            (dropdownID === ele?.id ? "" : " hidden ")
+                          }
                         >
                           <ul
                             className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -358,12 +401,16 @@ export function User() {
                             </li>
                             <li>
                               <button
-                              // onClick={
-                              //   // () => setShowModal(true)
-                              //   // navigate(
-                              //   //   `/dashboard/Leadsmodule/${ele?.id}`
-                              //   // )
-                              // }
+                                onClick={() => {
+                                  setShowModal(true);
+                                  setIdToDelete(ele?.id);
+                                }}
+                                // onClick={
+                                //   // () => setShowModal(true)
+                                //   // navigate(
+                                //   //   `/dashboard/Leadsmodule/${ele?.id}`
+                                //   // )
+                                // }
                               >
                                 Delete
                               </button>

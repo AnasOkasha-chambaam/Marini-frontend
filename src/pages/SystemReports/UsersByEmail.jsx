@@ -8,8 +8,10 @@ import {
 } from "@material-tailwind/react";
 import filterIcon from "../../../public/img/filterIcon.svg";
 import Userprops from "@/data/user-props";
-import dropdown from '../../../public/img/dropdown.svg'
-
+import dropdown from "../../../public/img/dropdown.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { listUsers } from "@/redux/actions/actions";
+import Paginate from "@/paginate";
 
 export function UsersByEmail() {
   return (
@@ -123,7 +125,10 @@ export function UsersByEmail() {
               </tbody>
             </table>
           </div>
-          <div className="mt-6 flex flex-col gap-4 md:flex-row md:gap-0 items-center justify-between rounded-[20px] bg-[#F8F9FB] py-4 px-6">
+
+          {/* <div className="mt-6 flex flex-col gap-4 md:flex-row md:gap-0 items-center justify-between rounded-[20px] bg-[#F8F9FB] py-4 px-6"> ** See this */}
+
+          {/* <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-[20px] bg-[#F8F9FB] py-4 px-6 md:flex-row md:gap-0">
             <p className="px-5 text-base text-[#92929D]">
               <span className="text-[#280559]">1</span>-5 of 56
             </p>
@@ -160,7 +165,11 @@ export function UsersByEmail() {
               </svg>
               </button>
             </div>
-          </div>
+          </div> */}
+
+          <Paginate method={listUsers} pagination={users?.data?.pagination}>
+            List Application By Level
+          </Paginate>
         </div>
       </div>
     </div>

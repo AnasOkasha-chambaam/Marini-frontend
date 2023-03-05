@@ -32,9 +32,9 @@ export function StatusManagement() {
   //
 
   useEffect(() => {
-    dispatch(listApplicationModuleStatuss());
-    dispatch(listLeadsManagmentModuleStatuss());
-    dispatch(listInvoiceModuleStatuss());
+    dispatch(listApplicationModuleStatuss("limit=5"));
+    dispatch(listLeadsManagmentModuleStatuss("limit=5"));
+    dispatch(listInvoiceModuleStatuss("limit=5"));
   }, []);
   // END
   const [statusstate, setStatusstate] = useState(true);
@@ -57,14 +57,14 @@ export function StatusManagement() {
               </p>
               <div className="hidden md:block">
                 <NavLink to="">
-                  <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
+                  {/* <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
                     <div className="flex flex-row items-center justify-center">
                       <img src={saveIcon} alt="..." />
                       <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
                         Save Changes
                       </p>
                     </div>
-                  </Button>
+                  </Button> */}
                 </NavLink>
               </div>
             </div>
@@ -85,12 +85,14 @@ export function StatusManagement() {
           <PropertyCard
             title={"Application Module"}
             toView={applicationModuleStatuss}
+            method={listApplicationModuleStatuss}
             type={"applicationmodulestatus"}
           />
 
           <PropertyCard
             title={"Leads Managment Module"}
             toView={leadsManagmentModuleStatuss}
+            method={listLeadsManagmentModuleStatuss}
             type={"leadsmanagmentmodulestatus"}
           />
 
@@ -98,6 +100,7 @@ export function StatusManagement() {
           <PropertyCard
             title={"Inovoice Module"}
             toView={invoiceModuleStatuss}
+            method={listInvoiceModuleStatuss}
             type={"invoicemodulestatus"}
           />
         </div>
