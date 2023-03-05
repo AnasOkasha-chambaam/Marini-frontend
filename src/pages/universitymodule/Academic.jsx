@@ -20,9 +20,37 @@ import { toast } from "react-toastify";
 import Modal from "./Modal";
 import axios from "axios";
 import Paginate from "@/paginate";
+import { ENV } from "@/config";
 
 export function Academic() {
   const [showModal, setShowModal] = useState(false);
+  // Anasite - Edits: for 'edit'/'delete'
+  const [idToDelete, setIdToDelete] = useState("");
+  const [dropdownID, setDropdownID] = useState("");
+  const onConfirmation = async () => {
+    // here we will delete call
+    console.log("Academic deleted");
+    console.log("academic delete", params.id);
+    const data = await axios.delete(
+      `${ENV.baseUrl}/programme/delete/${idToDelete}`
+    );
+    console.log("deleted data", data);
+    disptach(listProgramms(pagination));
+    // // alert("whppp");
+  };
+  const toggleDropdown = (ind) => {
+    // console.log("toggle dropdown ", dropdownID, " _ ", ind);
+
+    // ***
+    return () => {
+      // const dropdown = document.getElementById(`dropdown${ind}`);
+      // dropdown.classList.toggle("hidden");
+      // dropdown.classList.toggle("block");
+      if (ind === dropdownID) return setDropdownID("");
+      setDropdownID(ind);
+    };
+  };
+  // END
 
   const disptach = useDispatch();
   const navigate = useNavigate();
@@ -48,17 +76,6 @@ export function Academic() {
       });
     }
   }, []);
-
-  const onConfirmation = async () => {
-    // here we will delete call
-    console.log("academic deleted");
-    console.log("academic delte", params.id);
-    const data = await axios.delete(
-      `${ENV.baseUrl}/programme/delete/${params.id}`
-    );
-    console.log("deleted data", data);
-    // // alert("whppp");
-  };
 
   return (
     <>
@@ -250,6 +267,7 @@ export function Academic() {
                           id={`dropdownDefaultButton${ind}`}
                           data-dropdown-toggle={`dropdown${ind}`}
                           type="button"
+                          onClick={toggleDropdown(ele?.id)}
                         >
                           <svg
                             className="h-8 w-8 fill-current"
@@ -263,7 +281,11 @@ export function Academic() {
                         <div
                           // id="dropdown"
                           id={`dropdown${ind}`}
-                          className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                          // className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                          className={
+                            "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                            (dropdownID === ele?.id ? " block " : " hidden ")
+                          }
                         >
                           <ul
                             className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -285,7 +307,10 @@ export function Academic() {
                             <li>
                               <button
                                 onClick={
-                                  () => setShowModal(true)
+                                  () => {
+                                    setShowModal(true);
+                                    setIdToDelete(ele?.id);
+                                  }
                                   // navigate(
                                   //   `/dashboard/Leadsmodule/${ele?.id}`
                                   // )

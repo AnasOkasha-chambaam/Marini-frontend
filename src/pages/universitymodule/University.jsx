@@ -69,16 +69,36 @@ export function University() {
     setDisplayed(true);
   }, []);
 
+  // Anasite - Edits: for 'edit'/'delete'
+  const [idToDelete, setIdToDelete] = useState("");
+  const [dropdownID, setDropdownID] = useState("");
   const onConfirmation = async () => {
     // here we will delete call
     console.log("university deleted");
     console.log(params.id);
     const data = await axios.delete(
-      `${ENV.baseUrl}/university/delete/${params.id}`
+      `${ENV.baseUrl}/university/delete/${idToDelete}`
     );
     console.log("deleted data", data);
     // // alert("whppp");
+    // here we will delete call
+    disptach(listUniversities(pagination));
+    setDropdownID("");
+    // // alert("whppp");
   };
+  const toggleDropdown = (ind) => {
+    // console.log("toggle dropdown ", dropdownID, " _ ", ind);
+
+    // ***
+    return () => {
+      // const dropdown = document.getElementById(`dropdown${ind}`);
+      // dropdown.classList.toggle("hidden");
+      // dropdown.classList.toggle("block");
+      if (ind === dropdownID) return setDropdownID("");
+      setDropdownID(ind);
+    };
+  };
+  // END
 
   // function handleKeyDown(event) {
   //   if (event.keyCode === 13) {
@@ -261,9 +281,7 @@ export function University() {
                           id={`dropdownDefaultButton${ind}`}
                           data-dropdown-toggle={`dropdown${ind}`}
                           type="button"
-                          onClick={() => {
-                            console.log("hi saqib");
-                          }}
+                          onClick={toggleDropdown(ele?.id)}
                         >
                           <svg
                             className="h-8 w-8 fill-current"
@@ -276,7 +294,10 @@ export function University() {
                         </button>
                         <div
                           id={`dropdown${ind}`}
-                          className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                          className={
+                            "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                            (dropdownID === ele?.id ? " block " : " hidden ")
+                          }
                         >
                           <ul
                             className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -297,7 +318,10 @@ export function University() {
                             <li>
                               <button
                                 onClick={
-                                  () => setShowModal(true)
+                                  () => {
+                                    setShowModal(true);
+                                    setIdToDelete(ele?.id);
+                                  }
                                   // navigate(
                                   //   `/dashboard/Leadsmodule/${ele?.id}`
                                   // )

@@ -19,6 +19,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Paginate from "@/paginate";
 import { NavbarCtx } from "@/App";
+import { ENV } from "@/config";
 export function Leads() {
   // const { statusColor } = useContext(NavbarCtx);
   // console.log("ooooooooooooo", statusColor);
@@ -27,6 +28,30 @@ export function Leads() {
   const params = useParams();
 
   const leadsData = useSelector((state) => state?.universitiesReducer?.leads);
+  // Anasite - Edits: for 'edit'/'delete'
+  const [idToDelete, setIdToDelete] = useState("");
+  const [dropdownID, setDropdownID] = useState("");
+  const onConfirmation = async () => {
+    // here we will delete call
+    console.log("Lead deleted");
+    console.log(params.id, "_", idToDelete);
+    const data = await axios.delete(`${ENV.baseUrl}/lead/delete/${idToDelete}`);
+    console.log("deleted data", data);
+    disptach(listLeads(pagination));
+    setDropdownID("");
+    // // alert("whppp");
+  };
+  const toggleDropdown = (ind) => {
+    // ***
+    return () => {
+      // const dropdown = document.getElementById(`dropdown${ind}`);
+      // dropdown.classList.toggle("hidden");
+      // dropdown.classList.toggle("block");
+      if (ind === dropdownID) return setDropdownID("");
+      setDropdownID(ind);
+    };
+  };
+  // END
   // const status = useSelector(
   //   (state) => state?.universitiesReducer?.leads?.ProgrameDetail?.status
   // );
@@ -59,17 +84,8 @@ export function Leads() {
     }
   }, []);
 
-  const onConfirmation = async () => {
-    // here we will delete call
-    console.log("university deleted");
-    console.log(params.id);
-    const data = await axios.delete(`${ENV.baseUrl}/lead/delete/${params.id}`);
-    console.log("deleted data", data);
-    // // alert("whppp");
-  };
-
   // const handleDelete = () => {
-  //   // console.log("delte click", id);
+  //   // console.log("delete click", id);
   //   // const id = leadsData?.data?.faqs?.id;
   //   console.log("delted idddd ===>", id);
   //   setShowModal(true);
@@ -279,14 +295,7 @@ export function Leads() {
                               className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
                               // id="dropdownDefaultButton"
                               // data-dropdown-toggle="dropdown"
-                              onClick={() => {
-                                // ***
-                                const dropdown = document.getElementById(
-                                  `dropdown${ind}`
-                                );
-                                dropdown.classList.toggle("hidden");
-                                dropdown.classList.toggle("block");
-                              }}
+                              onClick={toggleDropdown(ele?.id)}
                               type="button"
                               id={`dropdownDefaultButton${ind}`}
                               data-dropdown-toggle={`dropdown${ind}`}
@@ -303,7 +312,13 @@ export function Leads() {
                             <div
                               // id="dropdown"
                               id={`dropdown${ind}`}
-                              className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                              className={
+                                // "temp-dropdown z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                                "z-10s w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                                (dropdownID === ele?.id
+                                  ? " block "
+                                  : " hidden ")
+                              }
                             >
                               <ul
                                 className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -325,7 +340,10 @@ export function Leads() {
                                 <li>
                                   <button
                                     onClick={
-                                      () => setShowModal(true)
+                                      () => {
+                                        setShowModal(true);
+                                        setIdToDelete(ele?.id);
+                                      }
                                       // navigate(
                                       //   `/dashboard/Leadsmodule/${ele?.id}`
                                       // )
