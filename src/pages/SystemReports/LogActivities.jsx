@@ -132,7 +132,7 @@ export function LogActivities() {
           </div>
           {/* <Paginate pagination={pagination} method={listUniversities} /> */}
 
-          <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-[20px] bg-[#F8F9FB] py-4 px-6 md:flex-row md:gap-0">
+          {/* <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-[20px] bg-[#F8F9FB] py-4 px-6 md:flex-row md:gap-0">
             <p className="px-5 text-base text-[#92929D]">
               <span className="text-[#280559]">1</span>-5 of 56
             </p>
@@ -192,7 +192,13 @@ export function LogActivities() {
                 </svg>
               </button>
             </div>
-          </div>
+          </div> */}
+          <Paginate
+            method={listActivities}
+            pagination={activities?.data?.pagination}
+          >
+            List Application By Level
+          </Paginate>
         </div>
       </div>
     </div>

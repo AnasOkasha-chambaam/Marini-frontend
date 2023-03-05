@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ENV } from "@/config";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Paginate from "@/paginate";
 //
 
 export function Expenses() {
@@ -325,6 +326,12 @@ export function Expenses() {
                 </button>
               </div>
             </div> */}
+            <Paginate
+              pagination={expenses?.data?.pagination}
+              method={listExpenses}
+            >
+              List Expenses
+            </Paginate>
           </div>
         </div>
       </div>
@@ -451,6 +458,17 @@ export function Expenses() {
               <img src={saveIcon} alt="..." />
               <p className="px-[11px] text-base font-medium normal-case text-white ">
                 Save Changes
+              </p>
+            </div>
+          </Button>
+          {"   "}
+          <Button
+            onClick={() => setExpstate(true)}
+            className="rounded-[15px]  bg-[#280559]"
+          >
+            <div className="flex flex-row items-center justify-center px-[33px] py-[10px]">
+              <p className="px-[11px] text-base font-medium normal-case text-white ">
+                Back
               </p>
             </div>
           </Button>

@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ENV } from "@/config";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Paginate from "@/paginate";
 //
 
 export function Sales() {
@@ -31,7 +32,7 @@ export function Sales() {
   // Anasite - Edits
   const dispatch = useDispatch();
   const params = useParams();
-
+  const [action, setAction] = useState(0); // 0: create, 1: edit
   const { sales } = useSelector((state) => state?.universitiesReducer);
   console.log("sales from accounting ====>", sales);
   useEffect(() => {
@@ -72,6 +73,17 @@ export function Sales() {
       });
     }
     // navigate("university")
+  };
+  // END
+  // Anasite - Edits: for view on click
+  const [idToView, setIdToView] = useState("");
+  const viewOnClick = ({ ID, name, description, amount, date }) => {
+    return () => {
+      setAction(1);
+      setSalesState(false);
+      setAllFormsData({ name, description, amount, date });
+      setIdToView(ID);
+    };
   };
   // END
   const [salesState, setSalesState] = useState(true);
@@ -235,6 +247,13 @@ export function Sales() {
                             variant="outlined"
                             className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
                             fullWidth
+                            onClick={viewOnClick({
+                              date,
+                              ID,
+                              amount: salesAmount,
+                              name,
+                              description,
+                            })}
                           >
                             <p className="text-center text-xs font-medium capitalize">
                               view
@@ -297,6 +316,9 @@ export function Sales() {
               </button>
             </div>
           </div> */}
+            <Paginate pagination={sales?.data?.pagination} method={listSales}>
+              List Sales
+            </Paginate>
           </div>
         </div>
       </div>
@@ -310,7 +332,7 @@ export function Sales() {
       >
         <div className="my-5">
           <p className=" mb-2 text-4xl font-semibold text-[#280559]">
-            Create Sales
+            {action === 1 ? "Edit" : "Create"} Sales
           </p>
           <p className=" font text-base text-[#9898A3]">
             Create or edit program
@@ -423,6 +445,17 @@ export function Sales() {
               <img src={saveIcon} alt="..." />
               <p className="px-[11px] text-base font-medium normal-case text-white ">
                 Save Changes
+              </p>
+            </div>
+          </Button>
+          {"   "}
+          <Button
+            onClick={() => setSalesState(true)}
+            className="rounded-[15px]  bg-[#280559]"
+          >
+            <div className="flex flex-row items-center justify-center px-[33px] py-[10px]">
+              <p className="px-[11px] text-base font-medium normal-case text-white ">
+                Back
               </p>
             </div>
           </Button>

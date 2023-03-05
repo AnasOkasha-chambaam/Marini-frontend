@@ -19,8 +19,8 @@ import { useParams } from "react-router-dom";
 //
 // import { useDispatch, useSelector } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
-import { listUniversities } from "@/redux/actions/actions";
 import axios from "axios";
+import { listUniversities } from "@/redux/actions/actions";
 import { ENV } from "../../config";
 import Paginate from "../../paginate";
 
@@ -296,7 +296,7 @@ export function University() {
                           id={`dropdown${ind}`}
                           className={
                             "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
-                            (dropdownID === ele?.id ? " block " : " hidden ")
+                            (dropdownID === ele?.id ? "" : " hidden ")
                           }
                         >
                           <ul

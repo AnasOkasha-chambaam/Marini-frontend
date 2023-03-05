@@ -652,7 +652,10 @@ export const removeBackupFile = (fileName) => async (dispatch) => {
 };
 
 export const downloadBackupFile = (fileName) => async (dispatch) => {
-  console.log(" file name in download function in action method", fileName);
+  console.log(
+    " file name in download function in action method >>>>>>>>> ",
+    fileName
+  );
   // console.log(" Umni param action in action method", action);
 
   // const data = await axios.get(

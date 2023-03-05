@@ -284,7 +284,7 @@ export function Academic() {
                           // className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
                           className={
                             "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
-                            (dropdownID === ele?.id ? " block " : " hidden ")
+                            (dropdownID === ele?.id ? "" : " hidden ")
                           }
                         >
                           <ul

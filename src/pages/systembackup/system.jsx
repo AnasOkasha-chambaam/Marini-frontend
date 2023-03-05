@@ -169,7 +169,7 @@ import { useSelector, useDispatch } from "react-redux";
 // import { listBackups } from "@/redux/actions/actions";
 // import { removeBackupFile } from "@/redux/actions/actions";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { ENV } from "@/config";
 import {
   listBackups,
@@ -178,20 +178,27 @@ import {
   restoreBackupFile,
 } from "@/redux/actions/actions";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export function System() {
   const dispatch = useDispatch();
-  const params = useParams();
-  const navigate = useNavigate();
+  // const params = useParams();
+  // // const navigate = useNavigate();
 
-  const backupsData = useSelector(
-    (state) => state?.universitiesReducer?.backups
-  );
+  const {
+    backups: backupsData,
+    deleteBackupFile,
+    downloadBackupFile: downBackFile,
+    restoreBackupFile: restoreBackFile,
+  } = useSelector((state) => state?.universitiesReducer);
   console.log("list backups data  backups compo", backupsData);
 
   useEffect(() => {
     dispatch(listBackups());
   }, []);
+  useEffect(() => {
+    dispatch(listBackups());
+  }, [deleteBackupFile, downBackFile, restoreBackFile]);
 
   //   router.route("/create").post(uploadSingle, controller.create);
   // router.route("/list").get(controller.list);
@@ -204,8 +211,9 @@ export function System() {
     // console.log("parts ==>", parts[0]);
     // console.log("parts ==>", parts[0]);
     let splittedUrl = parts[0];
-    navigate(`/dashboard/system/${splittedUrl}`);
-    dispatch(restoreBackupFile(params.file));
+    // navigate(`/dashboard/system/${splittedUrl}`);
+    dispatch(restoreBackupFile(splittedUrl));
+    dispatch(listBackups());
   };
 
   const handleDownload = (file) => {
@@ -213,28 +221,30 @@ export function System() {
     let parts = file.split(".");
     // console.log("parts ==>", parts[0]);
     let splittedUrl = parts[0];
-    navigate(`/dashboard/system/${splittedUrl}`);
-    dispatch(downloadBackupFile(params.file));
+    // navigate(`/dashboard/system/${splittedUrl}`);
+    dispatch(downloadBackupFile(splittedUrl));
+    dispatch(listBackups());
   };
 
   const handleDelete = (file) => {
-    console.log("file name in delete function", file);
+    console.log("file name in delete function ", file);
     let parts = file.split(".");
     // console.log("parts ===>", parts[0]);
     let splittedUrl = parts[0];
-    navigate(`/dashboard/system/${splittedUrl}`);
-    dispatch(removeBackupFile(params.file));
+    // navigate(`/dashboard/system/${splittedUrl}`);
+    dispatch(removeBackupFile(splittedUrl));
+    dispatch(listBackups());
     // console.log("file Deleted");
   };
 
   // useEffect(() => {
-  //   // const paramsFile = params.file;
+  //   // const paramsFile = splittedUrl;
   //   // console.log("paramsFileeeeev =====>", paramsFile);
 
   //   // const splitedFile = paramsFile.split("/");
   //   // console.log("splited file ==>", splitedFile);
-  //   dispatch(removeBackupFile(params.file));
-  // }, [params.file]);
+  //   dispatch(removeBackupFile(splittedUrl));
+  // }, [splittedUrl]);
 
   return (
     <div className="mt-12 w-full bg-[#E8E9EB] pr-8 font-display">
@@ -270,6 +280,7 @@ export function System() {
                           Math.random() * 1000000,
                       });
                     }
+                    dispatch(listBackups());
                   }}
                   className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6"
                 >
@@ -339,45 +350,70 @@ export function System() {
                             src={fileIcon}
                             alt="..."
                           />
-                          <p className="mx-6">{ele.file}</p>
+                          <p className="mx-6">{ele?.file}</p>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4   text-gray-800">
                           {/* {items.time} */}
-                          {ele?.time}
+                          {new Date(ele?.time).toLocaleDateString(undefined, {
+                            dateStyle: "medium",
+                          })}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4   text-gray-800">
-                          {/* {items.size} */}2gb
+                          {ele?.size}
                         </td>
                         <td className="flex items-center justify-center">
                           <div className="mx-1 flex">
-                            <Button className="flex h-[42px] w-[42px] items-center rounded-full bg-[#65BF83] p-0 ease-in hover:w-[120px]">
+                            <Button
+                              className="flex h-[42px] w-[42px] items-center rounded-full bg-[#65BF83] p-0 ease-in hover:w-[120px]"
+                              onClick={() => handleRestore(ele?.file)}
+                            >
                               <div className="flex items-center gap-3 p-3">
                                 <img src={restoreIcon} />
-                                <button
+                                <p
                                   // onClick={handleRestore}
                                   className="text-lg font-semibold capitalize"
-                                  onClick={() => handleRestore(ele?.file)}
+                                  // onClick={() => handleRestore(ele?.file)}
                                 >
                                   Restore
-                                </button>
+                                </p>
                               </div>
                             </Button>
                           </div>
                           <div className="mx-1 flex">
-                            <Button className="flex h-[42px] w-[42px] items-center rounded-full bg-[#280559] p-0 ease-in hover:w-[140px]">
+                            <Button
+                              className="flex h-[42px] w-[42px] items-center rounded-full bg-[#280559] p-0 ease-in hover:w-[140px]"
+                              onClick={() => handleDownload(ele?.file)}
+                            >
                               <div className="flex items-center gap-2.5 p-2.5">
                                 <img src={downloadIcon} />
-                                <button
+                                <p
                                   className="text-lg font-semibold capitalize"
                                   // onClick={handleDownload}
-                                  onClick={() => handleDownload(ele?.file)}
                                 >
                                   Download
-                                </button>
+                                </p>
                               </div>
                             </Button>
                           </div>
                           <div className="mx-1 flex">
+                            <Button
+                              className="flex h-[42px] w-[42px] items-center rounded-full bg-[#DB0D4B] p-0 ease-in hover:w-[140px]"
+                              onClick={() => handleDelete(ele?.file)}
+                            >
+                              <div className="flex items-center gap-2.5 p-2.5">
+                                <img src={deleteIcon} />
+                                <p
+                                  className="text-lg font-semibold capitalize"
+                                  // onClick={handleDownload}
+                                  // onClick={() => handleDelete(ele?.file)}
+                                >
+                                  {" "}
+                                  Delete
+                                </p>
+                              </div>
+                            </Button>
+                          </div>
+                          {/* <div className="mx-1 flex">
                             <button
                               onClick={() => handleDelete(ele?.file)}
                               className="flex h-[42px] w-[42px] items-center rounded-full bg-[#DB0D4B] p-0 ease-in hover:w-[105px]"
@@ -389,7 +425,7 @@ export function System() {
                                 </p>
                               </div>
                             </button>
-                          </div>
+                          </div> */}
                         </td>
                       </tr>
                     ))}
