@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Menu,
   MenuHandler,
@@ -7,21 +7,11 @@ import {
   Checkbox,
 } from "@material-tailwind/react";
 import filterIcon from "../../../public/img/filterIcon.svg";
-// import Userprops from "@/data/user-props";
+import Userprops from "@/data/user-props";
 import dropdown from "../../../public/img/dropdown.svg";
 import Paginate from "@/paginate";
-import { useDispatch, useSelector } from "react-redux";
-import { listActivities } from "@/redux/actions/actions";
 
 export function LogActivities() {
-  // Anasite - Edits
-  const dispatch = useDispatch();
-  const { activities } = useSelector((state) => state?.universitiesReducer);
-  console.log("Acitvities from SystemReports ====>", activities);
-  useEffect(() => {
-    dispatch(listActivities());
-  }, []);
-  // END
   return (
     <div className="mt-[30px] w-full bg-[#E8E9EB] font-display">
       <div>
@@ -84,7 +74,7 @@ export function LogActivities() {
                   >
                     Action
                   </th>
-                  <th scope="col" className="w-[200px] px-6 py-3" />
+                  <tr scope="col" className="w-[200px] px-6 py-3" />
                   <th
                     scope="col"
                     className="w-[113px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
@@ -100,33 +90,31 @@ export function LogActivities() {
                 </tr>
               </thead>
               <tbody className="border-none">
-                {activities?.data?.faqs.map(
-                  ({ id, createdAt: date, createdAt: time, action, User }) => (
-                    <tr key={id + name + "ojivasd" + date}>
-                      <td className="whitespace-nowrap py-3 pr-6">
-                        <Checkbox />
-                      </td>
-                      <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
-                        {new Date(date).toLocaleDateString(undefined, {
-                          dateStyle: "medium",
-                        })}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
-                        {new Date(time).toLocaleTimeString()}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg text-[#333]">
-                        {action}
-                      </td>
-                      <td className="px-6 py-4">&nbsp;</td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
-                        {User?.name || "No Name"}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
-                        {User?.role || "No Role"}
-                      </td>
-                    </tr>
-                  )
-                )}
+                {Userprops.map(({ date, time, action, name, role }) => (
+                  <tr key={name}>
+                    <td className="whitespace-nowrap py-3 pr-6">
+                      <Checkbox />
+                    </td>
+                    <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
+                      {new Date(date).toLocaleDateString(undefined, {
+                        dateStyle: "medium",
+                      })}
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
+                      {time}
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-lg text-[#333]">
+                      {action}
+                    </td>
+                    <td className="px-6 py-4">&nbsp;</td>
+                    <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                      {name}
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
+                      {role}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

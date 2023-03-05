@@ -110,7 +110,7 @@ export function Settings() {
                   >
                     Action
                   </th>
-                  <th scope="col" className="w-[200px] px-6 py-3" />
+                  <tr scope="col" className="w-[200px] px-6 py-3" />
                   <th
                     scope="col"
                     className="w-[113px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
@@ -151,12 +151,12 @@ export function Settings() {
                     </td>
                     <td className="px-6 py-4">&nbsp;</td>
                     <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
-                      {/* {name} */}
-                      name
+                      {ele?.name}
+                      {/* name */}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
-                      {/* {role} */}
-                      role
+                      {ele?.role}
+                      {/* role */}
                     </td>
                   </tr>
                 ))}

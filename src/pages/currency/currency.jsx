@@ -810,6 +810,7 @@ export function Currency() {
       exRate,
       status,
       id,
+      Uname: localStorage.name, role: localStorage.access
     };
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
@@ -1061,8 +1062,7 @@ export function Currency() {
                                 backgroundColor: `${color}10`,
                               }}
                             >
-                              {/* {console.log('statuss')} */}
-                              {ele?.status === 0 ? "Inactive" : "Active"}
+                              {ele?.status}
                             </p>
                           </td>
                           <td className="px-8">
@@ -1359,9 +1359,9 @@ export function Currency() {
                     disabled={isViewMode}
                   >
                     <option>Select Status</option>
-                    <option value={1}>Active</option>
+                    <option value={"active"}>Active</option>
                     <option
-                      value={0}
+                      value={"inactive"}
                       style={{ color: "red", border: "1px solid red" }}
                     >
                       Inactive
