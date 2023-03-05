@@ -87,7 +87,8 @@ export function PropertyCard({ title, type = 0, toView, method }) {
             <img className="m-1 w-[20px]" src={plus} alt="..." />
             <Link
               className="m-1 text-sm font-medium normal-case text-white sm:text-base"
-              to={`/dashboard/settingsManagement/property/1/${type}`}
+              to={`/dashboard/settingsManagement/property/1/${type}/${title}`}
+              title={title}
             >
               Add New Status
             </Link>

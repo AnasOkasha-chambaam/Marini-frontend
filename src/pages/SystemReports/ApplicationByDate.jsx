@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Menu,
   MenuHandler,
@@ -8,21 +8,13 @@ import {
 } from "@material-tailwind/react";
 import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
-// import { ApplicationLeadsData } from "@/data/application-leads-data";
+import { ApplicationLeadsData } from "@/data/application-leads-data";
 import dropdown from "../../../public/img/dropdown.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { listApplications } from "@/redux/actions/actions";
 import Paginate from "@/paginate";
 
 export function ApplicationByDate() {
-  // Anasite - Edits
-  const dispatch = useDispatch();
-  const { applications } = useSelector((state) => state?.universitiesReducer);
-  console.log("Leads from SystemReports ====>", applications);
-  useEffect(() => {
-    dispatch(listApplications());
-  }, []);
-  // END
   return (
     <div className="mt-[30px] w-full bg-[#E8E9EB] font-display">
       <div>
@@ -125,20 +117,18 @@ export function ApplicationByDate() {
                 </tr>
               </thead>
               <tbody className="border-none">
-                {applications?.data?.faqs.map(
+                {ApplicationLeadsData.map(
                   ({
-                    id,
-                    fullName: name,
-                    createdAt: date,
-                    fullName: application,
-                    ApplicationDetail,
+                    name,
+                    date,
+                    application,
                     program,
                     university,
                     branch,
                     status,
                     color,
                   }) => (
-                    <tr key={name + id + "_ooehnv_" + date}>
+                    <tr key={name}>
                       <td className="whitespace-nowrap py-3 pr-6">
                         <Checkbox />
                       </td>
@@ -151,23 +141,25 @@ export function ApplicationByDate() {
                         {application}
                       </td>
                       <td className="px-6 py-4 text-lg font-semibold text-[#333]">
-                        {ApplicationDetail?.interestedProgramme || ""}
+                        {program}
                       </td>
                       <td className="px-6 py-4 text-lg font-semibold text-[#333]">
-                        {ApplicationDetail?.selectUniversity || ""}
+                        {university}
                       </td>
                       <td className="px-6 py-4 text-lg font-normal text-[#333]">
-                        {ApplicationDetail?.Branch?.name}
+                        {branch}
                       </td>
                       <td>
                         <p
                           className="mx-auto w-fit rounded-2xl px-5 py-2 text-center text-xs font-medium normal-case"
                           style={{
-                            color:
-                              ApplicationDetail?.ApplicationModuleStatus?.Color,
-                            backgroundColor: `${ApplicationDetail?.ApplicationModuleStatus?.Color}10`,
+                            color,
+                            backgroundColor: `${color}10`,
                           }}
                         >
+
+                          {/* status */}
+
                           {ApplicationDetail?.ApplicationModuleStatus?.name}
                         </p>
                       </td>

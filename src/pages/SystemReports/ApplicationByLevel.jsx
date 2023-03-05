@@ -10,9 +10,11 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
 import { ApplicationLeadsData } from "@/data/application-leads-data";
 import dropdown from "../../../public/img/dropdown.svg";
+
 import { useDispatch, useSelector } from "react-redux";
 import { listApplications } from "@/redux/actions/actions";
 import Paginate from "@/paginate";
+
 
 export function ApplicationByLevel() {
   return (

@@ -67,14 +67,14 @@ export function Academic() {
   useEffect(() => {
     disptach(listProgramms());
 
-    if (programmsData?.success == true) {
-      let { message } = programmsData;
-      toast.success(message, {
-        position: toast.POSITION.TOP_RIGHT,
-        hideProgressBar: false,
-        autoClose: 3000,
-      });
-    }
+    // if (programmsData?.success == true) {
+    //   let { message } = programmsData;
+    //   toast.success(message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //     hideProgressBar: false,
+    //     autoClose: 3000,
+    //   });
+    // }
   }, []);
 
   return (

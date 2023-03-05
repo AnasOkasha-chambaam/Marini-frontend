@@ -582,7 +582,7 @@ const CreateAcademic = () => {
     };
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
-      `${ENV.baseUrl}/programme/${
+      `${ENV.baseUrl}/v1/front/programme/${
         params.action == 2 ? "edit" : "createProgramme"
       }`,
       payload

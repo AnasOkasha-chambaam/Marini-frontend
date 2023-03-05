@@ -59,12 +59,12 @@ export function University() {
 
       const key = message + "_";
 
-      toast.success(message, {
-        // key,
-        position: toast.POSITION.TOP_RIGHT,
-        hideProgressBar: false,
-        autoClose: 3000,
-      });
+      // toast.success(message, {
+      //   // key,
+      //   position: toast.POSITION.TOP_RIGHT,
+      //   hideProgressBar: false,
+      //   autoClose: 3000,
+      // });
     }
     setDisplayed(true);
   }, []);

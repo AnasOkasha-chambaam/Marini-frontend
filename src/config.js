@@ -1,9 +1,7 @@
 export const ENV = {
-
-  imageUrl: "http://127.0.0.1:8080/images/",
   baseUrl: "http://127.0.0.1:8080/v1/front",
-
-
+  imageUrl: "http://127.0.0.1:8080/images/",
+  
   decimalNumberValidator: function (e) {
     // Allow: backspace, delete, tab, escape, enter and .
     let specialKeys = [46, 8, 9, 27, 13, 110, 190];

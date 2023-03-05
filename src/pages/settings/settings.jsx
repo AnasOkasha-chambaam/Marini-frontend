@@ -16,7 +16,6 @@ import { useSelector, useDispatch } from "react-redux";
 // import universitiesReducer from "../../redux/reducers/reducer";
 import { listActivities } from "@/redux/actions/actions";
 import Paginate from "@/paginate";
-
 export function Settings() {
   const dispatch = useDispatch();
   // const activities = useSelector(
@@ -42,16 +41,7 @@ export function Settings() {
             <p className=" text-3xl font-semibold text-[#280559]">
               Activity Log
             </p>
-            <NavLink to="">
-              <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
-                <div className="flex flex-row items-center justify-center">
-                  <img src={saveIcon} alt="..." />
-                  <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                    Save Changes
-                  </p>
-                </div>
-              </Button>
-            </NavLink>
+           
           </div>
           <div className="mb-3 mt-12 flex flex-col items-center justify-between gap-3 rounded-[20px] bg-[#F8F9FB] p-5 md:flex-row">
             <form className="h-full w-full">
