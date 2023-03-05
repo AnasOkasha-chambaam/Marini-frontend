@@ -361,8 +361,17 @@ export function System() {
                         <td className="whitespace-nowrap px-6 py-4   text-gray-800">
                           {ele?.size}
                         </td>
+                        <style>
+                          {`
+                          tr.border-hidden .temp-btn{
+                            display: none;
+                          }
+                          tr.border-hidden:hover .temp-btn{
+                            display: flex;
+                          }`}
+                        </style>
                         <td className="flex items-center justify-center">
-                          <div className="mx-1 flex">
+                          <div className="temp-btn mx-1 flex">
                             <Button
                               className="flex h-[42px] w-[42px] items-center rounded-full bg-[#65BF83] p-0 ease-in hover:w-[120px]"
                               onClick={() => handleRestore(ele?.file)}
@@ -379,7 +388,7 @@ export function System() {
                               </div>
                             </Button>
                           </div>
-                          <div className="mx-1 flex">
+                          <div className="temp-btn mx-1 flex">
                             <Button
                               className="flex h-[42px] w-[42px] items-center rounded-full bg-[#280559] p-0 ease-in hover:w-[140px]"
                               onClick={() => handleDownload(ele?.file)}
@@ -395,7 +404,7 @@ export function System() {
                               </div>
                             </Button>
                           </div>
-                          <div className="mx-1 flex">
+                          <div className="temp-btn mx-1 flex">
                             <Button
                               className="flex h-[42px] w-[42px] items-center rounded-full bg-[#DB0D4B] p-0 ease-in hover:w-[140px]"
                               onClick={() => handleDelete(ele?.file)}
