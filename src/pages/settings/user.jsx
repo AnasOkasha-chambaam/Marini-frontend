@@ -54,6 +54,7 @@ export function User() {
     branch: "",
     position: "",
     date: "",
+    password: ""
   };
   const [formValues, setFormValues] = useState(initialValue);
 
@@ -81,22 +82,22 @@ export function User() {
     setFormValues({ ...formValues, [name]: value });
   };
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setIsLoading(true);
-    console.log("submit clicked");
-    const id = params.id;
+    // const id = params.id;
 
-    const { name, email, number, role, branch, position, date } = formValues;
+    const { name, email, number, role, branch, position, date, password } = formValues;
 
     const payload = {
       name,
       email,
       number,
-      role,
       branch,
       position,
       date,
-      id,
+      password,
+      Uname: localStorage.name,
+      role
     };
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
@@ -186,9 +187,8 @@ export function User() {
         onConfirmation={onConfirmation}
       />
       <div
-        className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
-          userstate ? "" : "hidden"
-        }`}
+        className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${userstate ? "" : "hidden"
+          }`}
       >
         <div>
           <div className=" rounded-[34px] bg-white p-6 md:p-12">
@@ -493,9 +493,8 @@ export function User() {
       {/* ----------------------------------------- */}
 
       <div
-        className={`flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
-          userstate ? "hidden" : ""
-        }`}
+        className={`flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${userstate ? "hidden" : ""
+          }`}
       >
         <div className="mb-5">
           <p className=" mb-2 text-4xl font-semibold text-[#280559]">
@@ -509,7 +508,7 @@ export function User() {
           <p className="mb-8 text-2xl font-semibold text-[#333333]">
             User Details
           </p>
-          <form onSubmit={handleSubmit}>
+          <form>
             <div className="mt-4 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
@@ -568,19 +567,21 @@ export function User() {
                   disabled={isViewMode}
                 >
                   <option value={""}>Select Role</option>
-                  <option value={"manager"}>Manager</option>
-                  <option value={"superadmin hq"}>Superadmin HQ</option>
-                  <option value={"admin hq"}>Admin HQ</option>
-                  <option value={"Boss"}>Boss</option>
-                  <option value={"Counselor HQ"}>Counselor HQ</option>
-                  <option value={"Accountant HQ"}>Accountant HQ</option>
+                  <option value={"superAdmin"}>Super Admin</option>
+                  <option value={"admin"}>Admin HQ</option>
+                  <option value={"counselor"}>Counselor HQ</option>
+                  <option value={"accountant"}>Accountant HQ</option>
+                  <option value={"adminBranch"}>Admin Branch</option>
+                  <option value={"accountantBranch"}>Counselor Branch</option>
+                  <option value={"applicant"}>Accountant Branch</option>
+
                 </select>
               </div>
-              {formValues.role.toLowerCase() === "superadmin hq" ||
-              formValues.role.toLowerCase() === "admin hq" ||
-              formValues.role.toLowerCase() === "Counselor HQ".toLowerCase() ||
-              formValues.role.toLowerCase() ===
-                "Accountant HQ".toLowerCase() ? (
+              {formValues.role.toLowerCase() === "superAdmin" ||
+                formValues.role.toLowerCase() === "admin" ||
+                formValues.role.toLowerCase() === "counselor".toLowerCase() ||
+                formValues.role.toLowerCase() ===
+                "accountant".toLowerCase() ? (
                 ""
               ) : (
                 <div>
@@ -617,7 +618,7 @@ export function User() {
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Position"
                   required
-                  name="Position"
+                  name="position"
                   defaultValue={formValues.position}
                   onChange={handleChange}
                   disabled={isViewMode}
@@ -682,43 +683,79 @@ export function User() {
               </div> */}
             </div>
 
-            {isViewMode ? (
-              <Button
-                onClick={() => navigate(-1)}
-                className="rounded-[15px]  bg-[#280559]"
-              >
-                <div className="flex flex-row items-center justify-center">
-                  <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                    Back
-                  </p>
-                </div>
-              </Button>
-            ) : (
-              <>
-                {/* <NavLink to=""> */}
-                <Button
-                  className="rounded-[15px]  bg-[#280559]"
-                  type="submit"
+
+          </form>
+
+        </div>
+        <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
+          <p className="mb-8 text-2xl font-semibold text-[#333333]">Password</p>
+          <form>
+            <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                  placeholder=""
+                  name="password"
+                  value={formValues.password}
+                  onChange={handleChange}
                   disabled={isViewMode}
-                >
-                  <div className="flex flex-row items-center justify-center">
-                    <img src={saveIcon} alt="..." />
-                    {/* <button
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="***********"
+                  required
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        {isViewMode ? (
+          <Button
+            onClick={() => {navigate(-1); handleSubmit();}}
+            className="rounded-[15px] w-[14%] bg-[#280559]"
+          >
+            <div className="flex flex-row items-center justify-center">
+              <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                Back
+              </p>
+            </div>
+          </Button>
+        ) : (
+          <>
+            {/* <NavLink to=""> */}
+            <Button
+              className="rounded-[15px] w-[14%] bg-[#280559]"
+              type="submit"
+              onClick={() => {handleSubmit()}}
+              disabled={isViewMode}
+            >
+              <div className="flex flex-row items-center justify-center">
+                <img src={saveIcon} alt="..." />
+                {/* <button
                   className="p-1 px-[11px] text-base font-medium normal-case text-white"
                   type="submit"
                   disabled={isViewMode}
                 > */}
-                    <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                      Save Changes
-                    </p>
-                    {/* </button> */}
-                  </div>
-                </Button>
-                {/* </NavLink> */}
-              </>
-            )}
-          </form>
-        </div>
+                <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                  Save Changes
+                </p>
+                {/* </button> */}
+              </div>
+            </Button>
+            {/* </NavLink> */}
+          </>
+        )}
       </div>
     </>
   );

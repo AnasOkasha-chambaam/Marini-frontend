@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Menu,
   MenuHandler,
@@ -15,14 +15,6 @@ import { listApplications } from "@/redux/actions/actions";
 import Paginate from "@/paginate";
 
 export function ApplicationByLevel() {
-  // Anasite - Edits
-  const dispatch = useDispatch();
-  const { applications } = useSelector((state) => state?.universitiesReducer);
-  console.log("applications from SystemReports ====>", applications);
-  useEffect(() => {
-    dispatch(listApplications());
-  }, []);
-  // END
   return (
     <div className="mt-[30px] w-full bg-[#E8E9EB] font-display">
       <div>
@@ -131,13 +123,11 @@ export function ApplicationByLevel() {
                 </tr>
               </thead>
               <tbody className="border-none">
-                {applications?.data?.faqs.map(
+                {ApplicationLeadsData.map(
                   ({
-                    id,
-                    fullName: name,
-                    createdAt: date,
-                    fullName: application,
-                    ApplicationDetail,
+                    name,
+                    date,
+                    application,
                     level,
                     category,
                     university,
@@ -145,7 +135,7 @@ export function ApplicationByLevel() {
                     status,
                     color,
                   }) => (
-                    <tr key={name + id + "_ooehnv_" + date}>
+                    <tr key={name}>
                       <td className="whitespace-nowrap py-3 pr-6">
                         <Checkbox />
                       </td>
@@ -158,28 +148,26 @@ export function ApplicationByLevel() {
                         {application}
                       </td>
                       <td className="px-6 py-4 text-lg font-normal text-[#333]">
-                        {ApplicationDetail?.applicationLevel}
+                        {level}
                       </td>
                       <td className="px-6 py-4 text-lg font-normal text-[#333]">
-                        {ApplicationDetail?.category || "No Category"}
+                        {category}
                       </td>
                       <td className="px-6 py-4 text-lg font-normal text-[#333]">
-                        {ApplicationDetail?.selectUniversity || "No University"}
+                        {university}
                       </td>
                       <td className="px-6 py-4 text-lg font-normal text-[#333]">
-                        {ApplicationDetail?.Branch?.name || "No Branch"}
+                        {branch}
                       </td>
                       <td>
                         <p
-                          className="neumorphism mx-auto w-fit rounded-2xl rounded-lg bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                          className="mx-auto w-fit rounded-2xl px-5 py-2 text-center text-xs font-medium normal-case"
                           style={{
-                            color:
-                              ApplicationDetail?.ApplicationModuleStatus?.Color,
-                            backgroundColor: `${ApplicationDetail?.ApplicationModuleStatus?.Color}10`,
+                            color,
+                            backgroundColor: `${color}10`,
                           }}
                         >
-                          {ApplicationDetail?.ApplicationModuleStatus?.name ||
-                            "No status"}
+                          {status}
                         </p>
                       </td>
                     </tr>

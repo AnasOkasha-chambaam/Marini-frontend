@@ -169,16 +169,19 @@ import { useSelector, useDispatch } from "react-redux";
 // import { listBackups } from "@/redux/actions/actions";
 // import { removeBackupFile } from "@/redux/actions/actions";
 import { useParams } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ENV } from "@/config";
+
 import {
   listBackups,
   removeBackupFile,
   downloadBackupFile,
   restoreBackupFile,
 } from "@/redux/actions/actions";
+
 import axios from "axios";
 import { toast } from "react-toastify";
+
 
 export function System() {
   const dispatch = useDispatch();
@@ -254,6 +257,15 @@ export function System() {
             <div className="flex items-center justify-between">
               <p className=" text-4xl font-semibold text-[#280559]">Backup</p>
               <div className="hidden md:block">
+
+               {/* <NavLink to="">
+                  <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
+                    <img className="m-1 w-[20px]" src={plus} alt="..." />
+                    <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
+                      Generate New Backup
+                    </p>
+                  </Button>
+                </NavLink> ** Check */}
                 {/* <NavLink to=""> */}
                 <Button
                   onClick={async () => {

@@ -1,6 +1,8 @@
 export const ENV = {
-  baseUrl: "http://localhost:8080/v1/front",
-  imageUrl: "http://localhost:8080/images/",
+
+  imageUrl: "http://127.0.0.1:8080/images/",
+  baseUrl: "http://127.0.0.1:8080/v1/front",
+
 
   decimalNumberValidator: function (e) {
     // Allow: backspace, delete, tab, escape, enter and .

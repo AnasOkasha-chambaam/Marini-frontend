@@ -61,6 +61,11 @@ export const LIST_ALL_COMMISSION_INVOICES = "LIST_ALL_COMMISSION_INVOICES";
 export const EDIT_COMMISSION_INVOICE = "EDIT_COMMISSION_INVOICE";
 export const DELETE_COMMISSION_INVOICE = "DELETE_ALL_COMMISSION_INVOICES";
 //
+
+// Login type
+
+export const SING_IN = "SING_IN";
+
 // Module: Accounting (Sale)
 export const VIEW_SALE = "VIEW_SALE";
 export const LIST_ALL_SALES = "LIST_ALL_SALES";

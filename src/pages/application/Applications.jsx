@@ -42,7 +42,7 @@ export function Applications() {
 
   // list all applications
   useEffect(() => {
-    disptach(listApplications());
+    disptach(listApplications("limit=10"));
 
     if (applicationsData?.success == true) {
       let { message } = applicationsData;
@@ -104,14 +104,18 @@ export function Applications() {
                 <p className="text-2xl font-bold text-black sm:text-3xl">
                   Applications
                 </p>
-                <NavLink to="createApplicant">
+                {
+                  (localStorage.access !== "accountant" && localStorage.access !== "adminBranch" && localStorage.access !== "counselorBranch" && localStorage.access !== "accountantBranch") &&
+                  <NavLink to="createApplicant">
                   <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
                     <img className="m-1 w-[20px]" src={plus} alt="..." />
                     <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
                       Add New Application
                     </p>
                   </Button>
-                </NavLink>
+                  </NavLink>
+                }
+                
               </div>
               <div className="my-3 flex flex-col items-center justify-between gap-3 rounded-[20px] bg-[#F8F9FB] p-5 md:flex-row">
                 <form className="h-full w-full">
