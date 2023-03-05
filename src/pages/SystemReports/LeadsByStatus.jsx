@@ -13,6 +13,7 @@ import { ApplicationLeadsData } from "@/data/application-leads-data";
 import { listLeads } from "@/redux/actions/actions";
 
 import { useDispatch, useSelector } from "react-redux";
+import Paginate from "@/paginate";
 
 // END
 // import dropdown from "../../../public/img/dropdown.svg";
@@ -216,6 +217,9 @@ export function LeadsByStatus() {
               </button>
             </div>
           </div> */}
+          <Paginate pagination={leads?.data?.pagination} method={listLeads}>
+            List Leads
+          </Paginate>
         </div>
       </div>
     </div>

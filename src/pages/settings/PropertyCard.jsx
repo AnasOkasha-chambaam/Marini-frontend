@@ -10,8 +10,9 @@ import { ENV } from "../../config";
 import { toast } from "react-toastify";
 import AddProperty from "./AddProperty";
 import { useEffect } from "react";
+import Paginate from "@/paginate";
 
-export function PropertyCard({ title, type = 0, toView }) {
+export function PropertyCard({ title, type = 0, toView, method }) {
   const [statusstate, setStatusstate] = useState(true);
   const [property, setProperty] = useState([]);
   //   const [type, setType] = useState(0);
@@ -20,6 +21,55 @@ export function PropertyCard({ title, type = 0, toView }) {
   useEffect(() => {
     setProperty(toView?.data?.faqs);
   }, [toView, toView?.data?.faqs]);
+  //
+  const [currentProperty, setCurrentProperty] = useState("");
+  const [isStatus, setIsStatus] = useState(false);
+  useEffect(() => {
+    switch (type) {
+      case "applicationmodulestatus":
+        setCurrentProperty("Application Module Status ");
+        setIsStatus(true);
+        break;
+      case "leadsmanagmentmodulestatus":
+        setCurrentProperty("Leads Managment Status ");
+        setIsStatus(true);
+        break;
+      case "invoicemodulestatus":
+        setCurrentProperty("Invoice Module Status ");
+        setIsStatus(true);
+        break;
+      case "programlevel":
+        setCurrentProperty("Program Level ");
+        setIsStatus(false);
+        break;
+      case "programcategory":
+        setCurrentProperty("Program Category ");
+        setIsStatus(false);
+        break;
+      case "qualificationtype":
+        setCurrentProperty("Qualification Type ");
+        setIsStatus(false);
+        break;
+      case "universitytype":
+        setCurrentProperty("University Type ");
+        setIsStatus(false);
+        break;
+      case "leadgroup":
+        setCurrentProperty("Lead Group ");
+        setIsStatus(false);
+        break;
+      case "interestedprogram":
+        setCurrentProperty("Interested Program ");
+        setIsStatus(false);
+        break;
+
+      default:
+        setCurrentProperty(type);
+        setIsStatus(false);
+        break;
+    }
+  }, [type]);
+  //
 
   return (
     <>
@@ -57,12 +107,16 @@ export function PropertyCard({ title, type = 0, toView }) {
                       Status Name
                     </th>
                     <th scope="col" className="w-full px-6 py-3" />
-                    <th
-                      scope="col"
-                      className="w-[75px] py-3 text-center text-base font-medium text-[#92929D]"
-                    >
-                      Color
-                    </th>
+                    {isStatus ? (
+                      <th
+                        scope="col"
+                        className="w-[75px] py-3 text-center text-base font-medium text-[#92929D]"
+                      >
+                        Color
+                      </th>
+                    ) : (
+                      ""
+                    )}
                     <th
                       scope="col"
                       className="w-[75px] py-3 text-center text-base font-medium text-[#92929D]"
@@ -82,25 +136,30 @@ export function PropertyCard({ title, type = 0, toView }) {
                   {property?.length > 0 ? (
                     property.map(({ id, name, Color }) => (
                       <tr key={id + name}>
+                        {console.log(name, " Coloolooolooloo", property)}
                         <td
                           className={`whitespace-nowrap py-4 text-lg font-semibold text-[#333]`}
                         >
                           {name}
                         </td>
                         <td className="px-6 py-4" />
-                        <td
-                          className={`whitespace-nowrap px-6 py-4 text-center text-lg font-medium`}
-                        >
-                          <p
-                            className="neumorphism mx-auto w-fit rounded-2xl rounded-lg bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
-                            style={{
-                              color: Color,
-                              backgroundColor: `${Color}10`,
-                            }}
+                        {isStatus ? (
+                          <td
+                            className={`whitespace-nowrap px-6 py-4 text-center text-lg font-medium`}
                           >
-                            Color
-                          </p>
-                        </td>
+                            <p
+                              className="neumorphism mx-auto w-fit rounded-2xl rounded-lg bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                              style={{
+                                color: Color,
+                                backgroundColor: `${Color}10`,
+                              }}
+                            >
+                              Color
+                            </p>
+                          </td>
+                        ) : (
+                          ""
+                        )}
                         <td>
                           <Button
                             variant="outlined"
@@ -108,12 +167,21 @@ export function PropertyCard({ title, type = 0, toView }) {
                             fullWidth
                           >
                             <p className="text-center text-xs font-medium capitalize">
-                              view
+                              Edit
                             </p>
                           </Button>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
-                          <button className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]">
+                          <Button
+                            variant="outlined"
+                            className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
+                            fullWidth
+                          >
+                            <p className="text-center text-xs font-medium capitalize">
+                              Delete
+                            </p>
+                          </Button>
+                          {/* <button className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]">
                             <svg
                               className="h-8 w-8 fill-current"
                               viewBox="0 0 32 32"
@@ -122,7 +190,7 @@ export function PropertyCard({ title, type = 0, toView }) {
                               <circle cx="16" cy="16" r="2" />
                               <circle cx="16" cy="22" r="2" />
                             </svg>
-                          </button>
+                          </button> */}
                         </td>
                       </tr>
                     ))
@@ -153,7 +221,8 @@ export function PropertyCard({ title, type = 0, toView }) {
                           </Button> */}
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
-                        <button className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]">
+                        No Data
+                        {/* <button className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]">
                           <svg
                             className="h-8 w-8 fill-current"
                             viewBox="0 0 32 32"
@@ -162,7 +231,7 @@ export function PropertyCard({ title, type = 0, toView }) {
                             <circle cx="16" cy="16" r="2" />
                             <circle cx="16" cy="22" r="2" />
                           </svg>
-                        </button>
+                        </button> */}
                       </td>
                     </tr>
                   )}
@@ -202,6 +271,9 @@ export function PropertyCard({ title, type = 0, toView }) {
                 </tbody>
               </table>
             </div>
+            <Paginate pagination={toView?.data?.pagination} method={method}>
+              List
+            </Paginate>
           </div>
         </div>
       </div>

@@ -217,7 +217,7 @@ export const routes = [
     layout: "applicant",
     pages: [
       {
-        id: "applicant_dashboard",
+        id: "dashboard",
         icon1: (
           <img style={{ maxWidth: "20px", height: "20px" }} src={dashboard1} />
         ),
@@ -249,26 +249,26 @@ export const routes = [
   //   ],
   // },
 ];
-/*
-export const applicantRoutes = 
-[
-{
-  layout: "applicant",
-  pages: [
-    {
-      id: "dashboard",
-      icon1: (
-        <img style={{ maxWidth: "20px", height: "20px" }} src={dashboard1} />
-      ),
-      icon2: (
-        <img style={{ maxWidth: "20px", height: "20px" }} src={dashboard2} />
-      ),
-      name: "Dashboard",
-      path: "/applicant/dashboard",
-      element: <ApplicantDashboard />,
-    }
-  ]
-}
-]
-*/
+
+// export const applicantRoutes = 
+// [
+// {
+//   layout: "applicant",
+//   pages: [
+//     {
+//       id: "dashboard",
+//       icon1: (
+//         <img style={{ maxWidth: "20px", height: "20px" }} src={dashboard1} />
+//       ),
+//       icon2: (
+//         <img style={{ maxWidth: "20px", height: "20px" }} src={dashboard2} />
+//       ),
+//       name: "Dashboard",
+//       path: "/applicant/dashboard",
+//       element: <ApplicantDashboard />,
+//     }
+//   ]
+// }
+// ]
+
 export default routes;

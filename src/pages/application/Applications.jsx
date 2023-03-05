@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import Modal from "../universitymodule/Modal";
 import Paginate from "@/paginate";
 import { NavbarCtx } from "@/App";
+import { ENV } from "@/config";
 
 export function Applications() {
   const { statusColor } = useContext(NavbarCtx);
@@ -41,7 +42,7 @@ export function Applications() {
 
   // list all applications
   useEffect(() => {
-    disptach(listApplications());
+    disptach(listApplications("limit=10"));
 
     // if (applicationsData?.success == true) {
     //   let { message } = applicationsData;
@@ -52,19 +53,36 @@ export function Applications() {
     //   });
     // }
   }, []);
-
+  // Anasite - Edits: for 'edit'/'delete'
+  const [idToDelete, setIdToDelete] = useState("");
+  const [dropdownID, setDropdownID] = useState("");
   const onConfirmation = async () => {
     // here we will delete call
-    console.log("university deleted");
-    console.log(params.id);
+    console.log("Application deleted");
+    // console.log(params.id);
     const data = await axios.delete(
-      `${ENV.baseUrl}/applicants/delete/${params.id}`
+      `${ENV.baseUrl}/applicants/delete/${idToDelete}`
     );
     console.log("deleted data", data);
+    disptach(listApplications(pagination));
 
     // http://localhost:8080/v1/front/applicants/delete/5
     // // alert("whppp");
   };
+  const toggleDropdown = (ind) => {
+    // console.log("toggle dropdown ", dropdownID, " _ ", ind);
+
+    // ***
+    return () => {
+      // const dropdown = document.getElementById(`dropdown${ind}`);
+      // dropdown.classList.toggle("hidden");
+      // dropdown.classList.toggle("block");
+      if (ind === dropdownID) return setDropdownID("");
+      setDropdownID(ind);
+    };
+  };
+  // END
+
   return (
     <>
       <Modal
@@ -86,14 +104,18 @@ export function Applications() {
                 <p className="text-2xl font-bold text-black sm:text-3xl">
                   Applications
                 </p>
-                <NavLink to="createApplicant">
+                {
+                  (localStorage.access !== "accountant" && localStorage.access !== "adminBranch" && localStorage.access !== "counselorBranch" && localStorage.access !== "accountantBranch") &&
+                  <NavLink to="createApplicant">
                   <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
                     <img className="m-1 w-[20px]" src={plus} alt="..." />
                     <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
                       Add New Application
                     </p>
                   </Button>
-                </NavLink>
+                  </NavLink>
+                }
+                
               </div>
               <div className="my-3 flex flex-col items-center justify-between gap-3 rounded-[20px] bg-[#F8F9FB] p-5 md:flex-row">
                 <form className="h-full w-full">
@@ -286,6 +308,7 @@ export function Applications() {
                               id={`dropdownDefaultButton${ind}`}
                               data-dropdown-toggle={`dropdown${ind}`}
                               type="button"
+                              onClick={toggleDropdown(ele?.id)}
                             >
                               <svg
                                 className="h-8 w-8 fill-current"
@@ -299,7 +322,13 @@ export function Applications() {
                             <div
                               // id="dropdown"
                               id={`dropdown${ind}`}
-                              className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                              // className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                              className={
+                                "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                                (dropdownID === ele?.id
+                                  ? " block "
+                                  : " hidden ")
+                              }
                             >
                               <ul
                                 className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -320,12 +349,10 @@ export function Applications() {
                                 </li>
                                 <li>
                                   <button
-                                    onClick={
-                                      () => setShowModal(true)
-                                      // navigate(
-                                      //   `/dashboard/Leadsmodule/${ele?.id}`
-                                      // )
-                                    }
+                                    onClick={() => {
+                                      setShowModal(true);
+                                      setIdToDelete(ele?.id);
+                                    }}
                                   >
                                     Delete
                                   </button>

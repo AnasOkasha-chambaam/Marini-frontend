@@ -19,8 +19,8 @@ import { useParams } from "react-router-dom";
 //
 // import { useDispatch, useSelector } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
-import { listUniversities } from "@/redux/actions/actions";
 import axios from "axios";
+import { listUniversities } from "@/redux/actions/actions";
 import { ENV } from "../../config";
 import Paginate from "../../paginate";
 
@@ -69,16 +69,36 @@ export function University() {
     setDisplayed(true);
   }, []);
 
+  // Anasite - Edits: for 'edit'/'delete'
+  const [idToDelete, setIdToDelete] = useState("");
+  const [dropdownID, setDropdownID] = useState("");
   const onConfirmation = async () => {
     // here we will delete call
     console.log("university deleted");
     console.log(params.id);
     const data = await axios.delete(
-      `${ENV.baseUrl}/university/delete/${params.id}`
+      `${ENV.baseUrl}/university/delete/${idToDelete}`
     );
     console.log("deleted data", data);
     // // alert("whppp");
+    // here we will delete call
+    disptach(listUniversities(pagination));
+    setDropdownID("");
+    // // alert("whppp");
   };
+  const toggleDropdown = (ind) => {
+    // console.log("toggle dropdown ", dropdownID, " _ ", ind);
+
+    // ***
+    return () => {
+      // const dropdown = document.getElementById(`dropdown${ind}`);
+      // dropdown.classList.toggle("hidden");
+      // dropdown.classList.toggle("block");
+      if (ind === dropdownID) return setDropdownID("");
+      setDropdownID(ind);
+    };
+  };
+  // END
 
   // function handleKeyDown(event) {
   //   if (event.keyCode === 13) {
@@ -105,14 +125,17 @@ export function University() {
               <p className="text-2xl font-bold text-black sm:text-3xl">
                 University
               </p>
-              <NavLink to="createUniversity">
-                <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
-                  <img className="m-1 w-[20px]" src={plus} alt="..." />
-                  <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
-                    Create New Form
-                  </p>
-                </Button>
-              </NavLink>
+              {
+                (localStorage.access !== "adminBranch" && localStorage.access !== "counselorBranch") &&
+                <NavLink to="createUniversity">
+                  <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
+                    <img className="m-1 w-[20px]" src={plus} alt="..." />
+                    <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
+                      Create New Form
+                    </p>
+                  </Button>
+                </NavLink>
+              }
             </div>
             <div className="my-3 flex flex-col items-center justify-between gap-3 rounded-[20px] bg-[#F8F9FB] p-5 md:flex-row">
               <form className="h-full w-full">
@@ -261,9 +284,7 @@ export function University() {
                           id={`dropdownDefaultButton${ind}`}
                           data-dropdown-toggle={`dropdown${ind}`}
                           type="button"
-                          onClick={() => {
-                            console.log("hi saqib");
-                          }}
+                          onClick={toggleDropdown(ele?.id)}
                         >
                           <svg
                             className="h-8 w-8 fill-current"
@@ -276,7 +297,10 @@ export function University() {
                         </button>
                         <div
                           id={`dropdown${ind}`}
-                          className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                          className={
+                            "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                            (dropdownID === ele?.id ? "" : " hidden ")
+                          }
                         >
                           <ul
                             className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -297,7 +321,10 @@ export function University() {
                             <li>
                               <button
                                 onClick={
-                                  () => setShowModal(true)
+                                  () => {
+                                    setShowModal(true);
+                                    setIdToDelete(ele?.id);
+                                  }
                                   // navigate(
                                   //   `/dashboard/Leadsmodule/${ele?.id}`
                                   // )

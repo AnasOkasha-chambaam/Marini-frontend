@@ -52,6 +52,14 @@ import {
   // Module: Invoice (1)
   LIST_ALL_COMMISSION_INVOICES,
   VIEW_COMMISSION_INVOICE,
+  LIST_ALL_SALES,
+  VIEW_SALE,
+  LIST_ALL_COST_OF_SALES,
+  VIEW_COST_OF_SALE,
+  LIST_ALL_EXPENSES,
+  VIEW_EXPENSE,
+  LIST_ALL_DEPIT_AND_CREDITS,
+  VIEW_DEPIT_AND_CREDIT,
   // END
 } from "../actions/actionType";
 
@@ -110,6 +118,22 @@ const initialState = {
   // Module: Invoice (1)
   commissionInvoices: [null],
   viewCommissionInvoice: [null],
+  //
+  // Module: Accounting (Sale)
+  sales: [null],
+  viewSale: [null],
+  //
+  // Module: Accounting (CostOfSale)
+  costOfSales: [null],
+  viewCostOfSale: [null],
+  //
+  // Module: Accounting (Expenses)
+  expenses: [null],
+  viewExpense: [null],
+  //
+  // Module: Accounting (DepitAndCredit)
+  depitAndCredits: [null],
+  viewDepitAndCredit: [null],
   //
   // END
 };
@@ -227,6 +251,54 @@ const universitiesReducer = (state = initialState, action) => {
       return {
         ...state,
         viewCommissionInvoice: action.payload,
+      };
+    //
+    // Module: Accounting (Sale)
+    case LIST_ALL_SALES:
+      return {
+        ...state,
+        sales: action.payload,
+      };
+    case VIEW_SALE:
+      return {
+        ...state,
+        viewSale: action.payload,
+      };
+    //
+    // Module: Accounting (Sale)
+    case LIST_ALL_COST_OF_SALES:
+      return {
+        ...state,
+        costOfSales: action.payload,
+      };
+    case VIEW_COST_OF_SALE:
+      return {
+        ...state,
+        viewCostOfSale: action.payload,
+      };
+    //
+    // Module: Accounting (Expenses)
+    case LIST_ALL_EXPENSES:
+      return {
+        ...state,
+        expenses: action.payload,
+      };
+    case VIEW_EXPENSE:
+      return {
+        ...state,
+        viewExpense: action.payload,
+      };
+    //
+    // Module: Accounting (Expenses)
+    case LIST_ALL_DEPIT_AND_CREDITS:
+      return {
+        ...state,
+        depitAndCredits: action.payload,
+      };
+    case VIEW_DEPIT_AND_CREDIT:
+      return {
+        ...state,
+        viewDepitAndCredit: action.payload,
       };
     //
     // END
