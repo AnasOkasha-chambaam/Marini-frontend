@@ -175,8 +175,11 @@ export function CreateUniversity() {
       let output = document.getElementById("university-logo");
       output.src = reader.result;
     };
-    if (event.target.files[0]) {
-      reader.readAsDataURL(event.target.files[0]);
+    // if (event.target.files[0]) {
+    //   reader.readAsDataURL(event.target.files[0]);
+    // }
+    if (file[0]) {
+      reader.readAsDataURL(file[0]);
     }
   };
 
@@ -204,8 +207,8 @@ export function CreateUniversity() {
     formData.append("email", email);
     formData.append("Uname", localStorage.name);
     formData.append("role", localStorage.access);
-    formData.append("Uname", localStorage.name);
-    formData.append("role", localStorage.access);
+    // formData.append("Uname", localStorage.name);
+    // formData.append("role", localStorage.access);
 
     if (params.id) formData.append("id", params.id);
     formData.append("campuses", JSON.stringify(campusValues));
@@ -213,7 +216,7 @@ export function CreateUniversity() {
     formData.append("addmissionFee", addmissionFee);
     formData.append("qetcFee", qetcFee);
     formData.append("commisionDuration", commisionDuration);
-    formData.append("logo", file[0]);
+    formData.append("logo", file && file[0] ? file[0] : "");
 
     const config = {
       headers: { "content-type": "multipart/form-data" },
@@ -235,7 +238,7 @@ export function CreateUniversity() {
         key: "_" + Math.random() * 1000000 + "_" + Math.random() * 1000000,
       });
     }
-    navigate(-1)
+    navigate(-1);
   };
 
   console.log(formValues);
@@ -603,7 +606,6 @@ export function CreateUniversity() {
                   defaultValue={campusValues[1].name}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  
                 />
               </div>
               <div>
@@ -618,7 +620,6 @@ export function CreateUniversity() {
                   defaultValue={campusValues[1].address1}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  
                 />
               </div>
               <div>
@@ -633,7 +634,6 @@ export function CreateUniversity() {
                   defaultValue={campusValues[1].address2}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  
                 />
               </div>
               <div>
@@ -649,7 +649,6 @@ export function CreateUniversity() {
                   defaultValue={campusValues[1].phone}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  
                 />
               </div>
               <div>
@@ -664,7 +663,6 @@ export function CreateUniversity() {
                   defaultValue={campusValues[1].email}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
-                  
                 />
               </div>
               {isViewMode ? (

@@ -41,7 +41,6 @@ export function Settings() {
             <p className=" text-3xl font-semibold text-[#280559]">
               Activity Log
             </p>
-           
           </div>
           <div className="mb-3 mt-12 flex flex-col items-center justify-between gap-3 rounded-[20px] bg-[#F8F9FB] p-5 md:flex-row">
             <form className="h-full w-full">
@@ -100,7 +99,7 @@ export function Settings() {
                   >
                     Action
                   </th>
-                  <tr scope="col" className="w-[200px] px-6 py-3" />
+                  <th scope="col" className="w-[200px] px-6 py-3" />
                   <th
                     scope="col"
                     className="w-[113px] px-6 py-3 text-left text-base font-medium text-[#92929D]"

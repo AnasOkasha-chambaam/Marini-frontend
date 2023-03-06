@@ -578,11 +578,12 @@ const CreateAcademic = () => {
       engRequirement,
       entryRequirement,
       id,
-      Uname: localStorage.name, role: localStorage.access
+      Uname: localStorage.name,
+      role: localStorage.access,
     };
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
-      `${ENV.baseUrl}/v1/front/programme/${
+      `${ENV.baseUrl}/programme/${
         params.action == 2 ? "edit" : "createProgramme"
       }`,
       payload

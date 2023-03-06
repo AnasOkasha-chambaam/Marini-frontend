@@ -54,7 +54,7 @@ export function User() {
     branch: "",
     position: "",
     date: "",
-    password: ""
+    password: "",
   };
   const [formValues, setFormValues] = useState(initialValue);
 
@@ -86,7 +86,8 @@ export function User() {
     setIsLoading(true);
     // const id = params.id;
 
-    const { name, email, number, role, branch, position, date, password } = formValues;
+    const { name, email, number, role, branch, position, date, password } =
+      formValues;
 
     const payload = {
       name,
@@ -97,7 +98,7 @@ export function User() {
       date,
       password,
       Uname: localStorage.name,
-      role
+      role,
     };
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
@@ -114,7 +115,7 @@ export function User() {
         hideProgressBar: false,
         autoClose: 3000,
       });
-      setUserstate(true)
+      setUserstate(true);
       dispatch(listUsers());
     }
   };
@@ -131,7 +132,7 @@ export function User() {
     if (viewUsers?.user) setFormValues(viewUsers?.user);
   }, [viewUsers.user]);
   useEffect(() => {
-    if (params.id) dispatch(viewUser(params.id));
+    if (params.id && params.id !== "*") dispatch(viewUser(params.id));
 
     if (params.action == 1) {
       setUserstate(false);
@@ -189,8 +190,9 @@ export function User() {
         onConfirmation={onConfirmation}
       />
       <div
-        className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${userstate ? "" : "hidden"
-          }`}
+        className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
+          userstate ? "" : "hidden"
+        }`}
       >
         <div>
           <div className=" rounded-[34px] bg-white p-6 md:p-12">
@@ -495,8 +497,9 @@ export function User() {
       {/* ----------------------------------------- */}
 
       <div
-        className={`flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${userstate ? "hidden" : ""
-          }`}
+        className={`flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
+          userstate ? "hidden" : ""
+        }`}
       >
         <div className="mb-5">
           <p className=" mb-2 text-4xl font-semibold text-[#280559]">
@@ -578,7 +581,7 @@ export function User() {
                   <option value={"CounselorBranch"}>Counselor Branch</option>
                   <option value={"AccountantBranch"}>Accountant Branch</option>
 
-             {/*     <option value={"superAdmin"}>Super Admin</option>
+                  {/*     <option value={"superAdmin"}>Super Admin</option>
                   <option value={"admin"}>Admin HQ</option>
                   <option value={"counselor"}>Counselor HQ</option>
                   <option value={"accountant"}>Accountant HQ</option>
@@ -586,15 +589,12 @@ export function User() {
                   <option value={"accountantBranch"}>Counselor Branch</option>
                   <option value={"applicant"}>Accountant Branch</option>
                   */}
-
-
                 </select>
               </div>
               {formValues.role.toLowerCase() === "superAdmin" ||
-                formValues.role.toLowerCase() === "admin" ||
-                formValues.role.toLowerCase() === "counselor".toLowerCase() ||
-                formValues.role.toLowerCase() ===
-                "accountant".toLowerCase() ? (
+              formValues.role.toLowerCase() === "admin" ||
+              formValues.role.toLowerCase() === "counselor".toLowerCase() ||
+              formValues.role.toLowerCase() === "accountant".toLowerCase() ? (
                 ""
               ) : (
                 <div>
@@ -695,10 +695,7 @@ export function User() {
                 <AddField open={openModal} close={() => setOpenModal(false)} />
               </div> */}
             </div>
-
-
           </form>
-
         </div>
         <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
           <p className="mb-8 text-2xl font-semibold text-[#333333]">Password</p>
@@ -735,8 +732,11 @@ export function User() {
         </div>
         {isViewMode ? (
           <Button
-            onClick={() => {navigate(-1); handleSubmit();}}
-            className="rounded-[15px] w-[14%] bg-[#280559]"
+            onClick={() => {
+              navigate(-1);
+              handleSubmit();
+            }}
+            className="w-[14%] rounded-[15px] bg-[#280559]"
           >
             <div className="flex flex-row items-center justify-center">
               <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
@@ -748,9 +748,11 @@ export function User() {
           <>
             {/* <NavLink to=""> */}
             <Button
-              className="rounded-[15px] w-[14%] bg-[#280559]"
+              className="w-[14%] rounded-[15px] bg-[#280559]"
               type="submit"
-              onClick={() => {handleSubmit()}}
+              onClick={() => {
+                handleSubmit();
+              }}
               disabled={isViewMode}
             >
               <div className="flex flex-row items-center justify-center">

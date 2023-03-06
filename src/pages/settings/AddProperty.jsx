@@ -73,8 +73,8 @@ export function AddProperty() {
   const [loading, setIsLoading] = useState(false);
   const [color, setColor] = useState("#000000");
 
-  const params = useParams();
-  const navigate = useNavigate()
+  // const params = useParams();
+  // const navigate = useNavigate()
   // var browserHistory = ReactRouter.browserHistory;
 
   const handleSubmit = async (e) => {
@@ -178,7 +178,7 @@ export function AddProperty() {
                   type="text"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 
-                {/*  placeholder={params.title + " Name"} */}
+                // {/*  placeholder={params.title + " Name"} */}
 
                   placeholder={currentProperty + " Name"}
 

@@ -56,7 +56,7 @@ import {
   EDIT_COMMISSION_INVOICE,
   //
   // login
-  SING_IN 
+  SING_IN,
 
   // Module: Accounting (Sale)
   VIEW_SALE,
@@ -721,31 +721,31 @@ export const listProperties = () => async (dispatch) => {
 
 // Login API
 
-export const loginUser = ( user ) => async (dispatch) => {
+export const loginUser = (user) => async (dispatch) => {
   try {
     let data = await axios.post(`${ENV.baseUrl}/users/login`, user);
-      dispatch({
-        type: LIST_ALL_USERS,
-        payload: data.data
-      });
-      localStorage.setItem('access', data.data.roles);
-      localStorage.setItem('name', data.data.username);
-      return {success: true};
+    dispatch({
+      type: LIST_ALL_USERS,
+      payload: data.data,
+    });
+    localStorage.setItem("access", data.data.roles);
+    localStorage.setItem("name", data.data.username);
+    return { success: true };
   } catch (err) {
-    return {error: err.response.data.message};
+    return { error: err.response.data.message };
   }
-}
+};
 
-export const signUp = user => async (dispatch) => {
+export const signUp = (user) => async (dispatch) => {
   try {
     let data = await axios.post(`${ENV.baseUrl}/users/signup`, user);
-    if(data) {
-      return {success: true};
+    if (data) {
+      return { success: true };
     }
   } catch (error) {
-    return {error: err.response.data.message};
+    return { error: err.response.data.message };
   }
-}
+};
 
 export const signOut = (user) => async (dispatch) => {
   try {
@@ -753,6 +753,6 @@ export const signOut = (user) => async (dispatch) => {
     localStorage.clear();
     let data = await axios.post(`${ENV.baseUrl}/users/signout`, user);
   } catch (error) {
-    return {error: err.response.data.message};
+    return { error: err.response.data.message };
   }
-}
+};
