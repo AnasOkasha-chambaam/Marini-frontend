@@ -82,7 +82,7 @@ export function User() {
     setFormValues({ ...formValues, [name]: value });
   };
   const handleSubmit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     setIsLoading(true);
     // const id = params.id;
 
@@ -93,30 +93,32 @@ export function User() {
       name,
       email,
       number,
+      role,
       branch,
       position,
       date,
       password,
       Uname: localStorage.name,
-      role,
+      // role,
     };
+    if ((name, email, number, role, branch, position, date, password)) {
+      const apiCall = await axios[params.action == 2 ? "put" : "post"](
+        `${ENV.baseUrl}/users/${params.action == 2 ? "edit" : "create"}`,
+        payload
+      );
+      console.log("apiCall");
 
-    const apiCall = await axios[params.action == 2 ? "put" : "post"](
-      `${ENV.baseUrl}/users/${params.action == 2 ? "edit" : "create"}`,
-      payload
-    );
-    console.log("apiCall");
-
-    setIsLoading(false);
-    if (apiCall.data?.success) {
-      let { message } = apiCall.data;
-      toast.success(message, {
-        position: toast.POSITION.TOP_RIGHT,
-        hideProgressBar: false,
-        autoClose: 3000,
-      });
-      setUserstate(true);
-      dispatch(listUsers());
+      setIsLoading(false);
+      if (apiCall.data?.success) {
+        let { message } = apiCall.data;
+        toast.success(message, {
+          position: toast.POSITION.TOP_RIGHT,
+          hideProgressBar: false,
+          autoClose: 3000,
+        });
+        setUserstate(true);
+        dispatch(listUsers());
+      }
     }
   };
   useEffect(() => {
@@ -200,12 +202,14 @@ export function User() {
               <p className=" text-3xl font-semibold text-[#280559]">Users</p>
               <Button
                 onClick={() => setUserstate(false)}
-                className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6"
+                className="rounded-[15px]  bg-[#280559]"
               >
-                <img className="m-1 w-[20px]" src={plus} alt="..." />
-                <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
-                  Create New User
-                </p>
+                <div className="flex flex-row items-center justify-center">
+                  <img className="m-1 w-[20px]" src={plus} alt="..." />
+                  <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                    Create New User
+                  </p>
+                </div>
               </Button>
             </div>
             <div className="my-3 flex flex-col items-center justify-between gap-3 rounded-[20px] bg-[#F8F9FB] p-5 md:flex-row">
@@ -513,7 +517,7 @@ export function User() {
           <p className="mb-8 text-2xl font-semibold text-[#333333]">
             User Details
           </p>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mt-4 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
@@ -523,7 +527,6 @@ export function User() {
                   type="text"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Name"
-                  required
                   name="name"
                   value={formValues.name}
                   onChange={handleChange}
@@ -552,7 +555,7 @@ export function User() {
                 <input
                   type="tel"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="+60123456789"
+                  placeholder="+91 0123 456 789"
                   name="number"
                   value={formValues.number}
                   onChange={handleChange}
@@ -591,10 +594,15 @@ export function User() {
                   */}
                 </select>
               </div>
-              {formValues.role.toLowerCase() === "superAdmin" ||
-              formValues.role.toLowerCase() === "admin" ||
-              formValues.role.toLowerCase() === "counselor".toLowerCase() ||
-              formValues.role.toLowerCase() === "accountant".toLowerCase() ? (
+              {formValues.role.split(" ").join("").toLowerCase() ===
+                "superadminhq" ||
+              formValues.role.split(" ").join("").toLowerCase() ===
+                "superadmin" ||
+              formValues.role.split(" ").join("").toLowerCase() === "adminhq" ||
+              formValues.role.split(" ").join("").toLowerCase() ===
+                "counselorHQ".toLowerCase() ||
+              formValues.role.split(" ").join("").toLowerCase() ===
+                "accountanthq".toLowerCase() ? (
                 ""
               ) : (
                 <div>
@@ -625,12 +633,12 @@ export function User() {
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
                   Position
                 </label>
-                {/* Anasite - Edits: Turn Position input into "text" instead of "select" & Adding Calender to "Date" Input */}
+                {/* Anasite - Edits: Turn Position input required into "text" instead of "select" & Adding Calender to "Date" Input required */}
                 <input
+                  required
                   type="text"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Position"
-                  required
                   name="position"
                   defaultValue={formValues.position}
                   onChange={handleChange}
@@ -654,10 +662,10 @@ export function User() {
                   Date
                 </label>
                 <input
+                  required
                   type="date"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="DD/MM/YYYY"
-                  required
                   name="date"
                   defaultValue={formValues.date}
                   onChange={handleChange}
@@ -695,17 +703,13 @@ export function User() {
                 <AddField open={openModal} close={() => setOpenModal(false)} />
               </div> */}
             </div>
-          </form>
-        </div>
-        <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
-          <p className="mb-8 text-2xl font-semibold text-[#333333]">Password</p>
-          <form>
             <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
                   Password
                 </label>
                 <input
+                  required
                   type="password"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder=""
@@ -713,7 +717,6 @@ export function User() {
                   value={formValues.password}
                   onChange={handleChange}
                   disabled={isViewMode}
-                  required
                 />
               </div>
               <div>
@@ -724,54 +727,87 @@ export function User() {
                   type="password"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="***********"
-                  required
                 />
               </div>
             </div>
-          </form>
-        </div>
-        {isViewMode ? (
-          <Button
-            onClick={() => {
-              navigate(-1);
-              handleSubmit();
-            }}
-            className="w-[14%] rounded-[15px] bg-[#280559]"
-          >
-            <div className="flex flex-row items-center justify-center">
-              <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                Back
-              </p>
-            </div>
-          </Button>
-        ) : (
-          <>
-            {/* <NavLink to=""> */}
-            <Button
-              className="w-[14%] rounded-[15px] bg-[#280559]"
-              type="submit"
-              onClick={() => {
-                handleSubmit();
-              }}
-              disabled={isViewMode}
-            >
-              <div className="flex flex-row items-center justify-center">
-                <img src={saveIcon} alt="..." />
-                {/* <button
+            {isViewMode ? (
+              ""
+            ) : (
+              <>
+                {/* <NavLink to=""> */}
+                <Button
+                  className="rounded-[15px]  bg-[#280559]"
+                  type="submit"
+                  // onClick={(e) => {
+                  //   handleSubmit(e);
+                  // }}
+                  disabled={isViewMode}
+                >
+                  <div className="flex flex-row items-center justify-center">
+                    <img src={saveIcon} alt="..." />
+                    {/* <button
                   className="p-1 px-[11px] text-base font-medium normal-case text-white"
                   type="submit"
                   disabled={isViewMode}
                 > */}
+                    <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                      Save Changes
+                    </p>
+                    {/* </button> */}
+                  </div>
+                </Button>
+                {/* </NavLink> */}
+              </>
+            )}{" "}
+            <Button
+              onClick={() => setUserstate(true)}
+              className="rounded-[15px]  bg-[#280559]"
+            >
+              <div className="flex flex-row items-center justify-center">
                 <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                  Save Changes
+                  Back
                 </p>
-                {/* </button> */}
               </div>
             </Button>
-            {/* </NavLink> */}
-          </>
-        )}
+          </form>
+        </div>
+        {/* <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
+          <p className="mb-8 text-2xl font-semibold text-[#333333]">Password</p>
+          <form>
+            <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                  Password
+                </label>
+                <input
+                  required
+                  type="password"
+                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                  placeholder=""
+                  name="password"
+                  value={formValues.password}
+                  onChange={handleChange}
+                  disabled={isViewMode}
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="***********"
+                />
+              </div>
+            </div>
+          </form>
+        </div> */}
+        {/* <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]"> */}
       </div>
+      {/* </form> */}
+      {/* </div> */}
+      {/* </div> */}
     </>
   );
 }
