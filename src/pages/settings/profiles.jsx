@@ -7,7 +7,6 @@ import { FileUploader } from "react-drag-drop-files";
 import { listUsers, listBranches } from "@/redux/actions/actions";
 import { useState } from "react";
 import AddField from "@/helpers/Addfield";
-import NewForm from "../../helpers/newform";
 import { useSelector, useDispatch } from "react-redux";
 
 export function Profiles() {

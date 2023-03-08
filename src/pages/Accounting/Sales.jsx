@@ -13,7 +13,7 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import print from "../../../public/img/print.svg";
 import saveIcon from "../../../public/img/saveIcon.svg";
 import Sales_recording_data from "@/data/Sales-recording-data";
-import AddField from "../../helpers/AddField";
+import AddField from "@/helpers/AddField";
 // import dropdown from "../../../public/img/dropdown.svg";
 // Anasite - Edits
 import { NavLink, useParams } from "react-router-dom";
