@@ -5,7 +5,9 @@ import ApplicantHome from "./pages/Applicant/ApplicantHome";
 import { createContext, useState, useEffect } from "react";
 import useWindowSize from "./hooks/useWindowSize";
 import ApplicantDashboard from "./layouts/ApplicantDashboard";
+import SettingsManagement from "./pages/settings/SettingsManagement";
 import 'react-toastify/dist/ReactToastify.css';
+
 
 export const NavbarCtx = createContext();
 const initialStatusColor = {

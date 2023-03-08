@@ -13,7 +13,7 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
 import dropdown from "../../../public/img/dropdown.svg";
 import { useSelector, useDispatch } from "react-redux";
-import { listProgramms } from "@/redux/actions/actions";
+import { listProgramms, filterProgramms } from "@/redux/actions/actions";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -27,6 +27,7 @@ export function Academic() {
   // Anasite - Edits: for 'edit'/'delete'
   const [idToDelete, setIdToDelete] = useState("");
   const [dropdownID, setDropdownID] = useState("");
+  const [search, setSearch] = useState("");
   const onConfirmation = async () => {
     // here we will delete call
     console.log("Academic deleted");
@@ -67,14 +68,14 @@ export function Academic() {
   useEffect(() => {
     disptach(listProgramms());
 
-    if (programmsData?.success == true) {
-      let { message } = programmsData;
-      toast.success(message, {
-        position: toast.POSITION.TOP_RIGHT,
-        hideProgressBar: false,
-        autoClose: 3000,
-      });
-    }
+    // if (programmsData?.success == true) {
+    //   let { message } = programmsData;
+    //   toast.success(message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //     hideProgressBar: false,
+    //     autoClose: 3000,
+    //   });
+    // }
   }, []);
 
   return (
@@ -123,17 +124,19 @@ export function Academic() {
                   </svg>
                   <input
                     type="text"
+                    // onKeyDown={handleKeyDown}
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
                     placeholder="Search"
                     className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
                   />
                 </div>
               </form>
               <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
+                <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => disptach(filterProgramms({name: search}))}>
                   <img className="w-[20px]" src={filterIcon} alt="..." />
                   <p className="mx-3 text-[16px] ">Filters</p>
                 </button>
-
                 <Menu>
                   <MenuHandler>
                     <button className="flex h-[57px] w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">

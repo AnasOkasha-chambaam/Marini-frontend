@@ -44,14 +44,14 @@ export function Applications() {
   useEffect(() => {
     disptach(listApplications("limit=10"));
 
-    if (applicationsData?.success == true) {
-      let { message } = applicationsData;
-      toast.success(message, {
-        position: toast.POSITION.TOP_RIGHT,
-        hideProgressBar: false,
-        autoClose: 3000,
-      });
-    }
+    // if (applicationsData?.success == true) {
+    //   let { message } = applicationsData;
+    //   toast.success(message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //     hideProgressBar: false,
+    //     autoClose: 3000,
+    //   });
+    // }
   }, []);
   // Anasite - Edits: for 'edit'/'delete'
   const [idToDelete, setIdToDelete] = useState("");
