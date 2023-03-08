@@ -20,7 +20,7 @@ import { useParams } from "react-router-dom";
 // import { useDispatch, useSelector } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { listUniversities } from "@/redux/actions/actions";
+import { listUniversities, filterUniversities } from "@/redux/actions/actions";
 import { ENV } from "../../config";
 import Paginate from "../../paginate";
 
@@ -28,6 +28,7 @@ export function University() {
   const [showSelect, setShowSelect] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [displayed, setDisplayed] = useState(false);
+  const [search, setSearch] = useState("");
 
   const navigate = useNavigate();
   const disptach = useDispatch();
@@ -157,13 +158,15 @@ export function University() {
                   <input
                     type="text"
                     // onKeyDown={handleKeyDown}
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
                     placeholder="Search"
                     className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
                   />
                 </div>
               </form>
               <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
+                <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => disptach(filterUniversities({name: search}))}>
                   <img className="w-[20px]" src={filterIcon} alt="..." />
                   <p className="mx-3 text-[16px] ">Filters</p>
                 </button>

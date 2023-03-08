@@ -84,6 +84,8 @@ export function CreateUniversity() {
   useEffect(() => {
     dispatch(listUniversityTypes("limit=100000"));
   }, []);
+
+  useEffect(() => console.log("dsfdsf",universityTypes), [universityTypes])
   //
   // console.log(
   //   "university data for view form in view Universities component",
@@ -137,9 +139,12 @@ export function CreateUniversity() {
   // view product using redux
   useEffect(() => {
     if (params.id) dispatch(viewUniversity(params.id));
-    if (params.action == 1) {
+    if (params.action != 1) {
       setIsViewMode(true);
     } else {
+      setIsViewMode(false);
+    }
+    if(!params.action) {
       setIsViewMode(false);
     }
   }, [params.id]);
@@ -389,6 +394,7 @@ export function CreateUniversity() {
               >
                 <option value={""}>Select Type</option>
                 {universityTypes?.data?.faqs.map((type) => {
+                  console.log(type)
                   return (
                     <option
                       value={type.ID}

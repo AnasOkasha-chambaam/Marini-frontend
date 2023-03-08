@@ -130,7 +130,7 @@ export function Branch() {
     if (params.action == 1) {
       // dispatch(viewCurrency(params.id));
       setBranchstate(false);
-      setIsViewMode(true);
+      setIsViewMode(false);
     } else if (params.action == 2) {
       setBranchstate(false);
       setIsViewMode(false);

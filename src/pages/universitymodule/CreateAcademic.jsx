@@ -494,9 +494,12 @@ const CreateAcademic = () => {
 
   useEffect(() => {
     if (params.id) dispatch(viewProgramme(params.id));
-    if (params.action == 1) {
+    if (params.action != 1) {
       setIsViewMode(true);
     } else {
+      setIsViewMode(false);
+    }
+    if(!params.action) {
       setIsViewMode(false);
     }
   }, [params.id]);

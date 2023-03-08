@@ -11,16 +11,111 @@ import { toast } from "react-toastify";
 import AddProperty from "./AddProperty";
 import { useEffect } from "react";
 import Paginate from "@/paginate";
+import { useDispatch } from "react-redux";
+import {
+  EditProgramLevels,
+  EditProgramCategorys,
+  EditQualificationTypes,
+  EditInterestedPrograms,
+  EditLeadGroups,
+  EditUniversityTypes,
+  DeleteProgramLevels,
+  DeleteProgramCategorys,
+  DeleteQualificationTypes,
+  DeleteInterestedPrograms,
+  DeleteLeadGroups,
+  DeleteUniversityTypes
+} from '../../redux/actions/actions';
 
 export function PropertyCard({ title, type = 0, toView, method }) {
+  const dispatch = useDispatch();
   const [statusstate, setStatusstate] = useState(true);
   const [property, setProperty] = useState([]);
   //   const [type, setType] = useState(0);
   const [loading, setIsLoading] = useState(false);
+  const [action, setAction] = useState({});
 
   useEffect(() => {
     setProperty(toView?.data?.faqs);
   }, [toView, toView?.data?.faqs]);
+
+  useEffect(() => {
+    console.log(property);
+    property && setAction(property.map(i => ({state: false, name: i.name})));
+  }, [property]);
+
+  useEffect(() => {
+    console.log(action);
+  }, [action]);
+
+  // const handleEdit = (e) => {
+  //   setAction();
+  // }
+
+
+  const handleEdit = (e) => {
+    switch (type) {
+      case "applicationmodulestatus":
+        break;
+      case "leadsmanagmentmodulestatus":
+        break;
+      case "invoicemodulestatus":
+        break;
+      case "programlevel":
+        dispatch(EditProgramLevels(e));
+        break;
+      case "programcategory":
+        dispatch(EditProgramCategorys(e));
+        break;
+      case "qualificationtype":
+        dispatch(EditQualificationTypes(e));
+        break;
+      case "universitytype":
+        dispatch(EditUniversityTypes(e));
+        break;
+      case "leadgroup":
+        dispatch(EditLeadGroups(e));
+        break;
+      case "interestedprogram":
+        dispatch(EditInterestedPrograms(e));
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  const handleDelete = (e) => {
+    switch (type) {
+      case "applicationmodulestatus":
+        break;
+      case "leadsmanagmentmodulestatus":
+        break;
+      case "invoicemodulestatus":
+        break;
+      case "programlevel":
+        dispatch(DeleteProgramLevels(e));
+        break;
+      case "programcategory":
+        dispatch(DeleteProgramCategorys(e));
+        break;
+      case "qualificationtype":
+        dispatch(DeleteQualificationTypes(e));
+        break;
+      case "universitytype":
+        dispatch(DeleteUniversityTypes(e));
+        break;
+      case "leadgroup":
+        dispatch(DeleteLeadGroups(e));
+        break;
+      case "interestedprogram":
+        dispatch(DeleteInterestedPrograms(e));
+        break;
+
+      default:
+        break;
+    }
+  }
   //
   const [currentProperty, setCurrentProperty] = useState("");
   const [isStatus, setIsStatus] = useState(false);
@@ -134,14 +229,23 @@ export function PropertyCard({ title, type = 0, toView, method }) {
                 <tbody className="border-none">
                   {/* {console.log("><><><><><><><><><><><><<><><><><><", property)} */}
                   {property?.length > 0 ? (
-                    property.map(({ id, name, Color }) => (
-                      <tr key={id + name}>
-                        {console.log(name, " Coloolooolooloo", property)}
-                        <td
-                          className={`whitespace-nowrap py-4 text-lg font-semibold text-[#333]`}
-                        >
-                          {name}
-                        </td>
+                    property.map(({ ID, name, Color }, id) => (
+                      <tr key={ID + name}>
+                        {
+                          action[id] && (
+                          !action[id].state ?
+                            <td
+                              className={`whitespace-nowrap py-4 text-lg font-semibold text-[#333]`}
+                            >
+                              {name}
+                            </td> :
+                            <td
+                              className={`whitespace-nowrap py-4 text-lg font-semibold text-[#333]`}
+                            >
+                              <input type="text" onChange={e => {setAction(action.map((i,ids) => ids === id ? {...i, name: e.target.value}: i))}} value={action[id].name}/>
+                            </td>
+                          )
+                        }
                         <td className="px-6 py-4" />
                         {isStatus ? (
                           <td
@@ -161,21 +265,38 @@ export function PropertyCard({ title, type = 0, toView, method }) {
                           ""
                         )}
                         <td>
-                          <Button
-                            variant="outlined"
-                            className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
-                            fullWidth
-                          >
-                            <p className="text-center text-xs font-medium capitalize">
-                              Edit
-                            </p>
-                          </Button>
+                          {
+                            action[id] && (
+                            !action[id].state ?
+                              <Button
+                                variant="outlined"
+                                className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
+                                fullWidth
+                                onClick={() => setAction(action.map((i,ids) => ids === id ? {...i, state: true}: i))}
+                              >
+                                <p className="text-center text-xs font-medium capitalize">
+                                  Edit
+                                </p>
+                              </Button> :
+                              <Button
+                                variant="outlined"
+                                className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
+                                fullWidth
+                                onClick={() => {handleEdit({ ID, name: action[id].name, Color }); setAction(action.map((i,ids) => ids === id ? {...i, state: false}: i))}}
+                              >
+                                <p className="text-center text-xs font-medium capitalize">
+                                  Save
+                                </p>
+                              </Button>
+                            )
+                          }
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
                           <Button
                             variant="outlined"
                             className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
                             fullWidth
+                            onClick={() => handleDelete({ ID })}
                           >
                             <p className="text-center text-xs font-medium capitalize">
                               Delete

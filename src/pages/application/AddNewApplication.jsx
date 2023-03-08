@@ -165,10 +165,14 @@ export function AddNewApplication() {
   const [appDetailValues, setAppDetailValue] = useState(secondInitialValues);
 
   useEffect(() => {
+    console.log("121212132",params);
     if (params.id) dispatch(viewApplication(params.id));
-    if (params.action == 1) {
+    if (params.action != 1) {
       setIsViewMode(true);
     } else {
+      setIsViewMode(false);
+    }
+    if(!params.action) {
       setIsViewMode(false);
     }
   }, [params.id]);

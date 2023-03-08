@@ -63,8 +63,19 @@ export function User() {
   );
 
   const allUsers = useSelector((state) => state?.universitiesReducer?.users);
+
+  const [allUser, setAllUser] = useState([]);
+
   console.log("all users in users module ===>", allUsers);
   console.log("all branches in users module ===>", branchData);
+
+  useEffect(() => {
+    if( localStorage.access === "adminBranch" || localStorage.access === "counselorBranch" || localStorage.access === "accountantBranch") {
+      setAllUser({...allUsers?.data?.faqs?.filter(item => item.role === localStorage.access)});
+    } else {
+      setAllUser({...allUsers});
+    }
+  }, [allUsers]);
 
   const viewUsers = useSelector(
     (state) => state?.universitiesReducer?.viewUser
@@ -138,7 +149,7 @@ export function User() {
 
     if (params.action == 1) {
       setUserstate(false);
-      setIsViewMode(true);
+      setIsViewMode(false);
     } else if (params.action == 2) {
       setUserstate(false);
       setIsViewMode(false);
@@ -302,7 +313,7 @@ export function User() {
                   </tr>
                 </thead>
                 <tbody className="border-none">
-                  {allUsers?.data?.faqs?.map((ele, ind) => (
+                  {allUser && allUser?.data?.faqs?.map((ele, ind) => (
                     <tr key={ind}>
                       <td className="whitespace-nowrap py-3 pr-6">
                         <Checkbox />

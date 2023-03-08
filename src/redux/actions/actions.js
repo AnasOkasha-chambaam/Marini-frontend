@@ -82,9 +82,28 @@ import { ENV } from "@/config";
 export const listProgramLevels = (qs) => async (dispatch) => {
   console.log("api url in action file", ENV.baseUrl);
   const data = await axios.get(
-    `${ENV.baseUrl}/programlevel/listProgramLevels?${qs}`
+    `${ENV.baseUrl}/programlevel/listProgramLevels?${qs}` 
   );
   console.log("data.data of list program level uni in action file", data);
+  dispatch({
+    type: LIST_ALL_PROGRAM_LEVELS,
+    payload: data.data,
+  });
+};
+export const EditProgramLevels = (qs) => async (dispatch) => {
+  const data = await axios.put(
+    `${ENV.baseUrl}/programlevel/edit`, qs
+  );
+  dispatch({
+    type: LIST_ALL_PROGRAM_LEVELS,
+    payload: data.data,
+  });
+};
+export const DeleteProgramLevels = (qs) => async (dispatch) => {
+  console.log(qs);
+  const data = await axios.post(
+    `${ENV.baseUrl}/programlevel/delete`, qs
+  );
   dispatch({
     type: LIST_ALL_PROGRAM_LEVELS,
     payload: data.data,
@@ -116,6 +135,25 @@ export const listProgramCategorys = (qs) => async (dispatch) => {
     payload: data.data,
   });
 };
+export const EditProgramCategorys = (qs) => async (dispatch) => {
+  const data = await axios.put(
+    `${ENV.baseUrl}/programcategory/edit`, qs
+  );
+  dispatch({
+    type: LIST_ALL_PROGRAM_CATEGORYS,
+    payload: data.data,
+  });
+};
+export const DeleteProgramCategorys = (qs) => async (dispatch) => {
+  console.log(qs);
+  const data = await axios.post(
+    `${ENV.baseUrl}/programcategory/delete`, qs
+  );
+  dispatch({
+    type: LIST_ALL_PROGRAM_CATEGORYS,
+    payload: data.data,
+  });
+};
 export const viewProgramCategory = (id) => async (dispatch) => {
   console.log(" Umni param id in action method", id);
   // console.log(" Umni param action in action method", action);
@@ -142,6 +180,25 @@ export const listQualificationTypes = (qs) => async (dispatch) => {
     payload: data.data,
   });
 };
+export const EditQualificationTypes = (qs) => async (dispatch) => {
+  const data = await axios.put(
+    `${ENV.baseUrl}/qualificationtype/edit`, qs
+  );
+  dispatch({
+    type: LIST_ALL_QUALIFICATION_TYPES,
+    payload: data.data,
+  });
+};
+export const DeleteQualificationTypes = (qs) => async (dispatch) => {
+  console.log(qs);
+  const data = await axios.post(
+    `${ENV.baseUrl}/qualificationtype/delete`, qs
+  );
+  dispatch({
+    type: LIST_ALL_QUALIFICATION_TYPES,
+    payload: data.data,
+  });
+};
 export const viewQualificationType = (id) => async (dispatch) => {
   console.log(" Umni param id in action method", id);
   // console.log(" Umni param action in action method", action);
@@ -158,11 +215,29 @@ export const viewQualificationType = (id) => async (dispatch) => {
 };
 //
 export const listUniversityTypes = (qs) => async (dispatch) => {
-  console.log("api url in action file", ENV.baseUrl);
   const data = await axios.get(
     `${ENV.baseUrl}/universitytype/listUniversityTypes?${qs}`
   );
-  console.log("data.data of list university type uni in action file", data);
+  console.log("data.data of list university type uni in action file", data.data.data);
+  dispatch({
+    type: LIST_ALL_UNIVERSITY_TYPES,
+    payload: data.data,
+  });
+};
+export const EditUniversityTypes = (qs) => async (dispatch) => {
+  const data = await axios.put(
+    `${ENV.baseUrl}/universitytype/edit`, qs
+  );
+  dispatch({
+    type: LIST_ALL_UNIVERSITY_TYPES,
+    payload: data.data,
+  });
+};
+export const DeleteUniversityTypes = (qs) => async (dispatch) => {
+  console.log(qs);
+  const data = await axios.post(
+    `${ENV.baseUrl}/universitytype/delete`, qs
+  );
   dispatch({
     type: LIST_ALL_UNIVERSITY_TYPES,
     payload: data.data,
@@ -192,6 +267,25 @@ export const listLeadGroups = (qs) => async (dispatch) => {
     payload: data.data,
   });
 };
+export const EditLeadGroups = (qs) => async (dispatch) => {
+  const data = await axios.put(
+    `${ENV.baseUrl}/leadgroup/edit`, qs
+  );
+  dispatch({
+    type: LIST_ALL_LEAD_GROUPS,
+    payload: data.data,
+  });
+};
+export const DeleteLeadGroups = (qs) => async (dispatch) => {
+  console.log(qs);
+  const data = await axios.post(
+    `${ENV.baseUrl}/leadgroup/delete`, qs
+  );
+  dispatch({
+    type: LIST_ALL_LEAD_GROUPS,
+    payload: data.data,
+  });
+};
 export const viewLeadGroup = (id) => async (dispatch) => {
   console.log(" Umni param id in action method", id);
   // console.log(" Umni param action in action method", action);
@@ -213,6 +307,25 @@ export const listInterestedPrograms = (qs) => async (dispatch) => {
     `${ENV.baseUrl}/interestedprogram/listInterestedPrograms?${qs}`
   );
   console.log("data.data of list interested program uni in action file", data);
+  dispatch({
+    type: LIST_ALL_INTERESTED_PROGRAMS,
+    payload: data.data,
+  });
+};
+export const EditInterestedPrograms = (qs) => async (dispatch) => {
+  const data = await axios.put(
+    `${ENV.baseUrl}/interestedprogram/edit`, qs
+  );
+  dispatch({
+    type: LIST_ALL_INTERESTED_PROGRAMS,
+    payload: data.data,
+  });
+};
+export const DeleteInterestedPrograms = (qs) => async (dispatch) => {
+  console.log(qs);
+  const data = await axios.post(
+    `${ENV.baseUrl}/interestedprogram/delete`, qs
+  );
   dispatch({
     type: LIST_ALL_INTERESTED_PROGRAMS,
     payload: data.data,
@@ -467,8 +580,30 @@ export const listUniversities = (qs) => async (dispatch) => {
   });
 };
 
+export const filterUniversities = (qs) => async (dispatch) => {
+  const data = await axios.post(
+    `${ENV.baseUrl}/university/search`, qs
+  );
+  console.log("data.data of list uni nn action file", data);
+  dispatch({
+    type: LIST_ALL_UNIVERSITIES,
+    payload: data.data,
+  });
+};
+
 export const listProgramms = (qs) => async (dispatch) => {
   const data = await axios.get(`${ENV.baseUrl}/programme/listProgrammes?${qs}`);
+  dispatch({
+    type: LIST_PROGRAMMS,
+    payload: data.data,
+  });
+};
+
+export const filterProgramms = (qs) => async (dispatch) => {
+  const data = await axios.post(
+    `${ENV.baseUrl}/programme/search`, qs
+  );
+  console.log("data.data of list uni nn action file", data);
   dispatch({
     type: LIST_PROGRAMMS,
     payload: data.data,

@@ -754,7 +754,7 @@ export function Currency() {
     if (params.action == 1) {
       // dispatch(viewCurrency(params.id));
       setCurstate(false);
-      setIsViewMode(true);
+      setIsViewMode(false);
     } else if (params.action == 2) {
       setCurstate(false);
       setIsViewMode(false);
@@ -821,6 +821,7 @@ export function Currency() {
 
     setIsLoading(false);
     if (apiCall.data?.success) {
+      console.log("sdfsf", apiCall.data);
       let { message } = apiCall.data;
       toast.success(message, {
         position: toast.POSITION.TOP_RIGHT,

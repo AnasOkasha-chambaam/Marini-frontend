@@ -651,7 +651,7 @@ export function CreateLead() {
   };
   // End
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [isViewMode, setIsViewMode] = useState(true);
+  const [isViewMode, setIsViewMode] = useState(false);
   const fileTypes = ["JPEG", "PNG", "GIF"];
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
@@ -701,9 +701,7 @@ export function CreateLead() {
     comments: "",
     image: "",
   };
-  const [ProgrameDetailValues, setProgrameDetailsValues] =
-    useState(secondInitialValus);
-  // const [isViewMode, setIsViewMode] = useState(true);
+  const [ProgrameDetailValues, setProgrameDetailsValues] = useState(secondInitialValus);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
@@ -711,9 +709,12 @@ export function CreateLead() {
 
   useEffect(() => {
     if (params.id) dispatch(viewLead(params.id));
-    if (params.action == 1) {
+    if (params.action != 1 ) {
       setIsViewMode(true);
     } else {
+      setIsViewMode(false);
+    }
+    if(!params.action) {
       setIsViewMode(false);
     }
 
