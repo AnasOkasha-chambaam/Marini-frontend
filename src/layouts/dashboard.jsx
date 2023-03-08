@@ -16,6 +16,7 @@ import Academic from "@/pages/universitymodule/Academic";
 import AddNewApplication from "@/pages/application/AddNewApplication";
 import Applications from "@/pages/application/Applications";
 import Currency from "@/pages/currency/currency";
+import Profile from '@/pages/settings/profiles';
 import Branch from "@/pages/settings/branch";
 import System from "@/pages/systembackup/system";
 import User from "@/pages/settings/user";
@@ -126,6 +127,7 @@ export function Dashboard() {
       >
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
           {routes.map(
             ({ layout, pages }) =>
               layout === "dashboard" &&
@@ -135,6 +137,7 @@ export function Dashboard() {
                   <Route path={path} element={element} />
                 ))
           )}
+          
           <Route
             path="/university_module/createUniversity"
             element={<CreateUniversity />}

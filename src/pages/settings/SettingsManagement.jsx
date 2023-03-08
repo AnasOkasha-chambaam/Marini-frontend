@@ -28,10 +28,10 @@ export function SettingsManagement() {
       label: "Branch",
       content: <Branch />,
     },
-    {
-      label: "Profile",
-      content: <Profiles />,
-    },
+    // {
+    //   label: "Profile",
+    //   content: <Profiles />,
+    // },
     {
       label: "Status",
       content: <StatusManagement />,
