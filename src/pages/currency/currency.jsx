@@ -785,6 +785,10 @@ export function Currency() {
     setFormValues({ ...formValues, [name]: value });
   };
 
+  React.useEffect(() => {
+    currencyData?.data?.faqs && setDefaultCurrency(currencyData?.data?.faqs[0]);
+  }, [currencyData])
+
   const handleDefaultCurrecyChange = (e) => {
     let newDefaultCurrency = { ...defaultCurrency };
     Object.keys(defaultCurrency).forEach((key) => {
@@ -836,9 +840,8 @@ export function Currency() {
       {isLoading && <FullPageLoader />}
       <div className="mt-12 w-full bg-[#E8E9EB] font-display">
         <div
-          className={` flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
-            curstate ? "" : "hidden"
-          }`}
+          className={` flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${curstate ? "" : "hidden"
+            }`}
         >
           <div className="mb-12">
             <div className="mb-10">
@@ -846,7 +849,7 @@ export function Currency() {
                 <p className=" text-4xl font-semibold text-[#280559]">
                   Currency Management
                 </p>
-                {isViewMode ? (
+                {/* {isViewMode ? (
                   <Button
                     onClick={() => navigate(-1)}
                     className="rounded-[15px]  bg-[#280559]"
@@ -870,12 +873,12 @@ export function Currency() {
                       </Button>
                     </NavLink>
                   </div>
-                )}
+                )} */}
               </div>
               <p className=" font text-base text-[#9898A3]">
                 Currency Management
               </p>
-              {isViewMode ? (
+              {/* {isViewMode ? (
                 <Button
                   onClick={() => navigate(-1)}
                   className="rounded-[15px]  bg-[#280559]"
@@ -899,85 +902,94 @@ export function Currency() {
                     </Button>
                   </NavLink>
                 </div>
-              )}
+              )} */}
             </div>
-            <div className="rounded-[34px] bg-white p-6 md:p-12">
-              <div className="my-0 flex w-full flex-col justify-between gap-3 pt-0 pb-5 sm:flex-row sm:items-center">
-                <p className=" text-2xl font-semibold text-black">
-                  Default Currency
-                </p>
-                {isViewMode ? (
-                  <Button
-                    onClick={() => navigate(-1)}
-                    className="rounded-[15px]  bg-[#280559]"
-                  >
-                    <div className="flex flex-row items-center justify-center">
-                      <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                        Back
-                      </p>
-                    </div>
-                  </Button>
-                ) : (
-                  <NavLink to="">
-                    <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
+            {
+              (localStorage.access === "superAdmin" || localStorage.access === "admin") &&
+              <div className="rounded-[34px] bg-white p-6 md:p-12">
+                <div className="my-0 flex w-full flex-col justify-between gap-3 pt-0 pb-5 sm:flex-row sm:items-center">
+                  <p className=" text-2xl font-semibold text-black">
+                    Default Currency
+                  </p>
+                  {isViewMode ? (
+                    <Button
+                      onClick={() => navigate(-1)}
+                      className="rounded-[15px]  bg-[#280559]"
+                    >
                       <div className="flex flex-row items-center justify-center">
-                        <img src={saveIcon} alt="..." />
-                        <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
-                          Save Changes
+                        <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                          Back
                         </p>
                       </div>
                     </Button>
-                  </NavLink>
-                )}
-              </div>
-              <div className="rounded-[34px] bg-white">
-                <div className="mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Currency
-                    </label>
-                    <select
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      value={`${defaultCurrency.index}`}
-                      name={"defaultcurrency"}
-                      onChange={handleDefaultCurrecyChange}
-                    >
-                      <option value={""}>Select Currency</option>
-                      {/* Anasite - Edits: fetching Currencies and Ex Rates
+                  ) : (
+                    <NavLink to="">
+                      <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
+                        <div className="flex flex-row items-center justify-center">
+                          <img src={saveIcon} alt="..." />
+                          <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
+                            Save Changes
+                          </p>
+                        </div>
+                      </Button>
+                    </NavLink>
+                  )}
+                </div>
+                <div className="rounded-[34px] bg-white">
+                  <div className="mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                        Currency
+                      </label>
+                      <select
+                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                        value={`${defaultCurrency.index}`}
+                        name={"defaultcurrency"}
+                        onChange={handleDefaultCurrecyChange}
+                      >
+                        {/* <option name={"defaultcurrency"}
+                              key={
+                                currency.id + currency.iso + index + currency.name
+                              }
+                              data-exrate={currency.exRate}
+                              value={index}>{currencyData?.data?.faqs[0].name}</option> */}
+                        {/* Anasite - Edits: fetching Currencies and Ex Rates
                       <option selected>USD</option>
                        */}
-                      {currencyData?.data?.faqs?.map((currency, index) => {
-                        return (
-                          <option
-                            name={"defaultcurrency"}
-                            key={
-                              currency.id + currency.iso + index + currency.name
-                            }
-                            data-exrate={currency.exRate}
-                            value={index}
-                          >
-                            {currency.name}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Exchange Rate
-                    </label>
-                    <input
-                      type="text"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="Exchange Rate"
-                      value={defaultCurrency.exRate}
-                      disabled
-                      required
-                    />
+                        {currencyData?.data?.faqs?.map((currency, index) => {
+                          return (
+                            <option
+                              name={"defaultcurrency"}
+                              key={
+                                currency.id + currency.iso + index + currency.name
+                              }
+                              data-exrate={currency.exRate}
+                              value={index}
+                            >
+                              {currency.name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                        Exchange Rate
+                      </label>
+                      <input
+                        type="text"
+                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="Exchange Rate"
+                        value={defaultCurrency.exRate}
+                        disabled
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            }
+
             <div className="mt-8 rounded-[34px] bg-white p-6 md:p-12">
               <div className="my-0 flex w-full flex-col justify-between gap-3 pt-0 pb-5 sm:flex-row sm:items-center">
                 <p className=" text-2xl font-semibold text-black">
@@ -1230,9 +1242,8 @@ export function Currency() {
         {/* ----------------------------------------- */}
 
         <div
-          className={`mb-10 flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
-            curstate ? "hidden" : ""
-          }`}
+          className={`mb-10 flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${curstate ? "hidden" : ""
+            }`}
         >
           <div className="my-5">
             <div>
@@ -1242,8 +1253,8 @@ export function Currency() {
                   {params.action == 1
                     ? "View Currency"
                     : params.action == 2
-                    ? "Edit Currency"
-                    : "Create Currency"}
+                      ? "Edit Currency"
+                      : "Create Currency"}
                 </p>
                 {isViewMode ? (
                   <Button
@@ -1276,8 +1287,8 @@ export function Currency() {
                 {params.action == 1
                   ? "View Currency"
                   : params.action == 2
-                  ? "Edit Currency"
-                  : "Create Currency"}
+                    ? "Edit Currency"
+                    : "Create Currency"}
               </p>
               {isViewMode ? (
                 ""
