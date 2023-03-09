@@ -20,6 +20,7 @@ export const VIEW_ALL_USERS = "VIEW_ALL_USERS";
 export const DELETE_BACKUP_FILE = "DELETE_BACKUP_FILE";
 export const DOWNLOAD_BACKUP_FILE = "DOWNLOAD_BACKUP_FILE";
 export const RESTORE_BACKUP_FILE = "RESTORE_BACKUP_FILE";
+export const VIEW_ALL_CURRECY = "VIEW_ALL_CURRECY";
 
 // http://localhost:8080/v1/front/activities/list
 

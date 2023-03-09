@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Dashboard, Auth } from "@/layouts";
 import { SignIn, SignUp } from "./pages/auth";
+import { useNavigate } from "react-router-dom";
 import ApplicantHome from "./pages/Applicant/ApplicantHome";
 import { createContext, useState, useEffect } from "react";
 import useWindowSize from "./hooks/useWindowSize";
@@ -10,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 export const NavbarCtx = createContext();
+
 const initialStatusColor = {
   hot: "#56ba6c",
   cold: "#0263FF",
@@ -18,6 +20,8 @@ const initialStatusColor = {
 };
 
 function App() {
+
+  const navigate = useNavigate();
   const [navbar, setNavbar] = useState({
     isMobile: false,
     mobileExpand: false,
@@ -51,6 +55,7 @@ function App() {
         overlap: true,
       });
     }
+    if(!localStorage?.access) navigate("/");
   }, [windowSize]);
 
   return (
