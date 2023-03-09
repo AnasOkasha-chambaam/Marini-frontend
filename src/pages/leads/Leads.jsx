@@ -8,6 +8,7 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
 import dropdown from "../../../public/img/dropdown.svg";
 import { useSelector, useDispatch } from "react-redux";
+import { read, utils, writeFile } from 'xlsx';
 import {
   listLeads,
   viewLeadsManagmentModuleStatus,
@@ -33,6 +34,31 @@ export function Leads() {
   const [idToDelete, setIdToDelete] = useState("");
   const [search, setSearch] = useState("");
   const [dropdownID, setDropdownID] = useState("");
+
+  const handleExportXlsx = () => {
+    const headings = [[
+      ...Object.keys(leadsData?.data?.faqs[0])
+    ]];
+    const wb = utils.book_new();
+    const ws = utils.json_to_sheet([]);
+    utils.sheet_add_aoa(ws, headings);
+    utils.sheet_add_json(ws, leadsData?.data?.faqs, { origin: 'A2', skipHeader: true });
+    utils.book_append_sheet(wb, ws, 'Report');
+    writeFile(wb, 'Movie Report.xlsx');
+  }
+
+  const handleExportCsv = () => {
+    const headings = [[
+      ...Object.keys(leadsData?.data?.faqs[0])
+    ]];
+    const wb = utils.book_new();
+    const ws = utils.json_to_sheet([]);
+    utils.sheet_add_aoa(ws, headings);
+    utils.sheet_add_json(ws, leadsData?.data?.faqs, { origin: 'A2', skipHeader: true });
+    utils.book_append_sheet(wb, ws, 'Report');
+    writeFile(wb, 'Movie Report.csv');
+  }
+
   const onConfirmation = async () => {
     // here we will delete call
     console.log("Lead deleted");
@@ -74,7 +100,7 @@ export function Leads() {
   const [showModal, setShowModal] = useState(false);
   // list all leads
   useEffect(() => {
-    
+
     disptach(listLeads(""));
 
     // if (leadsData?.success == true) {
@@ -167,10 +193,10 @@ export function Leads() {
                       </button>
                     </MenuHandler>
                     <MenuList>
-                      <MenuItem className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                      <MenuItem onClick={() => handleExportCsv()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
                         Export as .csv
                       </MenuItem>
-                      <MenuItem className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                      <MenuItem onClick={() => handleExportXlsx()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
                         Export as .xlsx
                       </MenuItem>
                     </MenuList>

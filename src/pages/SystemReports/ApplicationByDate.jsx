@@ -12,6 +12,7 @@ import down from "../../../public/img/downIcon.svg";
 import dropdown from "../../../public/img/dropdown.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { listApplications } from "@/redux/actions/actions";
+import { read, utils, writeFile } from 'xlsx';
 import Paginate from "@/paginate";
 
 export function ApplicationByDate() {
@@ -22,6 +23,31 @@ export function ApplicationByDate() {
   useEffect(() => {
     dispatch(listApplications());
   }, []);
+
+  
+  const handleExportXlsx = () => {
+    const headings = [[
+      ...Object.keys(applications?.data?.faqs[0])
+    ]];
+    const wb = utils.book_new();
+    const ws = utils.json_to_sheet([]);
+    utils.sheet_add_aoa(ws, headings);
+    utils.sheet_add_json(ws, applications?.data?.faqs, { origin: 'A2', skipHeader: true });
+    utils.book_append_sheet(wb, ws, 'Report');
+    writeFile(wb, 'Movie Report.xlsx');
+  }
+
+  const handleExportCsv = () => {
+    const headings = [[
+      ...Object.keys(applications?.data?.faqs[0])
+    ]];
+    const wb = utils.book_new();
+    const ws = utils.json_to_sheet([]);
+    utils.sheet_add_aoa(ws, headings);
+    utils.sheet_add_json(ws, applications?.data?.faqs, { origin: 'A2', skipHeader: true });
+    utils.book_append_sheet(wb, ws, 'Report');
+    writeFile(wb, 'Movie Report.csv');
+  }
   // END
   return (
     <div className="mt-[30px] w-full bg-[#E8E9EB] font-display">
@@ -66,10 +92,10 @@ export function ApplicationByDate() {
                   </button>
                 </MenuHandler>
                 <MenuList>
-                  <MenuItem className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                  <MenuItem onClick={() => handleExportCsv()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
                     Export as .csv
                   </MenuItem>
-                  <MenuItem className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                  <MenuItem onClick={() => handleExportXlsx()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
                     Export as .xlsx
                   </MenuItem>
                 </MenuList>

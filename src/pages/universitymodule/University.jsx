@@ -13,6 +13,8 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { read, utils, writeFile } from 'xlsx';
+
 // import { Modal } from "react-bootstrap";
 import Modal from "./Modal";
 import { useParams } from "react-router-dom";
@@ -45,6 +47,30 @@ export function University() {
   const universiteies = useSelector(
     (state) => state?.universitiesReducer?.universities?.data?.faqs
   );
+
+  const handleExportXlsx = () => {
+    const headings = [[
+      ...Object.keys(universiteies[0])
+    ]];
+    const wb = utils.book_new();
+    const ws = utils.json_to_sheet([]);
+    utils.sheet_add_aoa(ws, headings);
+    utils.sheet_add_json(ws, universiteies, { origin: 'A2', skipHeader: true });
+    utils.book_append_sheet(wb, ws, 'Report');
+    writeFile(wb, 'Movie Report.xlsx');
+  }
+
+  const handleExportCsv = () => {
+    const headings = [[
+      ...Object.keys(universiteies[0])
+    ]];
+    const wb = utils.book_new();
+    const ws = utils.json_to_sheet([]);
+    utils.sheet_add_aoa(ws, headings);
+    utils.sheet_add_json(ws, universiteies, { origin: 'A2', skipHeader: true });
+    utils.book_append_sheet(wb, ws, 'Report');
+    writeFile(wb, 'Movie Report.csv');
+  }
 
   // const universitiesData = useSelector(
   //   (state) => state?.universitiesReducer?.universities
@@ -166,7 +192,7 @@ export function University() {
                 </div>
               </form>
               <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => disptach(filterUniversities({name: search}))}>
+                <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => disptach(filterUniversities({ name: search }))}>
                   <img className="w-[20px]" src={filterIcon} alt="..." />
                   <p className="mx-3 text-[16px] ">Filters</p>
                 </button>
@@ -179,10 +205,10 @@ export function University() {
                     </button>
                   </MenuHandler>
                   <MenuList>
-                    <MenuItem className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                    <MenuItem onClick={() => handleExportCsv()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
                       Export as .csv
                     </MenuItem>
-                    <MenuItem className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                    <MenuItem onClick={() => handleExportXlsx()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
                       Export as .xlsx
                     </MenuItem>
                   </MenuList>
