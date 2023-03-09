@@ -17,6 +17,7 @@ import {
   LIST_ALL_BACKUPS,
   VIEW_ALL_BRANCH,
   VIEW_ALL_USERS,
+  VIEW_ALL_CURRECY,
   //
   DELETE_BACKUP_FILE,
   DOWNLOAD_BACKUP_FILE,
@@ -637,6 +638,15 @@ export const listCurrencies = (qs) => async (dispatch) => {
   });
 };
 
+export const listAllCurrencies = () => async (dispatch) => {
+  const data = await axios.get(`${ENV.baseUrl}/currencies/get`);
+  console.log("dfd", data);
+  dispatch({
+    type: VIEW_ALL_CURRECY,
+    payload: data.data,
+  });
+};
+
 export const listBackups =
   (qs = "") =>
   async (dispatch) => {
@@ -742,6 +752,7 @@ export const viewCurrency = (id) => async (dispatch) => {
     payload: data.data,
   });
 };
+
 
 export const viewBranch = (id) => async (dispatch) => {
   console.log(" branch param id in action method", id);

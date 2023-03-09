@@ -20,6 +20,7 @@ import {
   DELETE_BACKUP_FILE,
   DOWNLOAD_BACKUP_FILE,
   RESTORE_BACKUP_FILE,
+  VIEW_ALL_CURRECY,
   // Anasite - Edits: adding properties
   VIEW_PROGRAM_LEVEL,
   LIST_ALL_PROGRAM_LEVELS,
@@ -69,6 +70,7 @@ const initialState = {
   leads: [],
   applications: [],
   currency: [],
+  allcurrency: [],
   backups: [],
   branch: [null],
   users: [],
@@ -157,6 +159,11 @@ const universitiesReducer = (state = initialState, action) => {
         ...state,
         programCategorys: action.payload,
       };
+    case VIEW_ALL_CURRECY:
+      return {
+        ...state, 
+        allcurrency: action.payload
+      }
     case VIEW_PROGRAM_CATEGORY:
       return {
         ...state,

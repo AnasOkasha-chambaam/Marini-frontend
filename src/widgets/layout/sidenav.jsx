@@ -101,14 +101,14 @@ export function Sidenav({ brandImg, brandName, routes, role, lay }) {
               ))}
               <div className="flex justify-around py-5">
                 <div className="flex flex-row">
-                    <img src={userpt} onClick={() => Navigate('/dashboard/profile')} style={{ cursor: "pointer", width: 60}}/>
+                    <img src={userpt} onClick={() => Navigate('/dashboard/profile')} style={{ cursor: "pointer", width: 50}}/>
                     <div className={`left-5 mx-4 ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`}>
                       <p className={` text-white ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`}>USER</p>
                       <p className={`text-[#AAABAF] ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`}>
                         {localStorage.name}
                       </p>
                     </div>
-                  <Link to="/" onClick={() => dispatch(signOut({ name: localStorage.name, role: localStorage.access }))}>
+                  <Link to="/" className="flex items-center center" onClick={() => dispatch(signOut({ name: localStorage.name, role: localStorage.access }))}>
                     <img className={`ml-6  ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`} src={logout} />
                   </Link>
                 </div>

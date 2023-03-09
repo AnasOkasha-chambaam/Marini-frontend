@@ -708,7 +708,7 @@ import { listCurrencies } from "@/redux/actions/actions";
 import axios from "axios";
 import { ENV } from "@/config";
 import FullPageLoader from "@/FullPageLoader/FullPageLoader";
-import { viewCurrency } from "@/redux/actions/actions";
+import { viewCurrency, listAllCurrencies } from "@/redux/actions/actions";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Paginate from "@/paginate";
@@ -743,6 +743,7 @@ export function Currency() {
 
   useEffect(() => {
     dispatch(listCurrencies(""));
+    dispatch(listAllCurrencies(""));
   }, []);
 
   useEffect(() => {
@@ -767,6 +768,10 @@ export function Currency() {
   const currencyData = useSelector(
     (state) => state?.universitiesReducer?.currency
   );
+
+  const allCurrencyData = useSelector(
+    state => state?.universitiesReducer?.allcurrency
+  )
   // console.log("currency data in currency module ==>", currencyData);
 
   // Anaiste - Edits: default currency
@@ -905,7 +910,6 @@ export function Currency() {
               )} */}
             </div>
             {
-              (localStorage.access === "superAdmin" || localStorage.access === "admin") &&
               <div className="rounded-[34px] bg-white p-6 md:p-12">
                 <div className="my-0 flex w-full flex-col justify-between gap-3 pt-0 pb-5 sm:flex-row sm:items-center">
                   <p className=" text-2xl font-semibold text-black">
@@ -956,7 +960,7 @@ export function Currency() {
                         {/* Anasite - Edits: fetching Currencies and Ex Rates
                       <option selected>USD</option>
                        */}
-                        {currencyData?.data?.faqs?.map((currency, index) => {
+                        {allCurrencyData && allCurrencyData?.currency?.map((currency, index) => {
                           return (
                             <option
                               name={"defaultcurrency"}
@@ -989,112 +993,114 @@ export function Currency() {
                 </div>
               </div>
             }
+            {
+              (localStorage.access === "superAdmin" || localStorage.access === "admin") &&
 
-            <div className="mt-8 rounded-[34px] bg-white p-6 md:p-12">
-              <div className="my-0 flex w-full flex-col justify-between gap-3 pt-0 pb-5 sm:flex-row sm:items-center">
-                <p className=" text-2xl font-semibold text-black">
-                  Currency List
-                </p>
-                <Button
-                  onClick={() => setCurstate(false)}
-                  className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6"
-                >
-                  <img className="m-1 w-[20px]" src={plus} alt="..." />
-                  <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
-                    Add New Currency
+              <div className="mt-8 rounded-[34px] bg-white p-6 md:p-12">
+                <div className="my-0 flex w-full flex-col justify-between gap-3 pt-0 pb-5 sm:flex-row sm:items-center">
+                  <p className=" text-2xl font-semibold text-black">
+                    Currency List
                   </p>
-                </Button>
-              </div>
-              <div className="rounded-[34px] bg-white">
-                <div className="flex flex-col overflow-x-auto">
-                  <table className="w-full border-none">
-                    <thead>
-                      <tr>
-                        <th
-                          scope="col"
-                          className="w-1/5 py-3 px-8 text-left text-base font-medium text-[#92929D]"
-                        >
-                          ISO Codes
-                        </th>
-                        <th
-                          scope="col"
-                          className="w-1/5 py-3 px-8 text-left text-base font-medium text-[#92929D]"
-                        >
-                          Currency
-                        </th>
-                        <th
-                          scope="col"
-                          className="w-1/5 py-3 px-8 text-left text-base font-medium text-[#92929D]"
-                        >
-                          Rate
-                        </th>
-                        <th
-                          scope="col"
-                          className="w-1/5 py-3 px-8 text-center text-base font-medium text-[#92929D]"
-                        >
-                          Status
-                        </th>
-                        <th
-                          scope="col"
-                          className="py-3 px-8 text-center text-base font-medium text-[#92929D]"
-                        >
-                          Action
-                        </th>
-                        <th
-                          scope="col"
-                          className="py-3 px-8 text-center text-base font-medium text-[#92929D]"
-                        >
-                          Option
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="border-none">
-                      {currencyData?.data?.faqs?.map((ele, ind, color) => (
-                        <tr key={ind}>
-                          <td
-                            className={`whitespace-nowrap py-4 px-8 text-lg font-semibold text-[#333]`}
+                  <Button
+                    onClick={() => setCurstate(false)}
+                    className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6"
+                  >
+                    <img className="m-1 w-[20px]" src={plus} alt="..." />
+                    <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
+                      Add New Currency
+                    </p>
+                  </Button>
+                </div>
+                <div className="rounded-[34px] bg-white">
+                  <div className="flex flex-col overflow-x-auto">
+                    <table className="w-full border-none">
+                      <thead>
+                        <tr>
+                          <th
+                            scope="col"
+                            className="w-1/5 py-3 px-8 text-left text-base font-medium text-[#92929D]"
                           >
-                            {/* {iso} */}
-                            {ele?.iso}
-                          </td>
-                          <td
-                            className={`whitespace-nowrap py-4 px-8 text-lg font-semibold text-[#333]`}
+                            ISO Codes
+                          </th>
+                          <th
+                            scope="col"
+                            className="w-1/5 py-3 px-8 text-left text-base font-medium text-[#92929D]"
                           >
-                            {ele?.name}
-                          </td>
-                          <td
-                            className={`whitespace-nowrap py-4 px-8 text-lg font-normal text-[#333]`}
+                            Currency
+                          </th>
+                          <th
+                            scope="col"
+                            className="w-1/5 py-3 px-8 text-left text-base font-medium text-[#92929D]"
                           >
-                            {ele?.exRate}
-                          </td>
-                          <td className="px-8">
-                            <p
-                              className="mx-auto w-fit rounded-2xl px-5 py-2 text-center text-xs font-medium normal-case"
-                              style={{
-                                color,
-                                backgroundColor: `${color}10`,
-                              }}
+                            Rate
+                          </th>
+                          <th
+                            scope="col"
+                            className="w-1/5 py-3 px-8 text-center text-base font-medium text-[#92929D]"
+                          >
+                            Status
+                          </th>
+                          <th
+                            scope="col"
+                            className="py-3 px-8 text-center text-base font-medium text-[#92929D]"
+                          >
+                            Action
+                          </th>
+                          <th
+                            scope="col"
+                            className="py-3 px-8 text-center text-base font-medium text-[#92929D]"
+                          >
+                            Option
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="border-none">
+                        {currencyData?.data?.faqs?.map((ele, ind, color) => (
+                          <tr key={ind}>
+                            <td
+                              className={`whitespace-nowrap py-4 px-8 text-lg font-semibold text-[#333]`}
                             >
-                              {ele?.status}
-                            </p>
-                          </td>
-                          <td className="px-8">
-                            <Button
-                              variant="outlined"
-                              className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
-                              fullWidth
-                              onClick={() =>
-                                navigate(
-                                  `/dashboard/CurrencyManagement/1/${ele?.id}`
-                                )
-                              }
+                              {/* {iso} */}
+                              {ele?.iso}
+                            </td>
+                            <td
+                              className={`whitespace-nowrap py-4 px-8 text-lg font-semibold text-[#333]`}
                             >
-                              <p className="text-center text-xs font-medium capitalize">
-                                view
+                              {ele?.name}
+                            </td>
+                            <td
+                              className={`whitespace-nowrap py-4 px-8 text-lg font-normal text-[#333]`}
+                            >
+                              {ele?.exRate}
+                            </td>
+                            <td className="px-8">
+                              <p
+                                className="mx-auto w-fit rounded-2xl px-5 py-2 text-center text-xs font-medium normal-case"
+                                style={{
+                                  color,
+                                  backgroundColor: `${color}10`,
+                                }}
+                              >
+                                {ele?.status}
                               </p>
-                            </Button>
-                          </td>
-                          {/* <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
+                            </td>
+                            <td className="px-8">
+                              <Button
+                                variant="outlined"
+                                className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
+                                fullWidth
+                                onClick={() =>
+                                  navigate(
+                                    `/dashboard/CurrencyManagement/1/${ele?.id}`
+                                  )
+                                }
+                              >
+                                <p className="text-center text-xs font-medium capitalize">
+                                  view
+                                </p>
+                              </Button>
+                            </td>
+                            {/* <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
                             <button className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]">
                               <svg
                                 className="h-8 w-8 fill-current"
@@ -1106,74 +1112,74 @@ export function Currency() {
                               </svg>
                             </button>
                           </td> */}
-                          {/* id={`dropdownDefaultButton${ind}`}
+                            {/* id={`dropdownDefaultButton${ind}`}
                             data-dropdown-toggle={`dropdown${ind}`}
                             id={`dropdown${ind}`}
                             aria-labelledby={`dropdownDefaultButton${ind}`} */}
-                          <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
-                            <button
-                              className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
-                              // id="dropdownDefaultButton"
-                              // data-dropdown-toggle="dropdown"
-                              id={`dropdownDefaultButton${ind}`}
-                              data-dropdown-toggle={`dropdown${ind}`}
-                              type="button"
-                            >
-                              <svg
-                                className="h-8 w-8 fill-current"
-                                viewBox="0 0 32 32"
+                            <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
+                              <button
+                                className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
+                                // id="dropdownDefaultButton"
+                                // data-dropdown-toggle="dropdown"
+                                id={`dropdownDefaultButton${ind}`}
+                                data-dropdown-toggle={`dropdown${ind}`}
+                                type="button"
                               >
-                                <circle cx="16" cy="10" r="2" />
-                                <circle cx="16" cy="16" r="2" />
-                                <circle cx="16" cy="22" r="2" />
-                              </svg>
-                            </button>
+                                <svg
+                                  className="h-8 w-8 fill-current"
+                                  viewBox="0 0 32 32"
+                                >
+                                  <circle cx="16" cy="10" r="2" />
+                                  <circle cx="16" cy="16" r="2" />
+                                  <circle cx="16" cy="22" r="2" />
+                                </svg>
+                              </button>
 
-                            <div
-                              // id="dropdown"
-                              id={`dropdown${ind}`}
-                              className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
-                            >
-                              <ul
-                                className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                // aria-labelledby="dropdownDefaultButton"
-                                aria-labelledby={`dropdownDefaultButton${ind}`}
+                              <div
+                                // id="dropdown"
+                                id={`dropdown${ind}`}
+                                className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
                               >
-                                <li>
-                                  <button
-                                    onClick={() =>
-                                      navigate(
-                                        `/dashboard/CurrencyManagement/2/${ele?.id}`
-                                      )
-                                    }
-                                  >
-                                    Edit
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    onClick={
-                                      () => setShowModal(true)
-                                      // navigate(
-                                      //   `/dashboard/Leadsmodule/${ele?.id}`
-                                      // )
-                                    }
-                                  >
-                                    Delete
-                                  </button>
-                                </li>
-                              </ul>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {/* {console.log("pagination", pagination)} */}
-                <Paginate pagination={pagination} method={listCurrencies} />
+                                <ul
+                                  className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                  // aria-labelledby="dropdownDefaultButton"
+                                  aria-labelledby={`dropdownDefaultButton${ind}`}
+                                >
+                                  <li>
+                                    <button
+                                      onClick={() =>
+                                        navigate(
+                                          `/dashboard/CurrencyManagement/2/${ele?.id}`
+                                        )
+                                      }
+                                    >
+                                      Edit
+                                    </button>
+                                  </li>
+                                  <li>
+                                    <button
+                                      onClick={
+                                        () => setShowModal(true)
+                                        // navigate(
+                                        //   `/dashboard/Leadsmodule/${ele?.id}`
+                                        // )
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </li>
+                                </ul>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {/* {console.log("pagination", pagination)} */}
+                  <Paginate pagination={pagination} method={listCurrencies} />
 
-                {/* <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-[20px] bg-[#F8F9FB] py-4 px-6 md:flex-row md:gap-0">
+                  {/* <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-[20px] bg-[#F8F9FB] py-4 px-6 md:flex-row md:gap-0">
                   <p className="px-5 text-base text-[#92929D]">
                     <span className="text-[#280559]">1</span>-5 of 56
                   </p>
@@ -1234,8 +1240,9 @@ export function Currency() {
                     </button>
                   </div>
                 </div> */}
+                </div>
               </div>
-            </div>
+            }
           </div>
         </div>
 

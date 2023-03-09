@@ -12,6 +12,8 @@ import { useState } from "react";
 import NewCampusForm from "@/helpers/newCampusForm";
 import { ThemeAlert } from "@/helpers/alert";
 
+
+
 const AddCampus = ({
   toAdd,
   setToAdd,
