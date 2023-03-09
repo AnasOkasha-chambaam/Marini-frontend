@@ -446,6 +446,20 @@ export const listCommissionInvoices = (qs) => async (dispatch) => {
     payload: data.data,
   });
 };
+
+
+export const filterlistCommissionInvoices = (qs) => async (dispatch) => {
+  const data = await axios.post(
+    `${ENV.baseUrl}/commissioninvoice/search`, qs
+  );
+  console.log("data.data of list uni nn action file", data);
+  dispatch({
+    type: LIST_ALL_COMMISSION_INVOICES,
+    payload: data.data,
+  });
+};
+
+
 export const viewCommissionInvoice = (id) => async (dispatch) => {
   console.log(" commisionInvoice param id in action method", id);
   // console.log(" Umni param action in action method", action);
@@ -619,11 +633,31 @@ export const listLeads = (qs) => async (dispatch) => {
   });
 };
 
+export const filterListLeads = (qs) => async (dispatch) => {
+  const data = await axios.post(`${ENV.baseUrl}/lead/search`, qs);
+  dispatch({
+    type: LIST_ALL_LEADS,
+    payload: data.data,
+  });
+};
+
 export const listApplications = (qs) => async (dispatch) => {
   const data = await axios.get(
     `${ENV.baseUrl}/applicants/listApplicants?${qs}`
   );
   console.log(qs, "data", data);
+  dispatch({
+    type: LIST_ALL_APPLICATIONS,
+    payload: data.data,
+  });
+};
+
+
+export const filterlistApplications = (qs) => async (dispatch) => {
+  const data = await axios.post(
+    `${ENV.baseUrl}/applicants/search`, qs
+  );
+  console.log("data.data of list uni nn action file", data);
   dispatch({
     type: LIST_ALL_APPLICATIONS,
     payload: data.data,
@@ -667,6 +701,16 @@ export const listBranches =
     });
   };
 
+  export const filterListBranches = (qs) => async (dispatch) => {
+    const data = await axios.post(
+      `${ENV.baseUrl}/branch/search`, qs
+    );
+    dispatch({
+      type: LIST_ALL_BRANCHES,
+      payload: data.data,
+    });
+  };
+
 export const listUsers =
   (qs = "") =>
   async (dispatch) => {
@@ -676,6 +720,18 @@ export const listUsers =
       payload: data.data,
     });
   };
+
+  
+export const filterViewUser = (qs) => async (dispatch) => {
+  const data = await axios.post(
+    `${ENV.baseUrl}/users/search`, qs
+  );
+  console.log("data.data of list uni nn action file", data);
+  dispatch({
+    type: LIST_ALL_USERS,
+    payload: data.data,
+  });
+};
 //LIST_ALL_BRANCHES
 
 export const viewUniversity = (id) => async (dispatch) => {

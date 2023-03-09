@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   listLeads,
   viewLeadsManagmentModuleStatus,
+  filterListLeads
 } from "@/redux/actions/actions";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,7 @@ export function Leads() {
   const leadsData = useSelector((state) => state?.universitiesReducer?.leads);
   // Anasite - Edits: for 'edit'/'delete'
   const [idToDelete, setIdToDelete] = useState("");
+  const [search, setSearch] = useState("");
   const [dropdownID, setDropdownID] = useState("");
   const onConfirmation = async () => {
     // here we will delete call
@@ -72,6 +74,7 @@ export function Leads() {
   const [showModal, setShowModal] = useState(false);
   // list all leads
   useEffect(() => {
+    
     disptach(listLeads(""));
 
     // if (leadsData?.success == true) {
@@ -142,13 +145,16 @@ export function Leads() {
                     </svg>
                     <input
                       type="text"
+                      // onKeyDown={handleKeyDown}
+                      onChange={(e) => setSearch(e.target.value)}
+                      value={search}
                       placeholder="Search"
                       className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
                     />
                   </div>
                 </form>
                 <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                  <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
+                  <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => disptach(filterListLeads({ name: search }))}>
                     <img className="w-[20px]" src={filterIcon} alt="..." />
                     <p className="mx-3 text-[16px] ">Filters</p>
                   </button>
@@ -221,143 +227,299 @@ export function Leads() {
                   </thead>
                   <tbody className="border-none">
                     {leadsData?.data?.faqs.map((ele, ind) => {
-                      // console.log("lkllll", ele);
-                      // Anasite - Edits (Set Colors and status)
-                      // let { Color, name: statusName } =
-                      //   ele?.ProgrameDetail?.LeadsManagmentModuleStatus;
-                      // switch (ele?.ProgrameDetail?.status.toLowerCase()) {
-                      //   case "good":
-                      //     color = statusColor["hot"];
-                      //     break;
-
-                      //   default:
-                      //     color = statusColor["cold"];
-                      //     break;
-                      // }
-
-                      return (
-                        <tr key={ind}>
-                          {/* {console.log("leadsiddddd", ele.id)} */}
-
-                          <td className="whitespace-nowrap py-3 pr-6">
-                            <Checkbox />
-                            {/* 2 */}
-                          </td>
-                          <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
-                            {new Date(ele?.createdAt).toLocaleDateString(
-                              undefined,
-                              {
-                                dateStyle: "medium",
-                              }
-                            )}
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-4 text-lg font-medium text-[#333]">
-                            {ele?.name}
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333] underline">
-                            {ele?.email}
-                          </td>
-                          <td>
-                            <p
-                              className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
-                              style={{
-                                color:
-                                  ele?.ProgrameDetail
-                                    ?.LeadsManagmentModuleStatus?.Color ||
-                                  "#333",
-                                backgroundColor: `${
-                                  ele?.ProgrameDetail
-                                    ?.LeadsManagmentModuleStatus?.Color ||
-                                  "#333"
-                                }1a`,
-                              }}
-                            >
-                              {/* {console.log("Statujsjsjnmsjnsjs", status)} */}
-                              {ele?.ProgrameDetail?.LeadsManagmentModuleStatus
-                                ?.name || "GD"}
-                            </p>
-                          </td>
-                          <td>
-                            <Button
-                              variant="outlined"
-                              className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
-                              fullWidth
-                              onClick={() =>
-                                navigate(`/dashboard/Leadsmodule/1/${ele?.id}`)
-                              }
-                            >
-                              <p className="text-center text-xs font-medium capitalize">
-                                view
-                              </p>
-                            </Button>
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
-                            <button
-                              className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
-                              // id="dropdownDefaultButton"
-                              // data-dropdown-toggle="dropdown"
-                              onClick={toggleDropdown(ele?.id)}
-                              type="button"
-                              id={`dropdownDefaultButton${ind}`}
-                              data-dropdown-toggle={`dropdown${ind}`}
-                            >
-                              <svg
-                                className="h-8 w-8 fill-current"
-                                viewBox="0 0 32 32"
-                              >
-                                <circle cx="16" cy="10" r="2" />
-                                <circle cx="16" cy="16" r="2" />
-                                <circle cx="16" cy="22" r="2" />
-                              </svg>
-                            </button>
-                            <div
-                              // id="dropdown"
-                              id={`dropdown${ind}`}
-                              className={
-                                // "temp-dropdown z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
-                                "z-10s w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
-                                (dropdownID === ele?.id
-                                  ? " block "
-                                  : " hidden ")
-                              }
-                            >
-                              <ul
-                                className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                // aria-labelledby="dropdownDefaultButton"
-                                aria-labelledby={`dropdownDefaultButton${ind}`}
-                              >
-                                <li>
-                                  <button
-                                    className="btn btn-primary"
-                                    onClick={() =>
+                      if ((localStorage.access === "adminBranch" || localStorage.access === "counselorBranch" || localStorage.access === "accountantBranch")) {
+                        if ((ele?.Branch?.role === localStorage.access))
+                          return (
+                            <tr key={ind + ele?.createdAt + "serf" + ele?.name}>
+                              <td className="whitespace-nowrap py-3 pr-6">
+                                <Checkbox />
+                              </td>
+                              <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
+                                {new Date(ele?.createdAt).toLocaleDateString(
+                                  undefined,
+                                  {
+                                    dateStyle: "medium",
+                                  }
+                                )}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 text-lg font-medium text-[#333]">
+                                {ele?.name}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333] underline">
+                                {ele?.email}
+                              </td>
+                              <td>
+                                <p
+                                  className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                                  style={{
+                                    color:
+                                      ele?.ApplicationDetail
+                                        ?.ApplicationModuleStatus?.Color || "#333",
+                                    backgroundColor: `${ele?.ApplicationDetail
+                                      ?.ApplicationModuleStatus?.Color || "#333"
+                                      }1a`,
+                                  }}
+                                >
+                                  {/* {ele?.status} */}
+                                  {/* {applicationsData?.data?.applicantDetail[0].status} */}
+                                  {ele?.ApplicationDetail?.ApplicationModuleStatus
+                                    ?.name || "GD"}
+                                </p>
+                              </td>
+                              <td>
+                                <Button
+                                  variant="outlined"
+                                  className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
+                                  fullWidth
+                                  onClick={
+                                    () =>
                                       navigate(
-                                        `/dashboard/Leadsmodule/2/${ele?.id}`
+                                        `/dashboard/ApplicationModule/1/${ele?.id}`
                                       )
-                                    }
+                                    // /dashboard/university_module/${e.target.value}/${ele.id}
+                                  }
+                                >
+                                  <p className="text-center text-xs font-medium capitalize">
+                                    view
+                                  </p>
+                                </Button>
+                              </td>
+                              {/* <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
+                         
+                          <select
+                            className="focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none"
+                            onChange={(e) => {
+                              console.log("e", e.target.value);
+                              if (["1", "2"].includes(e.target.value)) {
+                                navigate(
+                                  `/dashboard/ApplicationModule/${e.target.value}/${ele.id}`
+                                );
+                              } else if (e.target.value == "3") {
+                                //open delete model here
+                                setShowModal(true);
+                                navigate(
+                                  `/dashboard/ApplicationModule/${ele.id}`
+                                );
+                              }
+                            }}
+                          >
+                            <option selected="true" disabled="disabled">
+                              Choose action
+                            </option>
+                            <option value={"1"}>view</option>
+                            <option value={"2"}>edit</option>
+                            <option value={"3"}>delete</option>
+                          </select>
+                        </td> */}
+                              <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
+                                <button
+                                  className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
+                                  // id="dropdownDefaultButton"
+                                  // data-dropdown-toggle="dropdown"
+                                  id={`dropdownDefaultButton${ind}`}
+                                  data-dropdown-toggle={`dropdown${ind}`}
+                                  type="button"
+                                  onClick={toggleDropdown(ele?.id)}
+                                >
+                                  <svg
+                                    className="h-8 w-8 fill-current"
+                                    viewBox="0 0 32 32"
                                   >
-                                    Edit
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    onClick={
-                                      () => {
+                                    <circle cx="16" cy="10" r="2" />
+                                    <circle cx="16" cy="16" r="2" />
+                                    <circle cx="16" cy="22" r="2" />
+                                  </svg>
+                                </button>
+                                <div
+                                  // id="dropdown"
+                                  id={`dropdown${ind}`}
+                                  // className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                                  className={
+                                    "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                                    (dropdownID === ele?.id
+                                      ? " block "
+                                      : " hidden ")
+                                  }
+                                >
+                                  <ul
+                                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                    // aria-labelledby="dropdownDefaultButton"
+                                    aria-labelledby={`dropdownDefaultButton${ind}`}
+                                  >
+                                    <li>
+                                      <button
+                                        className="btn btn-primary"
+                                        onClick={() =>
+                                          navigate(
+                                            `/dashboard/ApplicationModule/2/${ele?.id}`
+                                          )
+                                        }
+                                      >
+                                        Edit
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button
+                                        onClick={() => {
+                                          setShowModal(true);
+                                          setIdToDelete(ele?.id);
+                                        }}
+                                      >
+                                        Delete
+                                      </button>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+
+                      } else {
+                        return (
+                          <tr key={ind + ele?.createdAt + "serf" + ele?.name}>
+                            <td className="whitespace-nowrap py-3 pr-6">
+                              <Checkbox />
+                            </td>
+                            <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
+                              {new Date(ele?.createdAt).toLocaleDateString(
+                                undefined,
+                                {
+                                  dateStyle: "medium",
+                                }
+                              )}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-lg font-medium text-[#333]">
+                              {ele?.name}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333] underline">
+                              {ele?.email}
+                            </td>
+                            <td>
+                              <p
+                                className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                                style={{
+                                  color:
+                                    ele?.ApplicationDetail
+                                      ?.ApplicationModuleStatus?.Color || "#333",
+                                  backgroundColor: `${ele?.ApplicationDetail
+                                    ?.ApplicationModuleStatus?.Color || "#333"
+                                    }1a`,
+                                }}
+                              >
+                                {/* {ele?.status} */}
+                                {/* {applicationsData?.data?.applicantDetail[0].status} */}
+                                {ele?.ApplicationDetail?.ApplicationModuleStatus
+                                  ?.name || "GD"}
+                              </p>
+                            </td>
+                            <td>
+                              <Button
+                                variant="outlined"
+                                className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
+                                fullWidth
+                                onClick={
+                                  () =>
+                                    navigate(
+                                      `/dashboard/ApplicationModule/1/${ele?.id}`
+                                    )
+                                  // /dashboard/university_module/${e.target.value}/${ele.id}
+                                }
+                              >
+                                <p className="text-center text-xs font-medium capitalize">
+                                  view
+                                </p>
+                              </Button>
+                            </td>
+                            {/* <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
+                       
+                        <select
+                          className="focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none"
+                          onChange={(e) => {
+                            console.log("e", e.target.value);
+                            if (["1", "2"].includes(e.target.value)) {
+                              navigate(
+                                `/dashboard/ApplicationModule/${e.target.value}/${ele.id}`
+                              );
+                            } else if (e.target.value == "3") {
+                              //open delete model here
+                              setShowModal(true);
+                              navigate(
+                                `/dashboard/ApplicationModule/${ele.id}`
+                              );
+                            }
+                          }}
+                        >
+                          <option selected="true" disabled="disabled">
+                            Choose action
+                          </option>
+                          <option value={"1"}>view</option>
+                          <option value={"2"}>edit</option>
+                          <option value={"3"}>delete</option>
+                        </select>
+                      </td> */}
+                            <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
+                              <button
+                                className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
+                                // id="dropdownDefaultButton"
+                                // data-dropdown-toggle="dropdown"
+                                id={`dropdownDefaultButton${ind}`}
+                                data-dropdown-toggle={`dropdown${ind}`}
+                                type="button"
+                                onClick={toggleDropdown(ele?.id)}
+                              >
+                                <svg
+                                  className="h-8 w-8 fill-current"
+                                  viewBox="0 0 32 32"
+                                >
+                                  <circle cx="16" cy="10" r="2" />
+                                  <circle cx="16" cy="16" r="2" />
+                                  <circle cx="16" cy="22" r="2" />
+                                </svg>
+                              </button>
+                              <div
+                                // id="dropdown"
+                                id={`dropdown${ind}`}
+                                // className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                                className={
+                                  "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                                  (dropdownID === ele?.id
+                                    ? " block "
+                                    : " hidden ")
+                                }
+                              >
+                                <ul
+                                  className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                  // aria-labelledby="dropdownDefaultButton"
+                                  aria-labelledby={`dropdownDefaultButton${ind}`}
+                                >
+                                  <li>
+                                    <button
+                                      className="btn btn-primary"
+                                      onClick={() =>
+                                        navigate(
+                                          `/dashboard/ApplicationModule/2/${ele?.id}`
+                                        )
+                                      }
+                                    >
+                                      Edit
+                                    </button>
+                                  </li>
+                                  <li>
+                                    <button
+                                      onClick={() => {
                                         setShowModal(true);
                                         setIdToDelete(ele?.id);
-                                      }
-                                      // navigate(
-                                      //   `/dashboard/Leadsmodule/${ele?.id}`
-                                      // )
-                                    }
-                                  >
-                                    Delete
-                                  </button>
-                                </li>
-                              </ul>
-                            </div>
-                          </td>
-                        </tr>
-                      );
+                                      }}
+                                    >
+                                      Delete
+                                    </button>
+                                  </li>
+                                </ul>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      }
                     })}
                   </tbody>
                 </table>

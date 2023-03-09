@@ -22,7 +22,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import { listUsers, listBranches } from "@/redux/actions/actions";
-import { viewUser, viewBranch } from "@/redux/actions/actions";
+import { viewUser, viewBranch, filterViewUser } from "@/redux/actions/actions";
 import { ENV } from "@/config";
 import Paginate from "@/paginate";
 import Modal from "../universitymodule/Modal";
@@ -43,6 +43,7 @@ export function User() {
   const [openModal, setOpenModal] = useState(false);
   const [isViewMode, setIsViewMode] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useDispatch();
@@ -70,10 +71,10 @@ export function User() {
   console.log("all branches in users module ===>", branchData);
 
   useEffect(() => {
-    if( localStorage.access === "adminBranch" || localStorage.access === "counselorBranch" || localStorage.access === "accountantBranch") {
-      setAllUser({...allUsers?.data?.faqs?.filter(item => item.role === localStorage.access)});
+    if (localStorage.access === "adminBranch" || localStorage.access === "counselorBranch" || localStorage.access === "accountantBranch") {
+      setAllUser({ ...allUsers?.data?.faqs?.filter(item => item.role === localStorage.access) });
     } else {
-      setAllUser({...allUsers});
+      setAllUser({ ...allUsers });
     }
   }, [allUsers]);
 
@@ -203,9 +204,8 @@ export function User() {
         onConfirmation={onConfirmation}
       />
       <div
-        className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
-          userstate ? "" : "hidden"
-        }`}
+        className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${userstate ? "" : "hidden"
+          }`}
       >
         <div>
           <div className=" rounded-[34px] bg-white p-6 md:p-12">
@@ -242,12 +242,16 @@ export function User() {
                   </svg>
                   <input
                     type="text"
+                    // onKeyDown={handleKeyDown}
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
                     placeholder="Search"
                     className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
                   />
                 </div>
               </form>
-              <button className="flex h-[57px] w-[135px] items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
+
+              <button className="flex h-[57px] w-[135px] items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => dispatch(filterViewUser({ name: search }))}>
                 <img className="w-[20px]" src={filterIcon} alt="..." />
                 <p className="mx-3 text-[16px] ">Filters</p>
               </button>
@@ -424,12 +428,12 @@ export function User() {
                                   setShowModal(true);
                                   setIdToDelete(ele?.id);
                                 }}
-                                // onClick={
-                                //   // () => setShowModal(true)
-                                //   // navigate(
-                                //   //   `/dashboard/Leadsmodule/${ele?.id}`
-                                //   // )
-                                // }
+                              // onClick={
+                              //   // () => setShowModal(true)
+                              //   // navigate(
+                              //   //   `/dashboard/Leadsmodule/${ele?.id}`
+                              //   // )
+                              // }
                               >
                                 Delete
                               </button>
@@ -512,9 +516,8 @@ export function User() {
       {/* ----------------------------------------- */}
 
       <div
-        className={`flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
-          userstate ? "hidden" : ""
-        }`}
+        className={`flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${userstate ? "hidden" : ""
+          }`}
       >
         <div className="mb-5">
           <p className=" mb-2 text-4xl font-semibold text-[#280559]">
@@ -607,12 +610,12 @@ export function User() {
               </div>
               {formValues.role.split(" ").join("").toLowerCase() ===
                 "superadminhq" ||
-              formValues.role.split(" ").join("").toLowerCase() ===
+                formValues.role.split(" ").join("").toLowerCase() ===
                 "superadmin" ||
-              formValues.role.split(" ").join("").toLowerCase() === "adminhq" ||
-              formValues.role.split(" ").join("").toLowerCase() ===
+                formValues.role.split(" ").join("").toLowerCase() === "adminhq" ||
+                formValues.role.split(" ").join("").toLowerCase() ===
                 "counselorHQ".toLowerCase() ||
-              formValues.role.split(" ").join("").toLowerCase() ===
+                formValues.role.split(" ").join("").toLowerCase() ===
                 "accountanthq".toLowerCase() ? (
                 ""
               ) : (

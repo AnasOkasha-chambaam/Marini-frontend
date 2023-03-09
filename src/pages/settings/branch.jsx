@@ -15,7 +15,7 @@ import AddField from "@/helpers/Addfield";
 import { NavLink } from "react-router-dom";
 import dropdown from "../../../public/img/dropdown.svg";
 import { useSelector, useDispatch } from "react-redux";
-import { listBranches } from "@/redux/actions/actions";
+import { listBranches, filterListBranches } from "@/redux/actions/actions";
 import { viewBranch } from "@/redux/actions/actions";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -36,6 +36,7 @@ export function Branch() {
 
   /*{ toAdd, setToAdd,  open,close,  setOpenAddModal,  formsData,  setFormsData,  handleFormsDataChange,  section,} */
   // const [openModal, setOpenModal] = useState(false);
+  const [search, setSearch] = useState("");
   const [BranchState, setBranchState] = useState(true);
   const [openBranchAddModal, setOpenBranchAddModal] = useState(false);
   const [BranchNewFields, setBranchNewFields] = useState([]);
@@ -207,12 +208,16 @@ export function Branch() {
                   </svg>
                   <input
                     type="text"
+                    // onKeyDown={handleKeyDown}
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
                     placeholder="Search"
                     className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
                   />
                 </div>
               </form>
-              <button className="flex h-[57px] w-[135px] items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
+
+              <button className="flex h-[57px] w-[135px] items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => dispatch(filterListBranches({ name: search }))}>
                 <img className="w-[20px]" src={filterIcon} alt="..." />
                 <p className="mx-3 text-[16px] ">Filters</p>
               </button>
@@ -266,7 +271,9 @@ export function Branch() {
                   </tr>
                 </thead>
                 <tbody className="border-none">
-                  {branchDate?.data?.faqs?.map((ele, ind) => (
+                  {branchDate?.data?.faqs?.map((ele, ind) => 
+                    
+                    (
                     <tr key={ind}>
                       <td className="whitespace-nowrap py-3 pr-6">
                         <Checkbox />
