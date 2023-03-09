@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   Button,
@@ -19,11 +19,13 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   listCommissionInvoices,
   viewCommissionInvoice,
+  filterlistCommissionInvoices
 } from "@/redux/actions/actions";
 
 export function Commission() {
   const windowWidth = useWindowWidth();
   // Anasite - Edits: adding commissionInvoice
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const { commissionInvoices } = useSelector(
     (state) => state?.universitiesReducer
@@ -68,17 +70,20 @@ export function Commission() {
                   />
                 </svg>
                 <input
-                  type="text"
-                  placeholder="Search"
-                  className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
-                />
-              </div>
-            </form>
-            <div className="flex h-full w-full flex-wrap justify-center gap-3 sm:flex-nowrap lg:w-auto lg:justify-start">
-              <button className="flex h-[57px] w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
-                <img className="w-[20px]" src={filterIcon} alt="..." />
-                <p className="mx-3 text-[16px] ">Filters</p>
-              </button>
+                    type="text"
+                    // onKeyDown={handleKeyDown}
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
+                    placeholder="Search"
+                    className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
+                  />
+                </div>
+              </form>
+              <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
+                <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => dispatch(filterlistCommissionInvoices({name: search}))}>
+                  <img className="w-[20px]" src={filterIcon} alt="..." />
+                  <p className="mx-3 text-[16px] ">Filters</p>
+                </button>
 
               <Menu>
                 <MenuHandler>
