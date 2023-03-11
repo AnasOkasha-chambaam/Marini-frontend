@@ -17,9 +17,6 @@ import {
   EditProgramCategorys,
   EditQualificationTypes,
   EditInterestedPrograms,
-  EditApplicationmodulestatus,
-  EditLeadsmanagmentmodulestatus,
-  EditInvoicemodulestatus,
   EditLeadGroups,
   EditUniversityTypes,
   DeleteProgramLevels,
@@ -28,10 +25,7 @@ import {
   DeleteInterestedPrograms,
   DeleteLeadGroups,
   DeleteUniversityTypes,
-  DeleteApplicationmodulestatus,
-  DeleteLeadsmanagmentmodulestatus,
-  DeleteInvoicemodulestatus
-} from '../../redux/actions/actions';
+} from "../../redux/actions/actions";
 
 export function PropertyCard({ title, type = 0, toView, method }) {
   const dispatch = useDispatch();
@@ -47,7 +41,8 @@ export function PropertyCard({ title, type = 0, toView, method }) {
 
   useEffect(() => {
     console.log(property);
-    property && setAction(property.map(i => ({state: false, name: i.name})));
+    property &&
+      setAction(property.map((i) => ({ state: false, name: i.name })));
   }, [property]);
 
   useEffect(() => {
@@ -58,17 +53,13 @@ export function PropertyCard({ title, type = 0, toView, method }) {
   //   setAction();
   // }
 
-
   const handleEdit = (e) => {
     switch (type) {
       case "applicationmodulestatus":
-        dispatch(EditApplicationmodulestatus(e));
         break;
       case "leadsmanagmentmodulestatus":
-        dispatch(EditLeadsmanagmentmodulestatus(e));
         break;
       case "invoicemodulestatus":
-        dispatch(EditInvoicemodulestatus(e));
         break;
       case "programlevel":
         dispatch(EditProgramLevels(e));
@@ -92,18 +83,15 @@ export function PropertyCard({ title, type = 0, toView, method }) {
       default:
         break;
     }
-  }
+  };
 
   const handleDelete = (e) => {
     switch (type) {
       case "applicationmodulestatus":
-        dispatch(DeleteApplicationmodulestatus(e));
         break;
       case "leadsmanagmentmodulestatus":
-        dispatch(DeleteLeadsmanagmentmodulestatus(e));
         break;
       case "invoicemodulestatus":
-        dispatch(DeleteInvoicemodulestatus(e));
         break;
       case "programlevel":
         dispatch(DeleteProgramLevels(e));
@@ -127,7 +115,7 @@ export function PropertyCard({ title, type = 0, toView, method }) {
       default:
         break;
     }
-  }
+  };
   //
   const [currentProperty, setCurrentProperty] = useState("");
   const [isStatus, setIsStatus] = useState(false);
@@ -243,21 +231,32 @@ export function PropertyCard({ title, type = 0, toView, method }) {
                   {property?.length > 0 ? (
                     property.map(({ ID, name, Color }, id) => (
                       <tr key={ID + name}>
-                        {
-                          action[id] && (
-                          !action[id].state ?
+                        {action[id] &&
+                          (!action[id].state ? (
                             <td
                               className={`whitespace-nowrap py-4 text-lg font-semibold text-[#333]`}
                             >
                               {name}
-                            </td> :
+                            </td>
+                          ) : (
                             <td
                               className={`whitespace-nowrap py-4 text-lg font-semibold text-[#333]`}
                             >
-                              <input type="text" onChange={e => {setAction(action.map((i,ids) => ids === id ? {...i, name: e.target.value}: i))}} value={action[id].name}/>
+                              <input
+                                type="text"
+                                onChange={(e) => {
+                                  setAction(
+                                    action.map((i, ids) =>
+                                      ids === id
+                                        ? { ...i, name: e.target.value }
+                                        : i
+                                    )
+                                  );
+                                }}
+                                value={action[id].name}
+                              />
                             </td>
-                          )
-                        }
+                          ))}
                         <td className="px-6 py-4" />
                         {isStatus ? (
                           <td
@@ -277,31 +276,47 @@ export function PropertyCard({ title, type = 0, toView, method }) {
                           ""
                         )}
                         <td>
-                          {
-                            action[id] && (
-                            !action[id].state ?
+                          {action[id] &&
+                            (!action[id].state ? (
                               <Button
                                 variant="outlined"
                                 className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
                                 fullWidth
-                                onClick={() => setAction(action.map((i,ids) => ids === id ? {...i, state: true}: i))}
+                                onClick={() =>
+                                  setAction(
+                                    action.map((i, ids) =>
+                                      ids === id ? { ...i, state: true } : i
+                                    )
+                                  )
+                                }
                               >
                                 <p className="text-center text-xs font-medium capitalize">
                                   Edit
                                 </p>
-                              </Button> :
+                              </Button>
+                            ) : (
                               <Button
                                 variant="outlined"
                                 className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
                                 fullWidth
-                                onClick={() => {handleEdit({ ID, name: action[id].name, Color }); setAction(action.map((i,ids) => ids === id ? {...i, state: false}: i))}}
+                                onClick={() => {
+                                  handleEdit({
+                                    ID,
+                                    name: action[id].name,
+                                    Color,
+                                  });
+                                  setAction(
+                                    action.map((i, ids) =>
+                                      ids === id ? { ...i, state: false } : i
+                                    )
+                                  );
+                                }}
                               >
                                 <p className="text-center text-xs font-medium capitalize">
                                   Save
                                 </p>
                               </Button>
-                            )
-                          }
+                            ))}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
                           <Button

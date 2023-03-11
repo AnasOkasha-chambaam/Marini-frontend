@@ -86,7 +86,7 @@ export function CreateUniversity() {
     dispatch(listUniversityTypes("limit=100000"));
   }, []);
 
-  useEffect(() => console.log("dsfdsf", universityTypes), [universityTypes])
+  useEffect(() => console.log("dsfdsf", universityTypes), [universityTypes]);
   //
   // console.log(
   //   "university data for view form in view Universities component",
@@ -148,10 +148,12 @@ export function CreateUniversity() {
   }, [params.id]);
 
   useEffect(() => {
+    if (!params.action || !params.id) return;
+    // console.log("params >>", params);
     if (universitieData?.university) setFormValues(universitieData?.university);
     if (universitieData?.university?.campuses?.length > 0)
       setCampusValues(universitieData?.university?.campuses);
-  }, [universitieData.university]);
+  }, [universitieData.university, params?.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -240,11 +242,12 @@ export function CreateUniversity() {
         autoClose: 3000,
         key: "_" + Math.random() * 1000000 + "_" + Math.random() * 1000000,
       });
+      setFormValues(initialValues);
     }
     navigate(-1);
   };
 
-  console.log(formValues);
+  // console.log(formValues);
 
   return (
     <>
@@ -258,21 +261,30 @@ export function CreateUniversity() {
                 {params.action == 1
                   ? "View University"
                   : params.action == 2
-                    ? "Edit University"
-                    : "Create University"}
+                  ? "Edit University"
+                  : "Create University"}
               </p>
               <p className="font block text-base text-[#9898A3]">
                 {/* Create or edit university */}
                 {params.action == 1
                   ? "View University"
                   : params.action == 2
-                    ? "Edit University"
-                    : "Create University"}
+                  ? "Edit University"
+                  : "Create University"}
               </p>
             </div>
             {/* <NavLink to="university"> */}
             {isViewMode ? (
-              ""
+              <Button
+                onClick={() => navigate(-1)}
+                className="rounded-[15px]  bg-[#280559]"
+              >
+                <div className="flex flex-row items-center justify-center">
+                  <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                    Back
+                  </p>
+                </div>
+              </Button>
             ) : (
               <Button className="rounded-[15px]  bg-[#280559]">
                 <div className="flex flex-row items-center justify-center">
@@ -282,8 +294,8 @@ export function CreateUniversity() {
                   </p>
                 </div>
               </Button>
-            )}{" "}
-            <Button
+            )}
+            {/* <Button
               onClick={() => navigate(-1)}
               className="rounded-[15px]  bg-[#280559]"
             >
@@ -292,7 +304,7 @@ export function CreateUniversity() {
                   Back
                 </p>
               </div>
-            </Button>
+            </Button> */}
             {/* </NavLink> */}
           </div>
         </div>
@@ -302,7 +314,7 @@ export function CreateUniversity() {
           <p className="mb-8 text-2xl font-semibold text-[#333333]">
             University Details
           </p>
-          <div className=" flex flex-row gap-4 my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
+          <div className=" my-[30px] mr-8 flex flex-row gap-4 rounded-[34px] bg-white p-[39px]">
             <p className="mr-[70px] text-base font-semibold text-[#333333]">
               University Logo
             </p>
@@ -317,7 +329,7 @@ export function CreateUniversity() {
                     : universityLogo
                 }
                 onError={(e) => {
-                  console.log("aowiefoafmn", e.target, "ojoij", this);
+                  // console.log("aowiefoafmn", e.target, "ojoij", this);
                   e.target.src = universityLogo;
                 }}
                 // src={
@@ -335,7 +347,7 @@ export function CreateUniversity() {
                   multiple={true}
                   handleChange={handlefileChange}
                   name="file" //
-                // types={fileTypes}
+                  // types={fileTypes}
                 >
                   <button className="w-[150px] ">
                     <p className="rounded-2xl border-[1px] border-[#cbd2dc]/50 py-3 text-sm font-medium text-[#333333] shadow-md">
@@ -361,8 +373,7 @@ export function CreateUniversity() {
           </div>
           {/* <div> */}
           {/* <form > */}
-
-          <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3 my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
+          <div className="my-[30px] mt-12 mb-6 mr-8 grid gap-6 rounded-[34px] bg-white p-[39px] md:grid-cols-2 lg:grid-cols-3">
             <div>
               <label className="mb-2 block text-sm font-semibold text-[#333333]">
                 University Name
@@ -385,14 +396,14 @@ export function CreateUniversity() {
               <select
                 className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                 name="type" //
-                defaultValue={formValues?.type}
+                value={formValues?.type}
                 onChange={handleChange}
                 disabled={isViewMode}
-              // required
+                // required
               >
                 <option value={""}>Select Type</option>
                 {universityTypes?.data?.faqs.map((type) => {
-                  console.log(type)
+                  // console.log(type);
                   return (
                     <option
                       value={type.ID}
@@ -497,7 +508,7 @@ export function CreateUniversity() {
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Campus Name"
                   name="name0" //
-                  defaultValue={campusValues[0]?.name}
+                  value={campusValues[0]?.name}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
                   required
@@ -512,7 +523,7 @@ export function CreateUniversity() {
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Address line 1"
                   name="address10" //
-                  defaultValue={campusValues[0].address1}
+                  value={campusValues[0].address1}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
                   required
@@ -527,7 +538,7 @@ export function CreateUniversity() {
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Address line 2"
                   name="address20" //
-                  defaultValue={campusValues[0].address2}
+                  value={campusValues[0].address2}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
                   required
@@ -543,7 +554,7 @@ export function CreateUniversity() {
                   placeholder="+60123456789"
                   // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                   name="phone0" //
-                  defaultValue={campusValues[0].phone}
+                  value={campusValues[0].phone}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
                   required
@@ -558,7 +569,7 @@ export function CreateUniversity() {
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="example@email.com"
                   name="email0" //
-                  defaultValue={campusValues[0].email}
+                  value={campusValues[0].email}
                   onChange={handeCampusChange}
                   disabled={isViewMode}
                   required
@@ -590,105 +601,103 @@ export function CreateUniversity() {
                     Click to add more field
                   </button>
                 </div> */}
-
             </div>
             {/* </form> */}
           </div>
           <div className="my-[30px] mr-8 rounded-[34px] bg-white ">
-            {
-              list.map((item, id) => 
-                <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
-                  <p className="mb-8 text-2xl font-semibold text-[#333333]">
-                    Campus {id + 2}
-                  </p>
-                  <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    <div>
-                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                        Campus Name
-                      </label>
-                      <input
-                        type="text"
-                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="Campus Name"
-                        name="name1" //
-                        defaultValue={campusValues[1].name}
-                        onChange={handeCampusChange}
-                        disabled={isViewMode}
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                        Address (line 1)
-                      </label>
-                      <input
-                        type="text"
-                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="Address line 1"
-                        name="Address11" //
-                        defaultValue={campusValues[1].address1}
-                        onChange={handeCampusChange}
-                        disabled={isViewMode}
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                        Address (line 2)
-                      </label>
-                      <input
-                        type="text"
-                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="Address line 2"
-                        name="Address21" //
-                        defaultValue={campusValues[1].address2}
-                        onChange={handeCampusChange}
-                        disabled={isViewMode}
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                        Campus Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="+60123456789"
-                        // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-                        name="phone1" //
-                        defaultValue={campusValues[1].phone}
-                        onChange={handeCampusChange}
-                        disabled={isViewMode}
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="example@email.com"
-                        name="email1" //
-                        defaultValue={campusValues[1].email}
-                        onChange={handeCampusChange}
-                        disabled={isViewMode}
-                      />
-                    </div>
-                    {isViewMode ? (
-                      ""
-                    ) : (
-                      <AddField
-                        open={openThirdCreateUniversityAddModal}
-                        close={() => setOpenThirdCreateUniversityAddModal(false)}
-                        toAdd={ThirdCreateUniversityNewFields}
-                        setOpenAddModal={setOpenThirdCreateUniversityAddModal}
-                        setToAdd={setThirdCreateUniversityNewFields}
-                        formsData={formValues}
-                        setFormsData={setFormValues}
-                        handleFormsDataChange={handleChange}
-                        section={"university-ThirdCreateUniversity"}
-                      />
-                    )}
-                    {/* <div>
+            {list.map((item, id) => (
+              <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
+                <p className="mb-8 text-2xl font-semibold text-[#333333]">
+                  Campus {id + 2}
+                </p>
+                <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                      Campus Name
+                    </label>
+                    <input
+                      type="text"
+                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="Campus Name"
+                      name="name1" //
+                      value={campusValues[1].name}
+                      onChange={handeCampusChange}
+                      disabled={isViewMode}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                      Address (line 1)
+                    </label>
+                    <input
+                      type="text"
+                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="Address line 1"
+                      name="Address11" //
+                      value={campusValues[1].address1}
+                      onChange={handeCampusChange}
+                      disabled={isViewMode}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                      Address (line 2)
+                    </label>
+                    <input
+                      type="text"
+                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="Address line 2"
+                      name="Address21" //
+                      value={campusValues[1].address2}
+                      onChange={handeCampusChange}
+                      disabled={isViewMode}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                      Campus Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="+60123456789"
+                      // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+                      name="phone1" //
+                      value={campusValues[1].phone}
+                      onChange={handeCampusChange}
+                      disabled={isViewMode}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="example@email.com"
+                      name="email1" //
+                      value={campusValues[1].email}
+                      onChange={handeCampusChange}
+                      disabled={isViewMode}
+                    />
+                  </div>
+                  {isViewMode ? (
+                    ""
+                  ) : (
+                    <AddField
+                      open={openThirdCreateUniversityAddModal}
+                      close={() => setOpenThirdCreateUniversityAddModal(false)}
+                      toAdd={ThirdCreateUniversityNewFields}
+                      setOpenAddModal={setOpenThirdCreateUniversityAddModal}
+                      setToAdd={setThirdCreateUniversityNewFields}
+                      formsData={formValues}
+                      setFormsData={setFormValues}
+                      handleFormsDataChange={handleChange}
+                      section={"university-ThirdCreateUniversity"}
+                    />
+                  )}
+                  {/* <div>
                   <label className="mb-2 block text-sm font-semibold">
                     &nbsp;
                   </label>
@@ -699,27 +708,30 @@ export function CreateUniversity() {
                     Click to add more field
                   </button>
                 </div> */}
-                  </div>
                 </div>
-              )
-            } 
+              </div>
+            ))}
             <div>
-              <span className="w-[150px] m-[10px] ml-[39px] p-[10px] border rounded-2xl cursor-pointer border-slate-300 border-solid" onClick={() => {setList([...list, "1"])}}>
+              {/* <span className="w-[150px] m-[10px] ml-[39px] p-[10px] border rounded-2xl cursor-pointer border-slate-300 border-solid" onClick={() => {setList([...list, "1"])}}>
                 More Detail
-              </span>
-              <span className="w-[150px] m-[10px] ml-[39px] p-[10px] border rounded-2xl cursor-pointer border-slate-300 border-solid" 
-              onClick={() => {setList(list.filter((ite, id) => id < list.length - 1 && "1"))}}>
+              </span> */}
+              <span
+                className="border-slate-300 m-[10px] ml-[39px] w-[150px] cursor-pointer rounded-2xl border border-solid p-[10px]"
+                onClick={() => {
+                  setList(
+                    list.filter((ite, id) => id < list.length - 1 && "1")
+                  );
+                }}
+              >
                 Remove
               </span>
             </div>
           </div>
-
-
           {isViewMode ? (
             ""
           ) : (
             <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
-              <AddCampus
+              {/* <AddCampus
                 open={openFourthCreateUniversityAddModal}
                 close={() => setOpenFourthCreateUniversityAddModal(false)}
                 toAdd={FourthCreateUniversityNewFields}
@@ -729,7 +741,15 @@ export function CreateUniversity() {
                 setFormsData={setFormValues}
                 handleFormsDataChange={handleChange}
                 section={"university-FourthCreateUniversity"}
-              />
+              /> */}
+              <div
+                className="border-slate-300 w-full cursor-pointer  rounded-2xl border border-solid p-[10px] text-center font-display"
+                onClick={() => {
+                  setList([...list, "1"]);
+                }}
+              >
+                click to add more field
+              </div>
             </div>
           )}
           {/* <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
@@ -815,7 +835,7 @@ export function CreateUniversity() {
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="commisionDuration" //
-                  defaultValue={formValues?.commisionDuration}
+                  value={formValues?.commisionDuration}
                   onChange={handleChange}
                   disabled={isViewMode}
                 >
@@ -855,16 +875,7 @@ export function CreateUniversity() {
           </div>
           {/* <NavLink to="university"> */}
           {isViewMode ? (
-            <Button
-              onClick={() => navigate(-1)}
-              className="rounded-[15px]  bg-[#280559]"
-            >
-              <div className="flex flex-row items-center justify-center">
-                <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                  Back
-                </p>
-              </div>
-            </Button>
+            ""
           ) : (
             <Button
               className="rounded-[15px]  bg-[#280559]"
@@ -878,7 +889,20 @@ export function CreateUniversity() {
                 </p>
               </div>
             </Button>
-          )}
+          )}{" "}
+          <Button
+            onClick={() => {
+              setFormValues(initialValues);
+              return navigate(-1);
+            }}
+            className="rounded-[15px]  bg-[#280559]"
+          >
+            <div className="flex flex-row items-center justify-center">
+              <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                Back
+              </p>
+            </div>
+          </Button>
         </div>
       </form>
       {/* </NavLink> */}

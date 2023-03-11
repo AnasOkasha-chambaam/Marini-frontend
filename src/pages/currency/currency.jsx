@@ -598,7 +598,7 @@
 //                   <select
 //                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                     name="status"
-//                     defaultValue={formValues.status}
+//                     value={formValues.status}
 //                     onChange={handleChange}
 //                   >
 //                     <option selected>Select Status</option>
@@ -712,6 +712,7 @@ import { viewCurrency, listAllCurrencies } from "@/redux/actions/actions";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Paginate from "@/paginate";
+import Modal from "../universitymodule/Modal";
 
 export function Currency() {
   const [curstate, setCurstate] = useState(true);
@@ -721,6 +722,7 @@ export function Currency() {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const viewCur = useSelector(
     (state) => state?.universitiesReducer?.viewCurrency
   );
@@ -743,19 +745,21 @@ export function Currency() {
 
   useEffect(() => {
     dispatch(listCurrencies(""));
-    dispatch(listAllCurrencies(""));
+    dispatch(listAllCurrencies("limit=100000"));
   }, []);
 
   useEffect(() => {
+    if (!params.action || !params.id) return;
+
     if (viewCur?.currency) setFormValues(viewCur?.currency);
   }, [viewCur.currency]);
   useEffect(() => {
-    if (params.id) dispatch(viewCurrency(params.id));
+    if (params.id && params.id !== "*") dispatch(viewCurrency(params.id));
 
     if (params.action == 1) {
       // dispatch(viewCurrency(params.id));
       setCurstate(false);
-      setIsViewMode(false);
+      setIsViewMode(true);
     } else if (params.action == 2) {
       setCurstate(false);
       setIsViewMode(false);
@@ -770,8 +774,8 @@ export function Currency() {
   );
 
   const allCurrencyData = useSelector(
-    state => state?.universitiesReducer?.allcurrency
-  )
+    (state) => state?.universitiesReducer?.allcurrency
+  );
   // console.log("currency data in currency module ==>", currencyData);
 
   // Anaiste - Edits: default currency
@@ -792,7 +796,7 @@ export function Currency() {
 
   React.useEffect(() => {
     currencyData?.data?.faqs && setDefaultCurrency(currencyData?.data?.faqs[0]);
-  }, [currencyData])
+  }, [currencyData]);
 
   const handleDefaultCurrecyChange = (e) => {
     let newDefaultCurrency = { ...defaultCurrency };
@@ -819,7 +823,8 @@ export function Currency() {
       exRate,
       status,
       id,
-      Uname: localStorage.name, role: localStorage.access
+      Uname: localStorage.name,
+      role: localStorage.access,
     };
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
@@ -837,16 +842,62 @@ export function Currency() {
         hideProgressBar: false,
         autoClose: 3000,
       });
+      // setCurstate(true);
+      dispatch(listCurrencies());
+      dispatch(listAllCurrencies("limit=100000"));
+      setAllFormsData({});
+      setFormValues({});
+      setDropdownID(0);
+      setCurstate(true);
+      navigate("/dashboard/CurrencyManagement/*");
     }
   };
 
+  const [idToDelete, setIdToDelete] = useState("");
+  const [dropdownID, setDropdownID] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const onConfirmation = async () => {
+    // here we will delete call
+    console.log("User deleted");
+    console.log(params.id);
+    const data = await axios.delete(
+      `${ENV.baseUrl}/currencies/delete/${idToDelete}`,
+      { Uname: localStorage.name, Urole: localStorage.access }
+    );
+    console.log("deleted data", data);
+    // // alert("whppp");
+    // here we will delete call
+    // dispatch(list(pagination));
+    dispatch(listCurrencies(""));
+    setDropdownID("");
+    // // alert("whppp");
+  };
+  const toggleDropdown = (ind) => {
+    // console.log("toggle dropdown ", dropdownID, " _ ", ind);
+
+    // ***
+    return () => {
+      // const dropdown = document.getElementById(`dropdown${ind}`);
+      // dropdown.classList.toggle("hidden");
+      // dropdown.classList.toggle("block");
+      if (ind === dropdownID) return setDropdownID("");
+      setDropdownID(ind);
+    };
+  };
   return (
     <>
       {isLoading && <FullPageLoader />}
+      <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        onConfirmation={onConfirmation}
+      />
       <div className="mt-12 w-full bg-[#E8E9EB] font-display">
         <div
-          className={` flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${curstate ? "" : "hidden"
-            }`}
+          className={` flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
+            curstate ? "" : "hidden"
+          }`}
         >
           <div className="mb-12">
             <div className="mb-10">
@@ -917,7 +968,7 @@ export function Currency() {
                   </p>
                   {isViewMode ? (
                     <Button
-                      onClick={() => navigate(-1)}
+                      onClick={() => setCurstate(true)}
                       className="rounded-[15px]  bg-[#280559]"
                     >
                       <div className="flex flex-row items-center justify-center">
@@ -960,20 +1011,24 @@ export function Currency() {
                         {/* Anasite - Edits: fetching Currencies and Ex Rates
                       <option selected>USD</option>
                        */}
-                        {allCurrencyData && allCurrencyData?.currency?.map((currency, index) => {
-                          return (
-                            <option
-                              name={"defaultcurrency"}
-                              key={
-                                currency.id + currency.iso + index + currency.name
-                              }
-                              data-exrate={currency.exRate}
-                              value={index}
-                            >
-                              {currency.name}
-                            </option>
-                          );
-                        })}
+                        {allCurrencyData &&
+                          allCurrencyData?.data?.faqs.map((currency, index) => {
+                            return (
+                              <option
+                                name={"defaultcurrency"}
+                                key={
+                                  currency.id +
+                                  currency.iso +
+                                  index +
+                                  currency.name
+                                }
+                                data-exrate={currency.exRate}
+                                value={index}
+                              >
+                                {currency.name + " (" + currency.iso + ")"}
+                              </option>
+                            );
+                          })}
                       </select>
                     </div>
                     <div>
@@ -993,16 +1048,19 @@ export function Currency() {
                 </div>
               </div>
             }
-            {
-              (localStorage.access === "superAdmin" || localStorage.access === "admin") &&
-
+            {(localStorage.access === "superAdmin" ||
+              localStorage.access === "admin") && (
               <div className="mt-8 rounded-[34px] bg-white p-6 md:p-12">
                 <div className="my-0 flex w-full flex-col justify-between gap-3 pt-0 pb-5 sm:flex-row sm:items-center">
                   <p className=" text-2xl font-semibold text-black">
                     Currency List
                   </p>
                   <Button
-                    onClick={() => setCurstate(false)}
+                    onClick={() => {
+                      setAllFormsData({});
+                      setFormValues({});
+                      setCurstate(false);
+                    }}
                     className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6"
                   >
                     <img className="m-1 w-[20px]" src={plus} alt="..." />
@@ -1081,7 +1139,8 @@ export function Currency() {
                                   backgroundColor: `${color}10`,
                                 }}
                               >
-                                {ele?.status}
+                                {/* {console.log(ele)} */}
+                                {ele?.status === 0 ? "Inactive" : "Active"}
                               </p>
                             </td>
                             <td className="px-8">
@@ -1123,6 +1182,7 @@ export function Currency() {
                                 // data-dropdown-toggle="dropdown"
                                 id={`dropdownDefaultButton${ind}`}
                                 data-dropdown-toggle={`dropdown${ind}`}
+                                onClick={toggleDropdown(ele?.id)}
                                 type="button"
                               >
                                 <svg
@@ -1138,7 +1198,11 @@ export function Currency() {
                               <div
                                 // id="dropdown"
                                 id={`dropdown${ind}`}
-                                className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                                // className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                                className={
+                                  "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                                  (dropdownID === ele?.id ? "" : " hidden ")
+                                }
                               >
                                 <ul
                                   className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -1159,7 +1223,10 @@ export function Currency() {
                                   <li>
                                     <button
                                       onClick={
-                                        () => setShowModal(true)
+                                        () => {
+                                          setIdToDelete(ele?.id);
+                                          setShowModal(true);
+                                        }
                                         // navigate(
                                         //   `/dashboard/Leadsmodule/${ele?.id}`
                                         // )
@@ -1242,15 +1309,16 @@ export function Currency() {
                 </div> */}
                 </div>
               </div>
-            }
+            )}
           </div>
         </div>
 
         {/* ----------------------------------------- */}
 
         <div
-          className={`mb-10 flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${curstate ? "hidden" : ""
-            }`}
+          className={`mb-10 flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
+            curstate ? "hidden" : ""
+          }`}
         >
           <div className="my-5">
             <div>
@@ -1260,12 +1328,18 @@ export function Currency() {
                   {params.action == 1
                     ? "View Currency"
                     : params.action == 2
-                      ? "Edit Currency"
-                      : "Create Currency"}
+                    ? "Edit Currency"
+                    : "Create Currency"}
                 </p>
                 {isViewMode ? (
                   <Button
-                    onClick={() => navigate(-1)}
+                    onClick={() => {
+                      setAllFormsData({});
+                      setFormValues({});
+                      setDropdownID(0);
+                      setCurstate(true);
+                      navigate("/dashboard/CurrencyManagement/*");
+                    }}
                     className="rounded-[15px]  bg-[#280559]"
                   >
                     <div className="flex flex-row items-center justify-center">
@@ -1294,8 +1368,8 @@ export function Currency() {
                 {params.action == 1
                   ? "View Currency"
                   : params.action == 2
-                    ? "Edit Currency"
-                    : "Create Currency"}
+                  ? "Edit Currency"
+                  : "Create Currency"}
               </p>
               {isViewMode ? (
                 ""
@@ -1373,14 +1447,14 @@ export function Currency() {
                   <select
                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                     name="status"
-                    defaultValue={formValues.status}
+                    value={formValues.status}
                     onChange={handleChange}
                     disabled={isViewMode}
                   >
                     <option>Select Status</option>
-                    <option value={"active"}>Active</option>
+                    <option value={1}>Active</option>
                     <option
-                      value={"inactive"}
+                      value={0}
                       style={{ color: "red", border: "1px solid red" }}
                     >
                       Inactive
@@ -1423,18 +1497,8 @@ export function Currency() {
                   />
                 </div>
               )}
-
               {isViewMode ? (
-                <Button
-                  onClick={() => navigate(-1)}
-                  className="rounded-[15px]  bg-[#280559]"
-                >
-                  <div className="flex flex-row items-center justify-center">
-                    <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                      Back
-                    </p>
-                  </div>
-                </Button>
+                ""
               ) : (
                 <>
                   {/* <NavLink to=""> */}
@@ -1452,7 +1516,28 @@ export function Currency() {
                   </Button>
                   {/* </NavLink> */}
                 </>
-              )}
+              )}{" "}
+              <Button
+                onClick={() => {
+                  setAllFormsData({});
+                  setFormValues({});
+                  setDropdownID(0);
+                  setCurstate(true);
+                  navigate("/dashboard/CurrencyManagement/*");
+                }}
+                // onClick={() => {
+                //   setFormValues({});
+                //   setAllFormsData({});
+                //   navigate(-1);
+                // }}
+                className="rounded-[15px]  bg-[#280559]"
+              >
+                <div className="flex flex-row items-center justify-center">
+                  <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                    Back
+                  </p>
+                </div>
+              </Button>
             </form>
           </div>
         </div>

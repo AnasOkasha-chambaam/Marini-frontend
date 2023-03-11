@@ -4,7 +4,13 @@ import { Button } from "@material-tailwind/react/components/Button";
 import universityLogo from "../../../public/img/universityLogo.svg";
 import saveIcon from "../../../public/img/saveIcon.svg";
 import { FileUploader } from "react-drag-drop-files";
-import { listUsers, listBranches, listLeadGroups, EditUsers, GetCurrentUser } from "@/redux/actions/actions";
+import {
+  listUsers,
+  listBranches,
+  listLeadGroups,
+  EditUsers,
+  GetCurrentUser,
+} from "@/redux/actions/actions";
 import { useState, useEffect } from "react";
 import AddField from "@/helpers/Addfield";
 import { useParams, useNavigate } from "react-router-dom";
@@ -38,18 +44,21 @@ export function Profiles() {
     (state) => state?.universitiesReducer?.current_users?.data?.dataValues
   );
 
-  
-  const allLeadGroup = useSelector(state => state?.universitiesReducer?.leadGroups)
+  const allLeadGroup = useSelector(
+    (state) => state?.universitiesReducer?.leadGroups
+  );
 
   React.useEffect(() => {
     dispatch(listBranches());
     dispatch(listUsers());
     dispatch(listLeadGroups());
-    dispatch(GetCurrentUser({
-      name: localStorage.name, 
-      role: localStorage.access,
-      state: 0
-    }));
+    dispatch(
+      GetCurrentUser({
+        name: localStorage.name,
+        role: localStorage.access,
+        state: 0,
+      })
+    );
     // dis
   }, []);
 
@@ -59,24 +68,21 @@ export function Profiles() {
   };
 
   const initialValues = {
-    
-    name:viewUsers && viewUsers.name,
-    email:viewUsers && viewUsers.email,
-    number:viewUsers && viewUsers.number,
-    position:viewUsers && viewUsers.position,
+    name: viewUsers && viewUsers.name,
+    email: viewUsers && viewUsers.email,
+    number: viewUsers && viewUsers.number,
+    position: viewUsers && viewUsers.position,
     passportNo: "",
     password: "",
     id: "",
-    image:viewUsers && viewUsers.image
+    image: viewUsers && viewUsers.image,
     //
   };
   const [formValues, setFormValues] = useState(initialValues);
 
-
   React.useEffect(() => {
-    setFormValues({...viewUsers, password: ""});
-  }, [viewUsers])
-
+    setFormValues({ ...viewUsers, password: "" });
+  }, [viewUsers]);
 
   useEffect(() => {
     if (params.id) dispatch(viewApplication(params.id));
@@ -132,7 +138,6 @@ export function Profiles() {
       // applicantsId,
     } = formValues;
 
-
     let formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
@@ -145,8 +150,6 @@ export function Profiles() {
     formData.append("role", localStorage.access);
     formValues.Uname = localStorage.name;
     formValues.role = localStorage.access;
-
-    
 
     const apiCall = await dispatch(EditUsers(formData));
 
@@ -162,7 +165,7 @@ export function Profiles() {
       });
       localStorage.setItem("name", name);
     }
-    navigate(-1)
+    navigate(-1);
   };
 
   // End
@@ -222,8 +225,7 @@ export function Profiles() {
               style={{ width: "156px" }}
               src={
                 preview ||
-                (formValues?.image &&
-                  `${ENV.imageUrl}${formValues?.image}`) ||
+                (formValues?.image && `${ENV.imageUrl}${formValues?.image}`) ||
                 universityLogo
               }
               onError={function (e) {
@@ -238,7 +240,7 @@ export function Profiles() {
                 multiple={true}
                 handleChange={handlefileChange}
                 name="file" //
-              // types={fileTypes}
+                // types={fileTypes}
               >
                 <button className="w-[150px] ">
                   <p className="rounded-2xl border-[1px] border-[#cbd2dc]/50 py-3 text-sm font-medium text-[#333333] shadow-md">
@@ -256,15 +258,23 @@ export function Profiles() {
                 Full Name
               </label>
 
-              <input list="browsers" className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500" name="name" id="browser" placeholder="Full Name" value={formValues?.name} onChange={handleChange} />
+              <input
+                list="browsers"
+                className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                name="name"
+                id="browser"
+                placeholder="Full Name"
+                value={formValues?.name}
+                onChange={handleChange}
+              />
 
               <datalist id="browsers">
-                {
-                  allUsers &&
-                  allUsers?.data?.faqs?.map((ele, ind) =>
-                    <option key={ind} value={ele.name}>{ele.name}</option>
-                  )
-                }
+                {allUsers &&
+                  allUsers?.data?.faqs?.map((ele, ind) => (
+                    <option key={ind} value={ele.name}>
+                      {ele.name}
+                    </option>
+                  ))}
               </datalist>
             </div>
             <div>
@@ -291,12 +301,12 @@ export function Profiles() {
                 value={formValues?.leadgroup}
                 onChange={handleChange}
               >
-                {
-                  allLeadGroup &&
-                  allLeadGroup?.data?.faqs.map((item, id) =>
-                    <option key={id} value={item.name}>{item.name}</option>
-                  )
-                }
+                {allLeadGroup &&
+                  allLeadGroup?.data?.faqs.map((item, id) => (
+                    <option key={id} value={item.name}>
+                      {item.name}
+                    </option>
+                  ))}
               </select>
             </div>
             <div>
@@ -308,7 +318,7 @@ export function Profiles() {
                 name="position"
                 onChange={handleChange}
                 value={formValues?.position}
-              // value={""}
+                // value={""}
               >
                 <option>Select Country</option>
                 <option value="Afghanistan">Afghanistan</option>
@@ -338,12 +348,18 @@ export function Profiles() {
                 <option value="Bermuda">Bermuda</option>
                 <option value="Bhutan">Bhutan</option>
                 <option value="Bolivia">Bolivia</option>
-                <option value="Bonaire, Sint Eustatius and Saba">Caribbean Netherlands</option>
-                <option value="Bosnia and Herzegovina">Bosnia & Herzegovina</option>
+                <option value="Bonaire, Sint Eustatius and Saba">
+                  Caribbean Netherlands
+                </option>
+                <option value="Bosnia and Herzegovina">
+                  Bosnia & Herzegovina
+                </option>
                 <option value="Botswana">Botswana</option>
                 <option value="Bouvet Island">Bouvet Island</option>
                 <option value="Brazil">Brazil</option>
-                <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
+                <option value="British Indian Ocean Territory">
+                  British Indian Ocean Territory
+                </option>
                 <option value="Brunei Darussalam">Brunei</option>
                 <option value="Bulgaria">Bulgaria</option>
                 <option value="Burkina Faso">Burkina Faso</option>
@@ -353,16 +369,22 @@ export function Profiles() {
                 <option value="Canada">Canada</option>
                 <option value="Cape Verde">Cape Verde</option>
                 <option value="Cayman Islands">Cayman Islands</option>
-                <option value="Central African Republic">Central African Republic</option>
+                <option value="Central African Republic">
+                  Central African Republic
+                </option>
                 <option value="Chad">Chad</option>
                 <option value="Chile">Chile</option>
                 <option value="China">China</option>
                 <option value="Christmas Island">Christmas Island</option>
-                <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
+                <option value="Cocos (Keeling) Islands">
+                  Cocos (Keeling) Islands
+                </option>
                 <option value="Colombia">Colombia</option>
                 <option value="Comoros">Comoros</option>
                 <option value="Congo">Congo - Brazzaville</option>
-                <option value="Congo, Democratic Republic of the Congo">Congo - Kinshasa</option>
+                <option value="Congo, Democratic Republic of the Congo">
+                  Congo - Kinshasa
+                </option>
                 <option value="Cook Islands">Cook Islands</option>
                 <option value="Costa Rica">Costa Rica</option>
                 <option value="Cote D'Ivoire">Côte d’Ivoire</option>
@@ -382,14 +404,18 @@ export function Profiles() {
                 <option value="Eritrea">Eritrea</option>
                 <option value="Estonia">Estonia</option>
                 <option value="Ethiopia">Ethiopia</option>
-                <option value="Falkland Islands (Malvinas)">Falkland Islands (Islas Malvinas)</option>
+                <option value="Falkland Islands (Malvinas)">
+                  Falkland Islands (Islas Malvinas)
+                </option>
                 <option value="Faroe Islands">Faroe Islands</option>
                 <option value="Fiji">Fiji</option>
                 <option value="Finland">Finland</option>
                 <option value="France">France</option>
                 <option value="French Guiana">French Guiana</option>
                 <option value="French Polynesia">French Polynesia</option>
-                <option value="French Southern Territories">French Southern Territories</option>
+                <option value="French Southern Territories">
+                  French Southern Territories
+                </option>
                 <option value="Gabon">Gabon</option>
                 <option value="Gambia">Gambia</option>
                 <option value="Georgia">Georgia</option>
@@ -407,8 +433,12 @@ export function Profiles() {
                 <option value="Guinea-Bissau">Guinea-Bissau</option>
                 <option value="Guyana">Guyana</option>
                 <option value="Haiti">Haiti</option>
-                <option value="Heard Island and Mcdonald Islands">Heard & McDonald Islands</option>
-                <option value="Holy See (Vatican City State)">Vatican City</option>
+                <option value="Heard Island and Mcdonald Islands">
+                  Heard & McDonald Islands
+                </option>
+                <option value="Holy See (Vatican City State)">
+                  Vatican City
+                </option>
                 <option value="Honduras">Honduras</option>
                 <option value="Hong Kong">Hong Kong</option>
                 <option value="Hungary">Hungary</option>
@@ -428,7 +458,9 @@ export function Profiles() {
                 <option value="Kazakhstan">Kazakhstan</option>
                 <option value="Kenya">Kenya</option>
                 <option value="Kiribati">Kiribati</option>
-                <option value="Korea, Democratic People's Republic of">North Korea</option>
+                <option value="Korea, Democratic People's Republic of">
+                  North Korea
+                </option>
                 <option value="Korea, Republic of">South Korea</option>
                 <option value="Kosovo">Kosovo</option>
                 <option value="Kuwait">Kuwait</option>
@@ -443,10 +475,14 @@ export function Profiles() {
                 <option value="Lithuania">Lithuania</option>
                 <option value="Luxembourg">Luxembourg</option>
                 <option value="Macao">Macao</option>
-                <option value="Macedonia, the Former Yugoslav Republic of">North Macedonia</option>
+                <option value="Macedonia, the Former Yugoslav Republic of">
+                  North Macedonia
+                </option>
                 <option value="Madagascar">Madagascar</option>
                 <option value="Malawi">Malawi</option>
-                <option value="Malaysia" selected={true}>Malaysia</option>
+                <option value="Malaysia" selected={true}>
+                  Malaysia
+                </option>
                 <option value="Maldives">Maldives</option>
                 <option value="Mali">Mali</option>
                 <option value="Malta">Malta</option>
@@ -456,7 +492,9 @@ export function Profiles() {
                 <option value="Mauritius">Mauritius</option>
                 <option value="Mayotte">Mayotte</option>
                 <option value="Mexico">Mexico</option>
-                <option value="Micronesia, Federated States of">Micronesia</option>
+                <option value="Micronesia, Federated States of">
+                  Micronesia
+                </option>
                 <option value="Moldova, Republic of">Moldova</option>
                 <option value="Monaco">Monaco</option>
                 <option value="Mongolia">Mongolia</option>
@@ -477,12 +515,16 @@ export function Profiles() {
                 <option value="Nigeria">Nigeria</option>
                 <option value="Niue">Niue</option>
                 <option value="Norfolk Island">Norfolk Island</option>
-                <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+                <option value="Northern Mariana Islands">
+                  Northern Mariana Islands
+                </option>
                 <option value="Norway">Norway</option>
                 <option value="Oman">Oman</option>
                 <option value="Pakistan">Pakistan</option>
                 <option value="Palau">Palau</option>
-                <option value="Palestinian Territory, Occupied">Palestine</option>
+                <option value="Palestinian Territory, Occupied">
+                  Palestine
+                </option>
                 <option value="Panama">Panama</option>
                 <option value="Papua New Guinea">Papua New Guinea</option>
                 <option value="Paraguay">Paraguay</option>
@@ -502,11 +544,17 @@ export function Profiles() {
                 <option value="Saint Kitts and Nevis">St. Kitts & Nevis</option>
                 <option value="Saint Lucia">St. Lucia</option>
                 <option value="Saint Martin">St. Martin</option>
-                <option value="Saint Pierre and Miquelon">St. Pierre & Miquelon</option>
-                <option value="Saint Vincent and the Grenadines">St. Vincent & Grenadines</option>
+                <option value="Saint Pierre and Miquelon">
+                  St. Pierre & Miquelon
+                </option>
+                <option value="Saint Vincent and the Grenadines">
+                  St. Vincent & Grenadines
+                </option>
                 <option value="Samoa">Samoa</option>
                 <option value="San Marino">San Marino</option>
-                <option value="Sao Tome and Principe">São Tomé & Príncipe</option>
+                <option value="Sao Tome and Principe">
+                  São Tomé & Príncipe
+                </option>
                 <option value="Saudi Arabia">Saudi Arabia</option>
                 <option value="Senegal">Senegal</option>
                 <option value="Serbia">Serbia</option>
@@ -520,13 +568,17 @@ export function Profiles() {
                 <option value="Solomon Islands">Solomon Islands</option>
                 <option value="Somalia">Somalia</option>
                 <option value="South Africa">South Africa</option>
-                <option value="South Georgia and the South Sandwich Islands">South Georgia & South Sandwich Islands</option>
+                <option value="South Georgia and the South Sandwich Islands">
+                  South Georgia & South Sandwich Islands
+                </option>
                 <option value="South Sudan">South Sudan</option>
                 <option value="Spain">Spain</option>
                 <option value="Sri Lanka">Sri Lanka</option>
                 <option value="Sudan">Sudan</option>
                 <option value="Suriname">Suriname</option>
-                <option value="Svalbard and Jan Mayen">Svalbard & Jan Mayen</option>
+                <option value="Svalbard and Jan Mayen">
+                  Svalbard & Jan Mayen
+                </option>
                 <option value="Swaziland">Eswatini</option>
                 <option value="Sweden">Sweden</option>
                 <option value="Switzerland">Switzerland</option>
@@ -543,21 +595,31 @@ export function Profiles() {
                 <option value="Tunisia">Tunisia</option>
                 <option value="Turkey">Turkey</option>
                 <option value="Turkmenistan">Turkmenistan</option>
-                <option value="Turks and Caicos Islands">Turks & Caicos Islands</option>
+                <option value="Turks and Caicos Islands">
+                  Turks & Caicos Islands
+                </option>
                 <option value="Tuvalu">Tuvalu</option>
                 <option value="Uganda">Uganda</option>
                 <option value="Ukraine">Ukraine</option>
-                <option value="United Arab Emirates">United Arab Emirates</option>
+                <option value="United Arab Emirates">
+                  United Arab Emirates
+                </option>
                 <option value="United Kingdom">United Kingdom</option>
                 <option value="United States">United States</option>
-                <option value="United States Minor Outlying Islands">U.S. Outlying Islands</option>
+                <option value="United States Minor Outlying Islands">
+                  U.S. Outlying Islands
+                </option>
                 <option value="Uruguay">Uruguay</option>
                 <option value="Uzbekistan">Uzbekistan</option>
                 <option value="Vanuatu">Vanuatu</option>
                 <option value="Venezuela">Venezuela</option>
                 <option value="Viet Nam">Vietnam</option>
-                <option value="Virgin Islands, British">British Virgin Islands</option>
-                <option value="Virgin Islands, U.s.">U.S. Virgin Islands</option>
+                <option value="Virgin Islands, British">
+                  British Virgin Islands
+                </option>
+                <option value="Virgin Islands, U.s.">
+                  U.S. Virgin Islands
+                </option>
                 <option value="Wallis and Futuna">Wallis & Futuna</option>
                 <option value="Western Sahara">Western Sahara</option>
                 <option value="Yemen">Yemen</option>
@@ -569,31 +631,42 @@ export function Profiles() {
               <label className="mb-2 block text-sm font-semibold text-[#333333]">
                 Phone Number
               </label>
-              <input list="numbers" className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500" name="number" id="number" onChange={handleChange}
-                value={formValues?.number} />
+              <input
+                list="numbers"
+                className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                name="number"
+                id="number"
+                onChange={handleChange}
+                value={formValues?.number}
+              />
 
               <datalist id="numbers">
-                {
-                  allUsers &&
-                  allUsers?.data?.faqs?.map((ele, ind) =>
-                    <option key={ind} >{ele.number}</option>
-                  )
-                }
+                {allUsers &&
+                  allUsers?.data?.faqs?.map((ele, ind) => (
+                    <option key={ind}>{ele.number}</option>
+                  ))}
               </datalist>
             </div>
             <div>
               <label className="mb-2 block text-sm font-semibold text-[#333333]">
                 Email Address
               </label>
-              <input list="emails" className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500" name="email" id="email" value={formValues?.email} onChange={handleChange} />
+              <input
+                list="emails"
+                className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                name="email"
+                id="email"
+                value={formValues?.email}
+                onChange={handleChange}
+              />
 
               <datalist id="emails">
-                {
-                  allUsers &&
-                  allUsers?.data?.faqs?.map((ele, ind) =>
-                    <option key={ind} value={ele?.email}>{ele.email}</option>
-                  )
-                }
+                {allUsers &&
+                  allUsers?.data?.faqs?.map((ele, ind) => (
+                    <option key={ind} value={ele?.email}>
+                      {ele.email}
+                    </option>
+                  ))}
               </datalist>
             </div>
             {/* {personalDataNewFields.map()} */}
@@ -643,7 +716,11 @@ export function Profiles() {
             </div>
           </div>
         </form>
-        <Button className="rounded-[15px]  bg-[#280559]" type="submit" onClick={handleSubmit}>
+        <Button
+          className="rounded-[15px]  bg-[#280559]"
+          type="submit"
+          onClick={handleSubmit}
+        >
           <div className="flex flex-row items-center justify-center">
             <img src={saveIcon} alt="..." />
             <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
@@ -653,8 +730,7 @@ export function Profiles() {
         </Button>
       </div>
 
-      <NavLink to="">
-      </NavLink>
+      <NavLink to=""></NavLink>
     </div>
   );
 }

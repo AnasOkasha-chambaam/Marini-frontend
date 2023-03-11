@@ -19,12 +19,13 @@ import { listBranches, filterListBranches } from "@/redux/actions/actions";
 import { viewBranch } from "@/redux/actions/actions";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Modal from "../universitymodule/Modal";
+// import Modal from "../universitymodule/Modal";
 import FullPageLoader from "@/FullPageLoader/FullPageLoader";
 import { ENV } from "@/config";
 // import { Toast } from "react-toastify/dist/types";
 import { toast } from "react-toastify";
 import Paginate from "@/paginate";
+import Modal from "../universitymodule/Modal";
 
 export function Branch() {
   const [branchstate, setBranchstate] = useState(true);
@@ -38,7 +39,7 @@ export function Branch() {
   /*{ toAdd, setToAdd,  open,close,  setOpenAddModal,  formsData,  setFormsData,  handleFormsDataChange,  section,} */
   // const [openModal, setOpenModal] = useState(false);
   const [search, setSearch] = useState("");
-  const [BranchState, setBranchState] = useState(true);
+  // const [BranchState, setBranchstate] = useState(true);
   const [openBranchAddModal, setOpenBranchAddModal] = useState(false);
   const [BranchNewFields, setBranchNewFields] = useState([]);
   // const [allFormsData, setAllFormsData] = useState({});
@@ -93,7 +94,7 @@ export function Branch() {
       manager,
       id,
       Uname: localStorage.name,
-      role: localStorage.access,
+      Urole: localStorage.access,
     };
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
@@ -110,8 +111,9 @@ export function Branch() {
         hideProgressBar: false,
         autoClose: 3000,
       });
-      setBranchState(true);
+      setBranchstate(true);
       dispatch(listBranches());
+      navigate("/dashboard/settingsManagement/*");
     }
   };
 
@@ -132,7 +134,7 @@ export function Branch() {
     if (params.action == 1) {
       // dispatch(viewCurrency(params.id));
       setBranchstate(false);
-      setIsViewMode(false);
+      setIsViewMode(true);
     } else if (params.action == 2) {
       setBranchstate(false);
       setIsViewMode(false);
@@ -145,6 +147,8 @@ export function Branch() {
 
   const countryArr = ["pakistan", "India", "China"];
 
+  // Anasite - Edits: for 'edit'/'delete'
+
   const [idToDelete, setIdToDelete] = useState("");
   const [dropdownID, setDropdownID] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -154,7 +158,8 @@ export function Branch() {
     console.log("User deleted");
     console.log(params.id);
     const data = await axios.delete(
-      `${ENV.baseUrl}/branch/delete/${idToDelete}`
+      `${ENV.baseUrl}/branch/delete/${idToDelete}`,
+      { Uname: localStorage.name, Urole: localStorage.access }
     );
     console.log("deleted data", data);
     // // alert("whppp");
@@ -175,6 +180,7 @@ export function Branch() {
       setDropdownID(ind);
     };
   };
+  // END
 
   return (
     <>
@@ -184,6 +190,7 @@ export function Branch() {
         setShowModal={setShowModal}
         onConfirmation={onConfirmation}
       />
+      {isLoading && <FullPageLoader />}
       <div
         className={` flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
           branchstate ? "" : "hidden"
@@ -254,7 +261,10 @@ export function Branch() {
                 </div>
               </form>
 
-              <button className="flex h-[57px] w-[135px] items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => dispatch(filterListBranches({ name: search }))}>
+              <button
+                className="flex h-[57px] w-[135px] items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md"
+                onClick={() => dispatch(filterListBranches({ name: search }))}
+              >
                 <img className="w-[20px]" src={filterIcon} alt="..." />
                 <p className="mx-3 text-[16px] ">Filters</p>
               </button>
@@ -308,9 +318,7 @@ export function Branch() {
                   </tr>
                 </thead>
                 <tbody className="border-none">
-                  {branchDate?.data?.faqs?.map((ele, ind) => 
-                    
-                    (
+                  {branchDate?.data?.faqs?.map((ele, ind) => (
                     <tr key={ind}>
                       <td className="whitespace-nowrap py-3 pr-6">
                         <Checkbox />
@@ -358,6 +366,9 @@ export function Branch() {
                       <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
                         <button
                           className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
+                          // id="dropdownDefaultButton"
+                          // data-dropdown-toggle="dropdown"
+                          // type="button"
                           id={`dropdownDefaultButton${ind}`}
                           data-dropdown-toggle={`dropdown${ind}`}
                           type="button"
@@ -373,16 +384,18 @@ export function Branch() {
                           </svg>
                         </button>
                         <div
-                          id="dropdown"
+                          // id="dropdown"
+                          // class="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                          id={`dropdown${ind}`}
                           className={
                             "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
                             (dropdownID === ele?.id ? "" : " hidden ")
                           }
                         >
                           <ul
-                            className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                            // aria-labelledby="dropdownDefaultButton"
+                            class="py-2 text-sm text-gray-700 dark:text-gray-200"
                             aria-labelledby={`dropdownDefaultButton${ind}`}
+                            // aria-labelledby="dropdownDefaultButton"
                           >
                             <li>
                               <button
@@ -400,8 +413,8 @@ export function Branch() {
                               <button
                                 onClick={
                                   () => {
-                                  setIdToDelete(ele?.id);
-                                  setShowModal(true)
+                                    setShowModal(true);
+                                    setIdToDelete(ele?.id);
                                   }
                                   // navigate(
                                   //   `/dashboard/Leadsmodule/${ele?.id}`
@@ -552,7 +565,7 @@ export function Branch() {
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="country"
-                  defaultValue={formValues.country}
+                  value={formValues.country}
                   disabled={isViewMode}
                   onChange={handleChange}
                 >
@@ -941,17 +954,36 @@ export function Branch() {
                 />
               )}
             </div>
-
             {/* <NavLink to=""> */}
+            {isViewMode ? (
+              ""
+            ) : (
+              <Button
+                className="rounded-[15px]  bg-[#280559]"
+                type="submit"
+                disabled={isViewMode}
+              >
+                <div className="flex flex-row items-center justify-center">
+                  <img src={saveIcon} alt="..." />
+                  <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                    Save Changes
+                  </p>
+                </div>
+              </Button>
+            )}{" "}
             <Button
+              onClick={() => {
+                // setAllFormsData({});
+                setFormValues({});
+                setBranchstate(true);
+                navigate("/dashboard/settingsManagement/*");
+                return;
+              }}
               className="rounded-[15px]  bg-[#280559]"
-              type="submit"
-              disabled={isViewMode}
             >
               <div className="flex flex-row items-center justify-center">
-                <img src={saveIcon} alt="..." />
                 <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                  Save Changes
+                  Back
                 </p>
               </div>
             </Button>

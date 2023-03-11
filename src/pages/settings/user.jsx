@@ -71,8 +71,16 @@ export function User() {
   console.log("all branches in users module ===>", branchData);
 
   useEffect(() => {
-    if (localStorage.access === "adminBranch" || localStorage.access === "counselorBranch" || localStorage.access === "accountantBranch") {
-      setAllUser({ ...allUsers?.data?.faqs?.filter(item => item.role === localStorage.access) });
+    if (
+      localStorage.access === "adminBranch" ||
+      localStorage.access === "counselorBranch" ||
+      localStorage.access === "accountantBranch"
+    ) {
+      setAllUser({
+        ...allUsers?.data?.faqs?.filter(
+          (item) => item.role === localStorage.access
+        ),
+      });
     } else {
       setAllUser({ ...allUsers });
     }
@@ -111,6 +119,7 @@ export function User() {
       date,
       password,
       Uname: localStorage.name,
+      Urole: localStorage.access,
       // role,
     };
     if ((name, email, number, role, branch, position, date, password)) {
@@ -143,15 +152,22 @@ export function User() {
   // }, [params.id]);
 
   useEffect(() => {
-    if (viewUsers?.user) setFormValues({...viewUsers?.user, password: ""});
+    if (!params.action || !params.id) return;
+    console.log("paramssss>>", params);
+
+    if (viewUsers?.user)
+      setFormValues({
+        ...viewUsers?.user,
+        date: new Date(viewUsers?.user.date).toISOString().slice(0, 10),
+        password: "",
+      });
   }, [viewUsers.user]);
   useEffect(() => {
-    console.log("params",params);
     if (params.id && params.id !== "*") dispatch(viewUser(params.id));
 
     if (params.action == 1) {
       setUserstate(false);
-      setIsViewMode(false);
+      setIsViewMode(true);
     } else if (params.action == 2) {
       setUserstate(false);
       setIsViewMode(false);
@@ -173,7 +189,8 @@ export function User() {
     console.log("User deleted");
     console.log(params.id);
     const data = await axios.delete(
-      `${ENV.baseUrl}/users/delete/${idToDelete}`
+      `${ENV.baseUrl}/users/delete/${idToDelete}`,
+      { Uname: localStorage.name, Urole: localStorage.access }
     );
     console.log("deleted data", data);
     // // alert("whppp");
@@ -205,15 +222,20 @@ export function User() {
         onConfirmation={onConfirmation}
       />
       <div
-        className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${userstate ? "" : "hidden"
-          }`}
+        className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
+          userstate ? "" : "hidden"
+        }`}
       >
         <div>
           <div className=" rounded-[34px] bg-white p-6 md:p-12">
             <div className="my-0 flex w-full flex-col justify-between gap-3 pt-0 pb-5 sm:flex-row sm:items-center">
               <p className=" text-3xl font-semibold text-[#280559]">Users</p>
               <Button
-                onClick={() => setUserstate(false)}
+                onClick={() => {
+                  setAllFormsData({});
+                  setFormValues({});
+                  return setUserstate(false);
+                }}
                 className="rounded-[15px]  bg-[#280559]"
               >
                 <div className="flex flex-row items-center justify-center">
@@ -252,7 +274,10 @@ export function User() {
                 </div>
               </form>
 
-              <button className="flex h-[57px] w-[135px] items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => dispatch(filterViewUser({ name: search }))}>
+              <button
+                className="flex h-[57px] w-[135px] items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md"
+                onClick={() => dispatch(filterViewUser({ name: search }))}
+              >
                 <img className="w-[20px]" src={filterIcon} alt="..." />
                 <p className="mx-3 text-[16px] ">Filters</p>
               </button>
@@ -318,52 +343,53 @@ export function User() {
                   </tr>
                 </thead>
                 <tbody className="border-none">
-                  {allUser && allUser?.data?.faqs?.map((ele, ind) => (
-                    <tr key={ind}>
-                      <td className="whitespace-nowrap py-3 pr-6">
-                        <Checkbox />
-                      </td>
-                      <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
-                        {/* {id} */}
-                        {ele?.id}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
-                        {/* {name} */}
-                        {ele?.name}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333] underline">
-                        {/* {email} */}
-                        {ele?.email}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
-                        {/* {role} */}
-                        {ele?.role}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
-                        {/* {number} */}
-                        {ele?.number}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
-                        {/* {position} */}
-                        {ele?.position}
-                      </td>
-                      <td>
-                        <Button
-                          variant="outlined"
-                          className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
-                          fullWidth
-                          onClick={() =>
-                            navigate(
-                              `/dashboard/settingsManagement/user/1/${ele?.id}`
-                            )
-                          }
-                        >
-                          <p className="text-center text-xs font-medium capitalize">
-                            view
-                          </p>
-                        </Button>
-                      </td>
-                      {/* <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
+                  {allUser &&
+                    allUser?.data?.faqs?.map((ele, ind) => (
+                      <tr key={ind}>
+                        <td className="whitespace-nowrap py-3 pr-6">
+                          <Checkbox />
+                        </td>
+                        <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
+                          {/* {id} */}
+                          {ele?.id}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                          {/* {name} */}
+                          {ele?.name}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333] underline">
+                          {/* {email} */}
+                          {ele?.email}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
+                          {/* {role} */}
+                          {ele?.role}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                          {/* {number} */}
+                          {ele?.number}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
+                          {/* {position} */}
+                          {ele?.position}
+                        </td>
+                        <td>
+                          <Button
+                            variant="outlined"
+                            className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
+                            fullWidth
+                            onClick={() =>
+                              navigate(
+                                `/dashboard/settingsManagement/user/1/${ele?.id}`
+                              )
+                            }
+                          >
+                            <p className="text-center text-xs font-medium capitalize">
+                              view
+                            </p>
+                          </Button>
+                        </td>
+                        {/* <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
                         <button className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]">
                           <svg
                             className="h-8 w-8 fill-current"
@@ -375,75 +401,75 @@ export function User() {
                           </svg>
                         </button>
                       </td> */}
-                      {/* id={`dropdownDefaultButton${ind}`}
+                        {/* id={`dropdownDefaultButton${ind}`}
                             data-dropdown-toggle={`dropdown${ind}`}
                             id={`dropdown${ind}`}
                             aria-labelledby={`dropdownDefaultButton${ind}`} */}
-                      <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
-                        <button
-                          className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
-                          // id="dropdownDefaultButton"
-                          // data-dropdown-toggle="dropdown"
-                          id={`dropdownDefaultButton${ind}`}
-                          data-dropdown-toggle={`dropdown${ind}`}
-                          type="button"
-                          onClick={toggleDropdown(ele?.id)}
-                        >
-                          <svg
-                            className="h-8 w-8 fill-current"
-                            viewBox="0 0 32 32"
+                        <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
+                          <button
+                            className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
+                            // id="dropdownDefaultButton"
+                            // data-dropdown-toggle="dropdown"
+                            id={`dropdownDefaultButton${ind}`}
+                            data-dropdown-toggle={`dropdown${ind}`}
+                            type="button"
+                            onClick={toggleDropdown(ele?.id)}
                           >
-                            <circle cx="16" cy="10" r="2" />
-                            <circle cx="16" cy="16" r="2" />
-                            <circle cx="16" cy="22" r="2" />
-                          </svg>
-                        </button>
-                        <div
-                          // id="dropdown"
-                          id={`dropdown${ind}`}
-                          className={
-                            "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
-                            (dropdownID === ele?.id ? "" : " hidden ")
-                          }
-                        >
-                          <ul
-                            className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                            // aria-labelledby="dropdownDefaultButton"
-                            aria-labelledby={`dropdownDefaultButton${ind}`}
+                            <svg
+                              className="h-8 w-8 fill-current"
+                              viewBox="0 0 32 32"
+                            >
+                              <circle cx="16" cy="10" r="2" />
+                              <circle cx="16" cy="16" r="2" />
+                              <circle cx="16" cy="22" r="2" />
+                            </svg>
+                          </button>
+                          <div
+                            // id="dropdown"
+                            id={`dropdown${ind}`}
+                            className={
+                              "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                              (dropdownID === ele?.id ? "" : " hidden ")
+                            }
                           >
-                            <li>
-                              <button
-                                className="btn btn-primary"
-                                onClick={() =>
-                                  navigate(
-                                    `/dashboard/settingsManagement/user/2/${ele?.id}`
-                                  )
-                                }
-                              >
-                                Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={() => {
-                                  setShowModal(true);
-                                  setIdToDelete(ele?.id);
-                                }}
-                              // onClick={
-                              //   // () => setShowModal(true)
-                              //   // navigate(
-                              //   //   `/dashboard/Leadsmodule/${ele?.id}`
-                              //   // )
-                              // }
-                              >
-                                Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                            <ul
+                              className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                              // aria-labelledby="dropdownDefaultButton"
+                              aria-labelledby={`dropdownDefaultButton${ind}`}
+                            >
+                              <li>
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={() =>
+                                    navigate(
+                                      `/dashboard/settingsManagement/user/2/${ele?.id}`
+                                    )
+                                  }
+                                >
+                                  Edit
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  onClick={() => {
+                                    setShowModal(true);
+                                    setIdToDelete(ele?.id);
+                                  }}
+                                  // onClick={
+                                  //   // () => setShowModal(true)
+                                  //   // navigate(
+                                  //   //   `/dashboard/Leadsmodule/${ele?.id}`
+                                  //   // )
+                                  // }
+                                >
+                                  Delete
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
@@ -517,8 +543,9 @@ export function User() {
       {/* ----------------------------------------- */}
 
       <div
-        className={`flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${userstate ? "hidden" : ""
-          }`}
+        className={`flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
+          userstate ? "hidden" : ""
+        }`}
       >
         <div className="mb-5">
           <p className=" mb-2 text-4xl font-semibold text-[#280559]">
@@ -547,6 +574,7 @@ export function User() {
                   onChange={handleChange}
                   disabled={isViewMode}
                 />
+                {console.log("Is View Mode", ">>", isViewMode)}
               </div>
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
@@ -585,19 +613,19 @@ export function User() {
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="role"
-                  defaultValue={formValues.role}
+                  value={formValues.role}
                   onChange={handleChange}
                   disabled={isViewMode}
                 >
                   <option value={""}>Select Role</option>
 
-                  <option value={"superAdmin"}>Super Admin</option>
-                  <option value={"admin"}>Admin HQ</option>
-                  <option value={"counselor"}>Counselor HQ</option>
-                  <option value={"accountant"}>Accountant HQ</option>
-                  <option value={"adminBranch"}>Admin Branch</option>
-                  <option value={"counselorBranch"}>Counselor Branch</option>
-                  <option value={"accountantBranch"}>Accountant Branch</option>
+                  <option value={"SuperAdmin"}>Super Admin</option>
+                  <option value={"Admin"}>Admin HQ</option>
+                  <option value={"Counselor"}>Counselor HQ</option>
+                  <option value={"Accountant"}>Accountant HQ</option>
+                  <option value={"AdminBranch"}>Admin Branch</option>
+                  <option value={"CounselorBranch"}>Counselor Branch</option>
+                  <option value={"AccountantBranch"}>Accountant Branch</option>
 
                   {/*     <option value={"superAdmin"}>Super Admin</option>
                   <option value={"admin"}>Admin HQ</option>
@@ -609,15 +637,21 @@ export function User() {
                   */}
                 </select>
               </div>
-              {formValues.role.split(" ").join("").toLowerCase() ===
+              {formValues?.role?.split(" ").join("").toLowerCase() ===
                 "superadminhq" ||
-                formValues.role.split(" ").join("").toLowerCase() ===
+              formValues?.role?.split(" ").join("").toLowerCase() ===
                 "superadmin" ||
-                formValues.role.split(" ").join("").toLowerCase() === "adminhq" ||
-                formValues.role.split(" ").join("").toLowerCase() ===
+              formValues?.role?.split(" ").join("").toLowerCase() ===
+                "adminhq" ||
+              formValues?.role?.split(" ").join("").toLowerCase() ===
                 "counselorHQ".toLowerCase() ||
-                formValues.role.split(" ").join("").toLowerCase() ===
-                "accountanthq".toLowerCase() ? (
+              formValues?.role?.split(" ").join("").toLowerCase() ===
+                "accountanthq".toLowerCase() ||
+              formValues?.role?.split(" ").join("").toLowerCase() === "admin" ||
+              formValues?.role?.split(" ").join("").toLowerCase() ===
+                "counselor".toLowerCase() ||
+              formValues?.role?.split(" ").join("").toLowerCase() ===
+                "accountant".toLowerCase() ? (
                 ""
               ) : (
                 <div>
@@ -655,14 +689,14 @@ export function User() {
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Position"
                   name="position"
-                  defaultValue={formValues.position}
+                  value={formValues.position}
                   onChange={handleChange}
                   disabled={isViewMode}
                 />
                 {/* <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="position"
-                  defaultValue={formValues.position}
+                  value={formValues.position}
                   onChange={handleChange}
                   disabled={isViewMode}
                 >
@@ -682,7 +716,7 @@ export function User() {
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="DD/MM/YYYY"
                   name="date"
-                  defaultValue={formValues.date}
+                  value={formValues.date}
                   onChange={handleChange}
                   disabled={isViewMode}
                   min="1997-01-01"
@@ -718,37 +752,37 @@ export function User() {
                 <AddField open={openModal} close={() => setOpenModal(false)} />
               </div> */}
             </div>
-            <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  Password
-                </label>
-                <input
-                  required
-                  type="password"
-                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder=""
-                  name="password"
-                  value={formValues.password}
-                  onChange={handleChange}
-                  disabled={isViewMode}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="***********"
-                />
-              </div>
-            </div>
             {isViewMode ? (
               ""
             ) : (
               <>
+                <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                      Password
+                    </label>
+                    <input
+                      required
+                      type="password"
+                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                      placeholder=""
+                      name="password"
+                      value={formValues.password}
+                      onChange={handleChange}
+                      disabled={isViewMode}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                      Confirm Password
+                    </label>
+                    <input
+                      type="password"
+                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="***********"
+                    />
+                  </div>
+                </div>
                 {/* <NavLink to=""> */}
                 <Button
                   className="rounded-[15px]  bg-[#280559]"
@@ -775,7 +809,13 @@ export function User() {
               </>
             )}{" "}
             <Button
-              onClick={() => setUserstate(true)}
+              onClick={() => {
+                setAllFormsData({});
+                setFormValues({});
+                setUserstate(true);
+                navigate("/dashboard/settingsManagement/*");
+                return;
+              }}
               className="rounded-[15px]  bg-[#280559]"
             >
               <div className="flex flex-row items-center justify-center">

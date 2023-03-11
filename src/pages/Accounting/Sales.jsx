@@ -13,16 +13,18 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import print from "../../../public/img/print.svg";
 import saveIcon from "../../../public/img/saveIcon.svg";
 import Sales_recording_data from "@/data/Sales-recording-data";
-import AddField from "@/helpers/AddField";
+// import AddField from "@/helpers/AddField";
+import AddField from "../../../src/helpers/Addfield";
 // import dropdown from "../../../public/img/dropdown.svg";
 // Anasite - Edits
 import { NavLink, useParams } from "react-router-dom";
-import { listSales } from "@/redux/actions/actions";
+import { listInvoiceModuleStatuss, listSales } from "@/redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { ENV } from "@/config";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Paginate from "@/paginate";
+import Modal from "../universitymodule/Modal";
 //
 
 export function Sales() {
@@ -32,70 +34,137 @@ export function Sales() {
   // Anasite - Edits
   const dispatch = useDispatch();
   const params = useParams();
-  const [action, setAction] = useState(0); // 0: create, 1: edit
-  const { sales } = useSelector((state) => state?.universitiesReducer);
-  console.log("sales from accounting ====>", sales);
+  const [action, setAction] = useState(0); // 0: create, 1: view, 2: edit
+  const [isViewMode, setIsViewMode] = useState(true);
+  // const dispatch = useDispatch();
+  useEffect(() => {
+    if (action == 1) return setIsViewMode(true);
+    setIsViewMode(false);
+  }, [action]);
+  const { sales, invoiceModuleStatuss: statuss } = useSelector(
+    (state) => state?.universitiesReducer
+  );
+  // console.log("sales from accounting ====>", sales);
   useEffect(() => {
     dispatch(listSales());
+    dispatch(listInvoiceModuleStatuss("limit=100000"));
   }, []);
   const handleSubmit = async () => {
-    setSalesState(true);
+    // setSalesState(true);
     // console.log("handle submit", formValues);
-    const { name, description, amount, date } = allFormsData;
+    const { name, description, amount, date, statusID, ID } = allFormsData;
     let formData = new FormData();
     formData.append("name", name);
     formData.append("amount", amount);
     formData.append("description", description);
     formData.append("date", date);
-
+    formData.append("statusID", statusID);
+    if (ID) formData.append("ID", ID);
     if (params.id) formData.append("id", params.id);
 
+    // console.log("Salllleee", sale);
     const config = {
       headers: { "content-type": "multipart/form-data" },
     };
 
-    const apiCall = await axios[params.action == 2 ? "put" : "post"](
-      `${ENV.baseUrl}/sales/${params.action == 2 ? "edit" : "create"}`,
+    const sale = await axios[action == 2 ? "put" : "post"](
+      `${ENV.baseUrl}/sales/${action == 2 ? "edit" : "create"}`,
       formData,
       config
     );
     dispatch(listSales());
 
     // setIsLoading(false);
+    // console.log("Salllleee", sale);
 
-    if (apiCall.data?.success) {
-      let { message } = apiCall.data;
+    if (sale.data?.success) {
+      let { message } = sale.data;
       toast.success(message, {
         position: toast.POSITION.TOP_RIGHT,
         hideProgressBar: false,
         autoClose: 3000,
         // key: "_" + Math.random() * 1000000 + "_" + Math.random() * 1000000,
       });
+      setSalesState(true);
+      setAction(0);
+      setAllFormsData({  });
+      setIdToDelete();
+      setIdToView();
+      setDropdownID();
     }
     // navigate("university")
   };
   // END
   // Anasite - Edits: for view on click
   const [idToView, setIdToView] = useState("");
-  const viewOnClick = ({ ID, name, description, amount, date }) => {
+  const viewOnClick = ({ ID, name, description, amount, date, statusID }) => {
+    // console.log("view on click");
     return () => {
-      setAction(1);
+      // setAction(1);
       setSalesState(false);
-      setAllFormsData({ name, description, amount, date });
+      setAllFormsData({ name, description, amount, date: new Date(date).toISOString().substr(0, 10), statusID, ID });
       setIdToView(ID);
     };
   };
+  // Anasite - Edits: for 'edit'/'delete'
+  const [showModal, setShowModal] = useState(false);
+  const [idToDelete, setIdToDelete] = useState("");
+  const [dropdownID, setDropdownID] = useState("");
+  const [search, setSearch] = useState("");
+  const onConfirmation = async () => {
+    // here we will delete call
+    // console.log("Sales deleted");
+    // console.log("Sales delete", params.id);
+    const data = await axios.delete(
+      `${ENV.baseUrl}/sales/delete/${idToDelete}`
+    );
+    if (data.data?.success) {
+      let { message } = data.data;
+      toast.success(message, {
+        position: toast.POSITION.TOP_RIGHT,
+        hideProgressBar: false,
+        autoClose: 3000,
+        // key: "_" + Math.random() * 1000000 + "_" + Math.random() * 1000000,
+      });
+      setSalesState(true);
+      setAction(0);
+      setAllFormsData({  });
+      setIdToDelete();
+      setIdToView();
+    }
+    // console.log("deleted data", data);
+    dispatch(listSales(sales?.data?.faqs.pagination));
+    // // alert("whppp");
+  };
+  const toggleDropdown = (ind) => {
+    // console.log("toggle dropdown ", dropdownID, " _ ", ind);
+
+    // ***
+    return () => {
+      // const dropdown = document.getElementById(`dropdown${ind}`);
+      // dropdown.classList.toggle("hidden");
+      // dropdown.classList.toggle("block");
+      if (ind === dropdownID) return setDropdownID("");
+      setDropdownID(ind);
+    };
+  };
   // END
-  const [salesState, setSalesState] = useState(true);
+  // END
+  const [salesState, setSalesState] = useState(true); // false: show inputs
   const [openSalesAddModal, setOpenSalesAddModal] = useState(false);
   const [SalesNewFields, setSalesNewFields] = useState([]);
-  const [allFormsData, setAllFormsData] = useState({});
+  const [allFormsData, setAllFormsData] = useState({  });
   const handleAllFormsDataChange = (e) => {
     let { name, value } = e.target;
     setAllFormsData({ ...allFormsData, [name]: value });
   };
   return (
     <>
+      <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        onConfirmation={onConfirmation}
+      />
       <div
         className={`mt-[30px] flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
           salesState ? "" : "hidden"
@@ -108,7 +177,10 @@ export function Sales() {
                 Sales recording
               </p>
               <Button
-                onClick={() => setSalesState(false)}
+                onClick={() => {
+                  setAction(0);
+                  return setSalesState(false);
+                }}
                 className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6"
               >
                 <img className="m-1 w-[20px]" src={plus} alt="..." />
@@ -214,14 +286,18 @@ export function Sales() {
                 </thead>
                 <tbody className="border-none">
                   {sales?.data?.faqs.map(
-                    ({
-                      ID,
-                      date,
-                      name,
-                      description,
-                      amount: salesAmount,
-                      salesAmountColor,
-                    }) => (
+                    (
+                      {
+                        ID,
+                        date,
+                        name,
+                        description,
+                        amount: salesAmount,
+                        salesAmountColor,
+                        statusID,
+                      },
+                      ind
+                    ) => (
                       <tr key={name + ID + "lkj" + description}>
                         <td className="whitespace-nowrap py-3 pr-6">
                           <Checkbox />
@@ -247,13 +323,17 @@ export function Sales() {
                             variant="outlined"
                             className="mx-auto h-[28px] w-[78px] rounded-[15px] border border-[#280559] p-0 text-[#280559] ease-in hover:bg-[#280559] hover:text-white hover:opacity-100"
                             fullWidth
-                            onClick={viewOnClick({
-                              date,
-                              ID,
-                              amount: salesAmount,
-                              name,
-                              description,
-                            })}
+                            onClick={() => {
+                              setAction(1);
+                              return viewOnClick({
+                                date,
+                                ID,
+                                amount: salesAmount,
+                                name,
+                                description,
+                                statusID,
+                              })();
+                            }}
                           >
                             <p className="text-center text-xs font-medium capitalize">
                               view
@@ -261,6 +341,81 @@ export function Sales() {
                           </Button>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
+                          <button
+                            className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
+                            // id="dropdownDefaultButton"
+                            // data-dropdown-toggle="dropdown"
+                            id={`dropdownDefaultButton${ind}`}
+                            data-dropdown-toggle={`dropdown${ind}`}
+                            type="button"
+                            onClick={toggleDropdown(ID)}
+                          >
+                            <svg
+                              className="h-8 w-8 fill-current"
+                              viewBox="0 0 32 32"
+                            >
+                              <circle cx="16" cy="10" r="2" />
+                              <circle cx="16" cy="16" r="2" />
+                              <circle cx="16" cy="22" r="2" />
+                            </svg>
+                          </button>
+                          <div
+                            // id="dropdown"
+                            id={`dropdown${ind}`}
+                            // className="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                            className={
+                              "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                              (dropdownID === ID ? "" : " hidden ")
+                            }
+                          >
+                            <ul
+                              className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                              // aria-labelledby="dropdownDefaultButton"
+                              aria-labelledby={`dropdownDefaultButton${ind}`}
+                            >
+                              <li>
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={() => {
+                                    // setShowModal(true);
+                                    setAction(2); // Edit
+                                    viewOnClick({
+                                      ID,
+                                      name,
+                                      description,
+                                      amount: salesAmount,
+                                      date,
+                                      statusID,
+                                    })();
+                                    setSalesState(false);
+
+                                    //   (navigate(
+                                    //   `/dashboard/university_module/a/2/${ele?.id}`
+                                    // ))
+                                  }}
+                                >
+                                  Edit
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  onClick={
+                                    () => {
+                                      setIdToDelete(ID);
+                                      setShowModal(true);
+                                    }
+                                    // navigate(
+                                    //   `/dashboard/Leadsmodule/${ele?.id}`
+                                    // )
+                                  }
+                                >
+                                  Delete
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                        {/* <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
                           <button className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]">
                             <svg
                               className="h-8 w-8 fill-current"
@@ -271,7 +426,7 @@ export function Sales() {
                               <circle cx="16" cy="22" r="2" />
                             </svg>
                           </button>
-                        </td>
+                        </td> */}
                       </tr>
                     )
                   )}
@@ -332,10 +487,10 @@ export function Sales() {
       >
         <div className="my-5">
           <p className=" mb-2 text-4xl font-semibold text-[#280559]">
-            {action === 1 ? "Edit" : "Create"} Sales
+            {action === 2 ? "Edit" : action === 1 ? "View" : "Create"} Sales
           </p>
           <p className=" font text-base text-[#9898A3]">
-            Create or edit program
+            {action === 2 ? "Edit" : action === 1 ? "View" : "Create"} Sales
           </p>
         </div>
         <div className="rounded-[34px] bg-white p-[39px]">
@@ -355,6 +510,7 @@ export function Sales() {
                   onChange={handleAllFormsDataChange}
                   placeholder="Sale Name"
                   value={allFormsData.name || ""}
+                  disabled={isViewMode}
                   required
                 />
               </div>
@@ -369,6 +525,7 @@ export function Sales() {
                   name="description"
                   onChange={handleAllFormsDataChange}
                   value={allFormsData.description || ""}
+                  disabled={isViewMode}
                   required
                 />
               </div>
@@ -387,6 +544,7 @@ export function Sales() {
                     name="amount"
                     onChange={handleAllFormsDataChange}
                     value={allFormsData.amount || ""}
+                    disabled={isViewMode}
                     required
                   />
                 </div>
@@ -401,9 +559,59 @@ export function Sales() {
                   placeholder="DD/MM/YYYY"
                   name="date"
                   onChange={handleAllFormsDataChange}
-                  value={allFormsData.date || ""}
+                  // valueAsDate={
+                  //   new Date(allFormsData.date).toISOString().substr(0, 10) ||
+                  //   ""
+                  // }
+                  value={
+                    allFormsData?.date ||
+                    ""
+                  }
+                  disabled={isViewMode}
                   required
                 />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-[#333333]">
+                  Select Status
+                </label>
+
+                <select
+                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                  name="statusID" //
+                  value={+allFormsData?.statusID}
+                  disabled={isViewMode}
+                  onChange={handleAllFormsDataChange}
+                  onBlur={(e) => {
+                    if (e.target.value === "") {
+                      // setFormErrors({
+                      //   ...formErrors,
+                      //   selectUniversity: "please choose one first location",
+                      // });
+                    }
+                  }}
+                >
+                  <option value="">Select Status</option>
+                  {statuss?.data?.faqs.map((status) => {
+                    return (
+                      <option
+                        value={+status?.ID}
+                        key={
+                          status?.ID +
+                          status?.createdAt +
+                          "status of invoice on sale on accounting" +
+                          status?.name
+                        }
+                      >
+                        {status?.name}
+                      </option>
+                    );
+                  })}
+                  {/* <option>Punjab University</option>
+                  <option>Virtual University</option>
+                  <option>Central punjab University</option> */}
+                </select>
+                {/* <p className="text-red-500">{formErrors.selectUniversity}</p> */}
               </div>
               {/* <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
@@ -418,7 +626,7 @@ export function Sales() {
                 </button>
                 <AddField open={openModal} close={() => setOpenModal(false)} />
               </div> */}
-              {salesState ? (
+              {salesState || isViewMode ? (
                 ""
               ) : (
                 <AddField
@@ -437,20 +645,27 @@ export function Sales() {
           </form>
         </div>
         <NavLink>
-          <Button
-            onClick={handleSubmit}
-            className="rounded-[15px]  bg-[#280559]"
-          >
-            <div className="flex flex-row items-center justify-center px-[33px] py-[10px]">
-              <img src={saveIcon} alt="..." />
-              <p className="px-[11px] text-base font-medium normal-case text-white ">
-                Save Changes
-              </p>
-            </div>
-          </Button>
+          {isViewMode ? (
+            ""
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              className="rounded-[15px]  bg-[#280559]"
+            >
+              <div className="flex flex-row items-center justify-center px-[33px] py-[10px]">
+                <img src={saveIcon} alt="..." />
+                <p className="px-[11px] text-base font-medium normal-case text-white ">
+                  Save Changes
+                </p>
+              </div>
+            </Button>
+          )}
           {"   "}
           <Button
-            onClick={() => setSalesState(true)}
+            onClick={() => {
+              setAllFormsData({  });
+              return setSalesState(true);
+            }}
             className="rounded-[15px]  bg-[#280559]"
           >
             <div className="flex flex-row items-center justify-center px-[33px] py-[10px]">

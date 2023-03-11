@@ -311,7 +311,7 @@
 //                 <select
 //                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                   name="leadGroup" //
-//                   defaultValue={formValues?.leadGroup}
+//                   value={formValues?.leadGroup}
 //                   disabled={isViewMode}
 //                   onChange={handleChange}
 //                 >
@@ -327,7 +327,7 @@
 //                 <select
 //                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                   name="country" //
-//                   defaultValue={formValues?.country}
+//                   value={formValues?.country}
 //                   onChange={handleChange}
 //                   disabled={isViewMode}
 //                 >
@@ -409,7 +409,7 @@
 //                 <select
 //                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                   name="qualificationType" //
-//                   defaultValue={formValues?.qualificationType}
+//                   value={formValues?.qualificationType}
 //                   onChange={handleChange}
 //                   disabled={isViewMode}
 //                 >
@@ -441,7 +441,7 @@
 //                 <select
 //                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                   name="interestedProgramme" //
-//                   defaultValue={formValues?.interestedProgramme}
+//                   value={formValues?.interestedProgramme}
 //                   onChange={handleChange}
 //                   disabled={isViewMode}
 //                 >
@@ -457,7 +457,7 @@
 //                 <select
 //                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                   name="status" //
-//                   defaultValue={formValues?.status}
+//                   value={formValues?.status}
 //                   onChange={handleChange}
 //                   disabled={isViewMode}
 //                 >
@@ -606,7 +606,7 @@ import {
   listLeadsManagmentModuleStatuss,
   listQualificationTypes,
   listLeadGroups,
-  viewBranch
+  listLeads,
 } from "@/redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 import FullPageLoader from "@/FullPageLoader/FullPageLoader";
@@ -625,26 +625,13 @@ export function CreateLead() {
   } = useSelector((state) =>
     state?.universitiesReducer ? state?.universitiesReducer : {}
   );
-
-  const [branchID, setBranchID] = useState();
-  const ViewBranch = useSelector(state => state?.universitiesReducer?.viewBranch)
-
   useEffect(() => {
     dispatch(listUniversities("limit=100000"));
     dispatch(listInterestedPrograms("limit=100000"));
     dispatch(listLeadsManagmentModuleStatuss("limit=100000"));
     dispatch(listQualificationTypes("limit=100000"));
     dispatch(listLeadGroups("limit=100000"));
-    dispatch(viewBranch());
   }, []);
-
-  useEffect(() =>{
-    ViewBranch && ViewBranch?.branch?.map(item => item.role === localStorage.access && setBranchID(item.id));
-  }, [ViewBranch])
-
-  useEffect(() => {
-    console.log("dsf",branchID);
-  }, [branchID])
   // End
   /*{ toAdd, setToAdd,  open,close,  setOpenAddModal,  formsData,  setFormsData,  handleFormsDataChange,  section,} */
   // const [openModal, setOpenModal] = useState(false);
@@ -669,21 +656,19 @@ export function CreateLead() {
   const fileTypes = ["JPEG", "PNG", "GIF"];
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
-  const [newuid, setNewuid] = useState('')
+  const [newuid, setNewuid] = useState("");
 
   useEffect(() => {
     uidsd();
-
   }, []);
 
   const uidsd = () => {
     const unique_id = uuid();
     const only_numbers = unique_id.replace(/[^0-9]/g, "");
     const first_9_digits = only_numbers.substring(0, 9);
-    console.log(first_9_digits)
-    setNewuid(first_9_digits)
-  }
-
+    console.log(first_9_digits);
+    setNewuid(first_9_digits);
+  };
 
   const leadData = useSelector(
     (state) => state?.universitiesReducer?.viewLeads
@@ -716,7 +701,8 @@ export function CreateLead() {
     comments: "",
     image: "",
   };
-  const [ProgrameDetailValues, setProgrameDetailsValues] = useState(secondInitialValus);
+  const [ProgrameDetailValues, setProgrameDetailsValues] =
+    useState(secondInitialValus);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
@@ -724,28 +710,33 @@ export function CreateLead() {
 
   useEffect(() => {
     if (params.id) dispatch(viewLead(params.id));
-    if (params.action != 1 ) {
+    if (params.action == 1) {
       setIsViewMode(true);
     } else {
       setIsViewMode(false);
     }
-    if(!params.action) {
+    if (!params.action) {
       setIsViewMode(false);
     }
-
   }, [params.id]);
 
   useEffect(() => {
-    if (leadData?.lead) setFormValues(leadData?.lead);
+    if (!params.action || !params.id) return;
+    if (leadData?.lead) {
+      setFormValues(leadData?.lead);
+      console.log("Load Data Lead >>> ", leadData?.lead);
+      return setProgrameDetailsValues(leadData?.lead?.ProgrameDetail);
+    }
   }, [leadData.lead]);
 
   useEffect(() => {
+    if (!params.action || !params.id) return;
     if (leadData?.lead?.programmeDetails)
       setProgrameDetailsValues(leadData?.lead?.programmeDetails);
   }, [leadData?.lead?.programmeDetails]);
 
   const handlefileChange = (file) => {
-    console.log("file", file[0]);
+    console.log("file", file);
     setFile(file);
     //
     let reader = new FileReader();
@@ -812,14 +803,11 @@ export function CreateLead() {
     formData.append("status", status);
     formData.append("cert", cert);
     formData.append("comments", comments);
-    formData.append("logo", file[0]);
-    formData.append("branchID", branchID);
+    formData.append("logo", file && file[0] ? file[0] : "");
 
     const config = {
       headers: { "content-type": "multipart/form-data" },
     };
-
-    console.log("final", formData);
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
       `${ENV.baseUrl}/lead/${params.action == 2 ? "edit" : "createLead"}`,
@@ -837,9 +825,11 @@ export function CreateLead() {
         hideProgressBar: false,
         autoClose: 3000,
       });
-      navigate(-1)
+      setFormValues(initialValues);
+      setProgrameDetailsValues(secondInitialValus);
+      dispatch(listLeads());
+      navigate(-1);
     }
-    
   };
 
   return (
@@ -854,8 +844,8 @@ export function CreateLead() {
               {params.action == 1
                 ? "View Lead"
                 : params.action == 2
-                  ? "Edit Lead"
-                  : "Create Lead"}
+                ? "Edit Lead"
+                : "Create Lead"}
             </p>
             {isViewMode ? (
               <Button
@@ -888,8 +878,8 @@ export function CreateLead() {
             {params.action == 1
               ? "View Lead"
               : params.action == 2
-                ? "Edit Lead"
-                : "Create Lead"}
+              ? "Edit Lead"
+              : "Create Lead"}
           </p>
           {isViewMode ? (
             ""
@@ -939,7 +929,7 @@ export function CreateLead() {
                       multiple={true}
                       handleChange={handlefileChange}
                       name="file" //
-                    // types={fileTypes}
+                      // types={fileTypes}
                     >
                       <button className="w-[150px] ">
                         <p className="rounded-2xl border-[1px] border-[#cbd2dc]/50 py-3 text-sm font-medium text-[#333333] shadow-md">
@@ -1004,7 +994,7 @@ export function CreateLead() {
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="leadGroup" //
-                  defaultValue={formValues?.leadGroup}
+                  value={formValues?.leadGroup}
                   disabled={isViewMode}
                   onChange={handleChange}
                 >
@@ -1039,7 +1029,7 @@ export function CreateLead() {
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="country" //
-                  // defaultValue={formValues?.country}
+                  value={formValues?.country}
                   onChange={handleChange}
                   disabled={isViewMode}
                 >
@@ -1071,12 +1061,18 @@ export function CreateLead() {
                   <option value="Bermuda">Bermuda</option>
                   <option value="Bhutan">Bhutan</option>
                   <option value="Bolivia">Bolivia</option>
-                  <option value="Bonaire, Sint Eustatius and Saba">Caribbean Netherlands</option>
-                  <option value="Bosnia and Herzegovina">Bosnia & Herzegovina</option>
+                  <option value="Bonaire, Sint Eustatius and Saba">
+                    Caribbean Netherlands
+                  </option>
+                  <option value="Bosnia and Herzegovina">
+                    Bosnia & Herzegovina
+                  </option>
                   <option value="Botswana">Botswana</option>
                   <option value="Bouvet Island">Bouvet Island</option>
                   <option value="Brazil">Brazil</option>
-                  <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
+                  <option value="British Indian Ocean Territory">
+                    British Indian Ocean Territory
+                  </option>
                   <option value="Brunei Darussalam">Brunei</option>
                   <option value="Bulgaria">Bulgaria</option>
                   <option value="Burkina Faso">Burkina Faso</option>
@@ -1086,16 +1082,22 @@ export function CreateLead() {
                   <option value="Canada">Canada</option>
                   <option value="Cape Verde">Cape Verde</option>
                   <option value="Cayman Islands">Cayman Islands</option>
-                  <option value="Central African Republic">Central African Republic</option>
+                  <option value="Central African Republic">
+                    Central African Republic
+                  </option>
                   <option value="Chad">Chad</option>
                   <option value="Chile">Chile</option>
                   <option value="China">China</option>
                   <option value="Christmas Island">Christmas Island</option>
-                  <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
+                  <option value="Cocos (Keeling) Islands">
+                    Cocos (Keeling) Islands
+                  </option>
                   <option value="Colombia">Colombia</option>
                   <option value="Comoros">Comoros</option>
                   <option value="Congo">Congo - Brazzaville</option>
-                  <option value="Congo, Democratic Republic of the Congo">Congo - Kinshasa</option>
+                  <option value="Congo, Democratic Republic of the Congo">
+                    Congo - Kinshasa
+                  </option>
                   <option value="Cook Islands">Cook Islands</option>
                   <option value="Costa Rica">Costa Rica</option>
                   <option value="Cote D'Ivoire">Côte d’Ivoire</option>
@@ -1115,14 +1117,18 @@ export function CreateLead() {
                   <option value="Eritrea">Eritrea</option>
                   <option value="Estonia">Estonia</option>
                   <option value="Ethiopia">Ethiopia</option>
-                  <option value="Falkland Islands (Malvinas)">Falkland Islands (Islas Malvinas)</option>
+                  <option value="Falkland Islands (Malvinas)">
+                    Falkland Islands (Islas Malvinas)
+                  </option>
                   <option value="Faroe Islands">Faroe Islands</option>
                   <option value="Fiji">Fiji</option>
                   <option value="Finland">Finland</option>
                   <option value="France">France</option>
                   <option value="French Guiana">French Guiana</option>
                   <option value="French Polynesia">French Polynesia</option>
-                  <option value="French Southern Territories">French Southern Territories</option>
+                  <option value="French Southern Territories">
+                    French Southern Territories
+                  </option>
                   <option value="Gabon">Gabon</option>
                   <option value="Gambia">Gambia</option>
                   <option value="Georgia">Georgia</option>
@@ -1140,8 +1146,12 @@ export function CreateLead() {
                   <option value="Guinea-Bissau">Guinea-Bissau</option>
                   <option value="Guyana">Guyana</option>
                   <option value="Haiti">Haiti</option>
-                  <option value="Heard Island and Mcdonald Islands">Heard & McDonald Islands</option>
-                  <option value="Holy See (Vatican City State)">Vatican City</option>
+                  <option value="Heard Island and Mcdonald Islands">
+                    Heard & McDonald Islands
+                  </option>
+                  <option value="Holy See (Vatican City State)">
+                    Vatican City
+                  </option>
                   <option value="Honduras">Honduras</option>
                   <option value="Hong Kong">Hong Kong</option>
                   <option value="Hungary">Hungary</option>
@@ -1161,7 +1171,9 @@ export function CreateLead() {
                   <option value="Kazakhstan">Kazakhstan</option>
                   <option value="Kenya">Kenya</option>
                   <option value="Kiribati">Kiribati</option>
-                  <option value="Korea, Democratic People's Republic of">North Korea</option>
+                  <option value="Korea, Democratic People's Republic of">
+                    North Korea
+                  </option>
                   <option value="Korea, Republic of">South Korea</option>
                   <option value="Kosovo">Kosovo</option>
                   <option value="Kuwait">Kuwait</option>
@@ -1176,10 +1188,14 @@ export function CreateLead() {
                   <option value="Lithuania">Lithuania</option>
                   <option value="Luxembourg">Luxembourg</option>
                   <option value="Macao">Macao</option>
-                  <option value="Macedonia, the Former Yugoslav Republic of">North Macedonia</option>
+                  <option value="Macedonia, the Former Yugoslav Republic of">
+                    North Macedonia
+                  </option>
                   <option value="Madagascar">Madagascar</option>
                   <option value="Malawi">Malawi</option>
-                  <option value="Malaysia" selected>Malaysia</option>
+                  <option value="Malaysia" selected>
+                    Malaysia
+                  </option>
                   <option value="Maldives">Maldives</option>
                   <option value="Mali">Mali</option>
                   <option value="Malta">Malta</option>
@@ -1189,7 +1205,9 @@ export function CreateLead() {
                   <option value="Mauritius">Mauritius</option>
                   <option value="Mayotte">Mayotte</option>
                   <option value="Mexico">Mexico</option>
-                  <option value="Micronesia, Federated States of">Micronesia</option>
+                  <option value="Micronesia, Federated States of">
+                    Micronesia
+                  </option>
                   <option value="Moldova, Republic of">Moldova</option>
                   <option value="Monaco">Monaco</option>
                   <option value="Mongolia">Mongolia</option>
@@ -1210,12 +1228,16 @@ export function CreateLead() {
                   <option value="Nigeria">Nigeria</option>
                   <option value="Niue">Niue</option>
                   <option value="Norfolk Island">Norfolk Island</option>
-                  <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+                  <option value="Northern Mariana Islands">
+                    Northern Mariana Islands
+                  </option>
                   <option value="Norway">Norway</option>
                   <option value="Oman">Oman</option>
                   <option value="Pakistan">Pakistan</option>
                   <option value="Palau">Palau</option>
-                  <option value="Palestinian Territory, Occupied">Palestine</option>
+                  <option value="Palestinian Territory, Occupied">
+                    Palestine
+                  </option>
                   <option value="Panama">Panama</option>
                   <option value="Papua New Guinea">Papua New Guinea</option>
                   <option value="Paraguay">Paraguay</option>
@@ -1232,14 +1254,22 @@ export function CreateLead() {
                   <option value="Rwanda">Rwanda</option>
                   <option value="Saint Barthelemy">St. Barthélemy</option>
                   <option value="Saint Helena">St. Helena</option>
-                  <option value="Saint Kitts and Nevis">St. Kitts & Nevis</option>
+                  <option value="Saint Kitts and Nevis">
+                    St. Kitts & Nevis
+                  </option>
                   <option value="Saint Lucia">St. Lucia</option>
                   <option value="Saint Martin">St. Martin</option>
-                  <option value="Saint Pierre and Miquelon">St. Pierre & Miquelon</option>
-                  <option value="Saint Vincent and the Grenadines">St. Vincent & Grenadines</option>
+                  <option value="Saint Pierre and Miquelon">
+                    St. Pierre & Miquelon
+                  </option>
+                  <option value="Saint Vincent and the Grenadines">
+                    St. Vincent & Grenadines
+                  </option>
                   <option value="Samoa">Samoa</option>
                   <option value="San Marino">San Marino</option>
-                  <option value="Sao Tome and Principe">São Tomé & Príncipe</option>
+                  <option value="Sao Tome and Principe">
+                    São Tomé & Príncipe
+                  </option>
                   <option value="Saudi Arabia">Saudi Arabia</option>
                   <option value="Senegal">Senegal</option>
                   <option value="Serbia">Serbia</option>
@@ -1253,13 +1283,17 @@ export function CreateLead() {
                   <option value="Solomon Islands">Solomon Islands</option>
                   <option value="Somalia">Somalia</option>
                   <option value="South Africa">South Africa</option>
-                  <option value="South Georgia and the South Sandwich Islands">South Georgia & South Sandwich Islands</option>
+                  <option value="South Georgia and the South Sandwich Islands">
+                    South Georgia & South Sandwich Islands
+                  </option>
                   <option value="South Sudan">South Sudan</option>
                   <option value="Spain">Spain</option>
                   <option value="Sri Lanka">Sri Lanka</option>
                   <option value="Sudan">Sudan</option>
                   <option value="Suriname">Suriname</option>
-                  <option value="Svalbard and Jan Mayen">Svalbard & Jan Mayen</option>
+                  <option value="Svalbard and Jan Mayen">
+                    Svalbard & Jan Mayen
+                  </option>
                   <option value="Swaziland">Eswatini</option>
                   <option value="Sweden">Sweden</option>
                   <option value="Switzerland">Switzerland</option>
@@ -1276,21 +1310,31 @@ export function CreateLead() {
                   <option value="Tunisia">Tunisia</option>
                   <option value="Turkey">Turkey</option>
                   <option value="Turkmenistan">Turkmenistan</option>
-                  <option value="Turks and Caicos Islands">Turks & Caicos Islands</option>
+                  <option value="Turks and Caicos Islands">
+                    Turks & Caicos Islands
+                  </option>
                   <option value="Tuvalu">Tuvalu</option>
                   <option value="Uganda">Uganda</option>
                   <option value="Ukraine">Ukraine</option>
-                  <option value="United Arab Emirates">United Arab Emirates</option>
+                  <option value="United Arab Emirates">
+                    United Arab Emirates
+                  </option>
                   <option value="United Kingdom">United Kingdom</option>
                   <option value="United States">United States</option>
-                  <option value="United States Minor Outlying Islands">U.S. Outlying Islands</option>
+                  <option value="United States Minor Outlying Islands">
+                    U.S. Outlying Islands
+                  </option>
                   <option value="Uruguay">Uruguay</option>
                   <option value="Uzbekistan">Uzbekistan</option>
                   <option value="Vanuatu">Vanuatu</option>
                   <option value="Venezuela">Venezuela</option>
                   <option value="Viet Nam">Vietnam</option>
-                  <option value="Virgin Islands, British">British Virgin Islands</option>
-                  <option value="Virgin Islands, U.s.">U.S. Virgin Islands</option>
+                  <option value="Virgin Islands, British">
+                    British Virgin Islands
+                  </option>
+                  <option value="Virgin Islands, U.s.">
+                    U.S. Virgin Islands
+                  </option>
                   <option value="Wallis and Futuna">Wallis & Futuna</option>
                   <option value="Western Sahara">Western Sahara</option>
                   <option value="Yemen">Yemen</option>
@@ -1379,7 +1423,7 @@ export function CreateLead() {
                   placeholder="School Name"
                   required
                   name="schoolName"
-                  defaultValue={ProgrameDetailValues?.schoolName}
+                  value={ProgrameDetailValues?.schoolName}
                   onChange={handleChange}
                   disabled={isViewMode}
                 />
@@ -1391,7 +1435,7 @@ export function CreateLead() {
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="qualificationType" //
-                  defaultValue={ProgrameDetailValues?.qualificationType}
+                  value={ProgrameDetailValues?.qualificationType}
                   onChange={handleChange}
                   disabled={isViewMode}
                 >
@@ -1452,7 +1496,7 @@ export function CreateLead() {
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="interestedProgramme" //
-                  defaultValue={ProgrameDetailValues?.interestedProgramme}
+                  value={ProgrameDetailValues?.interestedProgramme}
                   onChange={handleChange}
                   disabled={isViewMode}
                 >
@@ -1483,7 +1527,7 @@ export function CreateLead() {
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="status" //
-                  defaultValue={ProgrameDetailValues?.status}
+                  value={ProgrameDetailValues?.status}
                   onChange={handleChange}
                   disabled={isViewMode}
                 >
@@ -1649,16 +1693,7 @@ export function CreateLead() {
             {/* </form> */}
           </div>
           {isViewMode ? (
-            <Button
-              onClick={() => navigate(-1)}
-              className="rounded-[15px]  bg-[#280559]"
-            >
-              <div className="flex flex-row items-center justify-center">
-                <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                  Back
-                </p>
-              </div>
-            </Button>
+            ""
           ) : (
             <>
               {/* <NavLink to="university"> */}
@@ -1676,7 +1711,21 @@ export function CreateLead() {
               </Button>
               {/* </NavLink> */}
             </>
-          )}
+          )}{" "}
+          <Button
+            onClick={() => {
+              setFormValues(initialValues);
+              setProgrameDetailsValues(secondInitialValus);
+              return navigate(-1);
+            }}
+            className="rounded-[15px]  bg-[#280559]"
+          >
+            <div className="flex flex-row items-center justify-center">
+              <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                Back
+              </p>
+            </div>
+          </Button>
         </form>
       </div>
     </>

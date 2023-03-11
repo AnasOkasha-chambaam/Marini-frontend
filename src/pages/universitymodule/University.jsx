@@ -13,7 +13,7 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { read, utils, writeFile } from 'xlsx';
+import { read, utils, writeFile } from "xlsx";
 
 // import { Modal } from "react-bootstrap";
 import Modal from "./Modal";
@@ -39,6 +39,7 @@ export function University() {
   const universitiesData = useSelector(
     (state) => state?.universitiesReducer?.universities
   );
+  console.log("Universities in the module >>>>> ", universitiesData);
 
   const pagination = useSelector(
     (state) => state?.universitiesReducer?.universities?.data?.pagination
@@ -49,28 +50,24 @@ export function University() {
   );
 
   const handleExportXlsx = () => {
-    const headings = [[
-      ...Object.keys(universiteies[0])
-    ]];
+    const headings = [[...Object.keys(universiteies[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, universiteies, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'University Report.xlsx');
-  }
+    utils.sheet_add_json(ws, universiteies, { origin: "A2", skipHeader: true });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Movie Report.xlsx");
+  };
 
   const handleExportCsv = () => {
-    const headings = [[
-      ...Object.keys(universiteies[0])
-    ]];
+    const headings = [[...Object.keys(universiteies[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, universiteies, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'University Report.csv');
-  }
+    utils.sheet_add_json(ws, universiteies, { origin: "A2", skipHeader: true });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Movie Report.csv");
+  };
 
   // const universitiesData = useSelector(
   //   (state) => state?.universitiesReducer?.universities
@@ -101,12 +98,12 @@ export function University() {
   const [dropdownID, setDropdownID] = useState("");
   const onConfirmation = async () => {
     // here we will delete call
-    console.log("university deleted");
-    console.log(params.id);
+    // console.log("university deleted");
+    // console.log(params.id);
     const data = await axios.delete(
       `${ENV.baseUrl}/university/delete/${idToDelete}`
     );
-    console.log("deleted data", data);
+    // console.log("deleted data", data);
     // // alert("whppp");
     // here we will delete call
     disptach(listUniversities(pagination));
@@ -152,17 +149,17 @@ export function University() {
               <p className="text-2xl font-bold text-black sm:text-3xl">
                 University
               </p>
-              {
-                (localStorage.access !== "adminBranch" && localStorage.access !== "counselorBranch") &&
-                <NavLink to="createUniversity">
-                  <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
-                    <img className="m-1 w-[20px]" src={plus} alt="..." />
-                    <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
-                      Create New Form
-                    </p>
-                  </Button>
-                </NavLink>
-              }
+              {localStorage.access !== "adminBranch" &&
+                localStorage.access !== "counselorBranch" && (
+                  <NavLink to="createUniversity">
+                    <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
+                      <img className="m-1 w-[20px]" src={plus} alt="..." />
+                      <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
+                        Create New Form
+                      </p>
+                    </Button>
+                  </NavLink>
+                )}
             </div>
             <div className="my-3 flex flex-col items-center justify-between gap-3 rounded-[20px] bg-[#F8F9FB] p-5 md:flex-row">
               <form className="h-full w-full">
@@ -192,7 +189,10 @@ export function University() {
                 </div>
               </form>
               <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => disptach(filterUniversities({ name: search }))}>
+                <button
+                  className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md"
+                  onClick={() => disptach(filterUniversities({ name: search }))}
+                >
                   <img className="w-[20px]" src={filterIcon} alt="..." />
                   <p className="mx-3 text-[16px] ">Filters</p>
                 </button>
@@ -205,10 +205,16 @@ export function University() {
                     </button>
                   </MenuHandler>
                   <MenuList>
-                    <MenuItem onClick={() => handleExportCsv()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                    <MenuItem
+                      onClick={() => handleExportCsv()}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
                       Export as .csv
                     </MenuItem>
-                    <MenuItem onClick={() => handleExportXlsx()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                    <MenuItem
+                      onClick={() => handleExportXlsx()}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
                       Export as .xlsx
                     </MenuItem>
                   </MenuList>
@@ -371,7 +377,7 @@ export function University() {
               </table>
             </div>
             <Paginate pagination={pagination} method={listUniversities} />
-            listUniversities
+            {/* listUniversities */}
           </div>
         </div>
       </div>

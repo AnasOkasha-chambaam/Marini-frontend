@@ -54,6 +54,11 @@ import {
   // Module: Invoice (1)
   LIST_ALL_COMMISSION_INVOICES,
   VIEW_COMMISSION_INVOICE,
+  //
+  // Module: Invoice (2)
+  LIST_ALL_GENERAL_INVOICES,
+  VIEW_GENERAL_INVOICE,
+  //
   LIST_ALL_SALES,
   VIEW_SALE,
   LIST_ALL_COST_OF_SALES,
@@ -123,6 +128,10 @@ const initialState = {
   commissionInvoices: [null],
   viewCommissionInvoice: [null],
   //
+  // Module: Invoice (2)
+  generalInvoices: [null],
+  viewGeneralInvoice: [null],
+  //
   // Module: Accounting (Sale)
   sales: [null],
   viewSale: [null],
@@ -163,9 +172,9 @@ const universitiesReducer = (state = initialState, action) => {
       };
     case VIEW_ALL_CURRECY:
       return {
-        ...state, 
-        allcurrency: action.payload
-      }
+        ...state,
+        allcurrency: action.payload,
+      };
     case VIEW_PROGRAM_CATEGORY:
       return {
         ...state,
@@ -260,6 +269,18 @@ const universitiesReducer = (state = initialState, action) => {
       return {
         ...state,
         viewCommissionInvoice: action.payload,
+      };
+    //
+    // Module: Invoice (2)
+    case LIST_ALL_GENERAL_INVOICES:
+      return {
+        ...state,
+        generalInvoices: action.payload,
+      };
+    case VIEW_GENERAL_INVOICE:
+      return {
+        ...state,
+        viewGeneralInvoice: action.payload,
       };
     //
     // Module: Accounting (Sale)
@@ -416,8 +437,8 @@ const universitiesReducer = (state = initialState, action) => {
     case LIST_CURRENT_USER:
       return {
         ...state,
-        current_users: action.payload
-      }
+        current_users: action.payload,
+      };
     default:
       return state;
   }

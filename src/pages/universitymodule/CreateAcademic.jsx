@@ -182,7 +182,7 @@
 //                   <select
 //                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                     name="selectUniversity" //
-//                     defaultValue={formValues?.selectUniversity}
+//                     value={formValues?.selectUniversity}
 //                     disabled={isViewMode}
 //                     onChange={handleChange}
 //                   >
@@ -199,7 +199,7 @@
 //                   <select
 //                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                     name="programmeLevel" //
-//                     defaultValue={formValues?.programmeLevel}
+//                     value={formValues?.programmeLevel}
 //                     disabled={isViewMode}
 //                     onChange={handleChange}
 //                   >
@@ -232,7 +232,7 @@
 //                   <select
 //                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                     name="programmeDuration" //
-//                     defaultValue={formValues?.programmeDuration}
+//                     value={formValues?.programmeDuration}
 //                     disabled={isViewMode}
 //                     onChange={handleChange}
 //                   >
@@ -248,7 +248,7 @@
 //                   <select
 //                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
 //                     name="programmeCategory" //
-//                     defaultValue={formValues?.programmeCategory}
+//                     value={formValues?.programmeCategory}
 //                     disabled={isViewMode}
 //                     onChange={handleChange}
 //                   >
@@ -489,17 +489,20 @@ const CreateAcademic = () => {
   );
 
   useEffect(() => {
-    if (programmsData?.programme) setFormValues(programmsData?.programme);
+    if (!params.action || !params.id) return;
+    if (programmsData?.programme)
+      setFormValues({ ...programmsData?.programme });
   }, [programmsData.programme]);
 
   useEffect(() => {
+    // if (!params.action || !params.id) return;
     if (params.id) dispatch(viewProgramme(params.id));
-    if (params.action != 1) {
+    if (params.action == 1) {
       setIsViewMode(true);
     } else {
       setIsViewMode(false);
     }
-    if(!params.action) {
+    if (!params.action) {
       setIsViewMode(false);
     }
   }, [params.id]);
@@ -725,10 +728,14 @@ const CreateAcademic = () => {
                   <label className="mb-2 block text-sm font-medium text-[#333333]">
                     Select University
                   </label>
+                  {console.log(
+                    "form selectuniversity",
+                    formValues?.selectUniversity
+                  )}
                   <select
                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                     name="selectUniversity" //
-                    defaultValue={formValues?.selectUniversity}
+                    value={"" + formValues?.selectUniversity}
                     disabled={isViewMode}
                     onChange={handleChange}
                     onBlur={(e) => {
@@ -744,7 +751,7 @@ const CreateAcademic = () => {
                     {universities?.data?.faqs.map((university) => {
                       return (
                         <option
-                          value={university.id}
+                          value={+university.id}
                           key={
                             university.id +
                             university.createdAt +
@@ -768,7 +775,7 @@ const CreateAcademic = () => {
                   <select
                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                     name="programmeLevel" //
-                    defaultValue={formValues?.programmeLevel}
+                    value={formValues?.programmeLevel}
                     disabled={isViewMode}
                     onChange={handleChange}
                     onBlur={(e) => {
@@ -831,7 +838,7 @@ const CreateAcademic = () => {
                   <select
                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                     name="programmeDuration" //
-                    defaultValue={formValues?.programmeDuration}
+                    value={formValues?.programmeDuration}
                     disabled={isViewMode}
                     onChange={handleChange}
                     onBlur={(e) => {
@@ -859,7 +866,7 @@ const CreateAcademic = () => {
                   <select
                     className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                     name="programmeCategory" //
-                    defaultValue={formValues?.programmeCategory}
+                    value={formValues?.programmeCategory}
                     disabled={isViewMode}
                     onChange={handleChange}
                     onBlur={(e) => {
@@ -1090,6 +1097,7 @@ const CreateAcademic = () => {
                 </button>
               </div> */}
             {/* <NavLink to="university"> */}
+            {console.log("is view mode", isViewMode)}
             {isViewMode ? (
               ""
             ) : (
@@ -1101,7 +1109,7 @@ const CreateAcademic = () => {
                 <div className="flex flex-row items-center justify-center px-[33px] py-[10px]">
                   <img src={saveIcon} alt="..." />
                   <p className="px-[11px] text-base font-medium normal-case text-white">
-                    Save Changess
+                    Save Changes
                   </p>
                 </div>
               </Button>

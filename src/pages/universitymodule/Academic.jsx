@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Modal from "./Modal";
-import { read, utils, writeFile } from 'xlsx';
+import { read, utils, writeFile } from "xlsx";
 import axios from "axios";
 import Paginate from "@/paginate";
 import { ENV } from "@/config";
@@ -60,34 +60,36 @@ export function Academic() {
   const programmsData = useSelector(
     (state) => state?.universitiesReducer?.programms
   );
-
+  console.log("ProgrammsData >>>>>", programmsData);
   const pagination = useSelector(
     (state) => state?.universitiesReducer?.programms?.data?.pagination
   );
 
   const handleExportXlsx = () => {
-    const headings = [[
-      ...Object.keys(programmsData?.data?.faqs[0])
-    ]];
+    const headings = [[...Object.keys(programmsData?.data?.faqs[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, programmsData?.data?.faqs, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Academic Report.xlsx');
-  }
+    utils.sheet_add_json(ws, programmsData?.data?.faqs, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Movie Report.xlsx");
+  };
 
   const handleExportCsv = () => {
-    const headings = [[
-      ...Object.keys(programmsData?.data?.faqs[0])
-    ]];
+    const headings = [[...Object.keys(programmsData?.data?.faqs[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, programmsData?.data?.faqs, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Academic Report.csv');
-  }
+    utils.sheet_add_json(ws, programmsData?.data?.faqs, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Movie Report.csv");
+  };
 
   // list all programms
   useEffect(() => {
@@ -117,18 +119,17 @@ export function Academic() {
               <p className="text-2xl font-bold text-black sm:text-3xl">
                 Academic Programs
               </p>
-              {
-                (localStorage.access !== "adminBranch" && localStorage.access !== "counselorBranch") &&
-                <NavLink to="createAcademic">
-                  <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
-                    <img className="m-1 w-[20px]" src={plus} alt="..." />
-                    <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
-                      Add New Programs
-                    </p>
-                  </Button>
-                </NavLink>
-              }
-
+              {localStorage.access !== "adminBranch" &&
+                localStorage.access !== "counselorBranch" && (
+                  <NavLink to="createAcademic">
+                    <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
+                      <img className="m-1 w-[20px]" src={plus} alt="..." />
+                      <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
+                        Add New Programs
+                      </p>
+                    </Button>
+                  </NavLink>
+                )}
             </div>
             <div className="my-3 flex flex-col items-center justify-between gap-3 rounded-[20px] bg-[#F8F9FB] p-5 md:flex-row">
               <form className="h-full w-full">
@@ -158,7 +159,10 @@ export function Academic() {
                 </div>
               </form>
               <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => disptach(filterProgramms({ name: search }))}>
+                <button
+                  className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md"
+                  onClick={() => disptach(filterProgramms({ name: search }))}
+                >
                   <img className="w-[20px]" src={filterIcon} alt="..." />
                   <p className="mx-3 text-[16px] ">Filters</p>
                 </button>
@@ -170,10 +174,16 @@ export function Academic() {
                     </button>
                   </MenuHandler>
                   <MenuList>
-                    <MenuItem onClick={() => handleExportCsv()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                    <MenuItem
+                      onClick={() => handleExportCsv()}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
                       Export as .csv
                     </MenuItem>
-                    <MenuItem onClick={() => handleExportXlsx()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                    <MenuItem
+                      onClick={() => handleExportXlsx()}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
                       Export as .xlsx
                     </MenuItem>
                   </MenuList>
@@ -234,7 +244,7 @@ export function Academic() {
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
                         {/* {ele?.createdAt} */}
-                        {ele?.programmeLevel}
+                        {ele?.ProgramLevel?.name}
                       </td>
                       <td className="w-[115px] px-3">
                         <Button

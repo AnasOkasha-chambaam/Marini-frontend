@@ -8,11 +8,11 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
 import dropdown from "../../../public/img/dropdown.svg";
 import { useSelector, useDispatch } from "react-redux";
-import { read, utils, writeFile } from 'xlsx';
+import { read, utils, writeFile } from "xlsx";
 import {
   listLeads,
   viewLeadsManagmentModuleStatus,
-  filterListLeads
+  filterListLeads,
 } from "@/redux/actions/actions";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -36,28 +36,30 @@ export function Leads() {
   const [dropdownID, setDropdownID] = useState("");
 
   const handleExportXlsx = () => {
-    const headings = [[
-      ...Object.keys(leadsData?.data?.faqs[0])
-    ]];
+    const headings = [[...Object.keys(leadsData?.data?.faqs[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, leadsData?.data?.faqs, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Leads Report.xlsx');
-  }
+    utils.sheet_add_json(ws, leadsData?.data?.faqs, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Movie Report.xlsx");
+  };
 
   const handleExportCsv = () => {
-    const headings = [[
-      ...Object.keys(leadsData?.data?.faqs[0])
-    ]];
+    const headings = [[...Object.keys(leadsData?.data?.faqs[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, leadsData?.data?.faqs, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Leads Report.csv');
-  }
+    utils.sheet_add_json(ws, leadsData?.data?.faqs, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Movie Report.csv");
+  };
 
   const onConfirmation = async () => {
     // here we will delete call
@@ -100,7 +102,6 @@ export function Leads() {
   const [showModal, setShowModal] = useState(false);
   // list all leads
   useEffect(() => {
-
     disptach(listLeads(""));
 
     // if (leadsData?.success == true) {
@@ -111,7 +112,6 @@ export function Leads() {
     //     autoClose: 3000,
     //   });
     // }
-
   }, []);
 
   // const handleDelete = () => {
@@ -180,7 +180,10 @@ export function Leads() {
                   </div>
                 </form>
                 <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                  <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => disptach(filterListLeads({ name: search }))}>
+                  <button
+                    className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md"
+                    onClick={() => disptach(filterListLeads({ name: search }))}
+                  >
                     <img className="w-[20px]" src={filterIcon} alt="..." />
                     <p className="mx-3 text-[16px] ">Filters</p>
                   </button>
@@ -193,10 +196,16 @@ export function Leads() {
                       </button>
                     </MenuHandler>
                     <MenuList>
-                      <MenuItem onClick={() => handleExportCsv()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                      <MenuItem
+                        onClick={() => handleExportCsv()}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
                         Export as .csv
                       </MenuItem>
-                      <MenuItem onClick={() => handleExportXlsx()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                      <MenuItem
+                        onClick={() => handleExportXlsx()}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
                         Export as .xlsx
                       </MenuItem>
                     </MenuList>
@@ -253,8 +262,12 @@ export function Leads() {
                   </thead>
                   <tbody className="border-none">
                     {leadsData?.data?.faqs.map((ele, ind) => {
-                      if ((localStorage.access === "adminBranch" || localStorage.access === "counselorBranch" || localStorage.access === "accountantBranch")) {
-                        if ((ele?.Branch?.role === localStorage.access))
+                      if (
+                        localStorage.access === "adminBranch" ||
+                        localStorage.access === "counselorBranch" ||
+                        localStorage.access === "accountantBranch"
+                      ) {
+                        if (ele?.Branch?.role === localStorage.access)
                           return (
                             <tr key={ind + ele?.createdAt + "serf" + ele?.name}>
                               <td className="whitespace-nowrap py-3 pr-6">
@@ -279,17 +292,32 @@ export function Leads() {
                                   className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                                   style={{
                                     color:
-                                      ele?.ApplicationDetail
-                                        ?.ApplicationModuleStatus?.Color || "#333",
-                                    backgroundColor: `${ele?.ApplicationDetail
-                                      ?.ApplicationModuleStatus?.Color || "#333"
-                                      }1a`,
+                                      ele?.ProgrameDetail
+                                        ?.LeadsManagmentModuleStatus?.Color ||
+                                      "#333",
+                                    backgroundColor: `${
+                                      ele?.ProgrameDetail
+                                        ?.LeadsManagmentModuleStatus?.Color ||
+                                      "#333"
+                                    }1a`,
                                   }}
+                                  // style={{
+                                  //   color:
+                                  //     ele?.ApplicationDetail
+                                  //       ?.ApplicationModuleStatus?.Color ||
+                                  //     "#333",
+                                  //   backgroundColor: `${
+                                  //     ele?.ApplicationDetail
+                                  //       ?.ApplicationModuleStatus?.Color ||
+                                  //     "#333"
+                                  //   }1a`,
+                                  // }}
                                 >
                                   {/* {ele?.status} */}
                                   {/* {applicationsData?.data?.applicantDetail[0].status} */}
-                                  {ele?.ApplicationDetail?.ApplicationModuleStatus
-                                    ?.name || "GD"}
+                                  {ele?.ProgrameDetail
+                                    ?.LeadsManagmentModuleStatus?.name ||
+                                    "STATUS"}
                                 </p>
                               </td>
                               <td>
@@ -318,13 +346,13 @@ export function Leads() {
                               console.log("e", e.target.value);
                               if (["1", "2"].includes(e.target.value)) {
                                 navigate(
-                                  `/dashboard/ApplicationModule/${e.target.value}/${ele.id}`
+                                  `/dashboard/Leadsmodule/${e.target.value}/${ele.id}`
                                 );
                               } else if (e.target.value == "3") {
                                 //open delete model here
                                 setShowModal(true);
                                 navigate(
-                                  `/dashboard/ApplicationModule/${ele.id}`
+                                  `/dashboard/Leadsmodule/${ele.id}`
                                 );
                               }
                             }}
@@ -399,7 +427,6 @@ export function Leads() {
                               </td>
                             </tr>
                           );
-
                       } else {
                         return (
                           <tr key={ind + ele?.createdAt + "serf" + ele?.name}>
@@ -423,19 +450,34 @@ export function Leads() {
                             <td>
                               <p
                                 className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                                // style={{
+                                //   color:
+                                //     ele?.ApplicationDetail
+                                //       ?.ApplicationModuleStatus?.Color ||
+                                //     "#333",
+                                //   backgroundColor: `${
+                                //     ele?.ApplicationDetail
+                                //       ?.ApplicationModuleStatus?.Color || "#333"
+                                //   }1a`,
+                                // }}
                                 style={{
                                   color:
-                                    ele?.ApplicationDetail
-                                      ?.ApplicationModuleStatus?.Color || "#333",
-                                  backgroundColor: `${ele?.ApplicationDetail
-                                    ?.ApplicationModuleStatus?.Color || "#333"
-                                    }1a`,
+                                    ele?.ProgrameDetail
+                                      ?.LeadsManagmentModuleStatus?.Color ||
+                                    "#333",
+                                  backgroundColor: `${
+                                    ele?.ProgrameDetail
+                                      ?.LeadsManagmentModuleStatus?.Color ||
+                                    "#333"
+                                  }1a`,
                                 }}
                               >
                                 {/* {ele?.status} */}
                                 {/* {applicationsData?.data?.applicantDetail[0].status} */}
-                                {ele?.ApplicationDetail?.ApplicationModuleStatus
-                                  ?.name || "GD"}
+                                {/* {ele?.ApplicationDetail?.ApplicationModuleStatus
+                                  ?.name || "GD"} */}
+                                {ele?.ProgrameDetail?.LeadsManagmentModuleStatus
+                                  ?.name || "STATUS"}
                               </p>
                             </td>
                             <td>
@@ -464,13 +506,13 @@ export function Leads() {
                             console.log("e", e.target.value);
                             if (["1", "2"].includes(e.target.value)) {
                               navigate(
-                                `/dashboard/ApplicationModule/${e.target.value}/${ele.id}`
+                                `/dashboard/Leadsmodule/${e.target.value}/${ele.id}`
                               );
                             } else if (e.target.value == "3") {
                               //open delete model here
                               setShowModal(true);
                               navigate(
-                                `/dashboard/ApplicationModule/${ele.id}`
+                                `/dashboard/Leadsmodule/${ele.id}`
                               );
                             }
                           }}

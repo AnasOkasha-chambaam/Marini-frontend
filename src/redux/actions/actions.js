@@ -57,6 +57,12 @@ import {
   DELETE_COMMISSION_INVOICE,
   EDIT_COMMISSION_INVOICE,
   //
+  // Module: Invoice (2)
+  LIST_ALL_GENERAL_INVOICES,
+  VIEW_GENERAL_INVOICE,
+  DELETE_GENERAL_INVOICE,
+  EDIT_GENERAL_INVOICE,
+  //
   // login
   SING_IN,
 
@@ -84,7 +90,7 @@ import { ENV } from "@/config";
 export const listProgramLevels = (qs) => async (dispatch) => {
   console.log("api url in action file", ENV.baseUrl);
   const data = await axios.get(
-    `${ENV.baseUrl}/programlevel/listProgramLevels?${qs}` 
+    `${ENV.baseUrl}/programlevel/listProgramLevels?${qs}`
   );
   console.log("data.data of list program level uni in action file", data);
   dispatch({
@@ -93,9 +99,7 @@ export const listProgramLevels = (qs) => async (dispatch) => {
   });
 };
 export const EditProgramLevels = (qs) => async (dispatch) => {
-  const data = await axios.put(
-    `${ENV.baseUrl}/programlevel/edit`, qs
-  );
+  const data = await axios.put(`${ENV.baseUrl}/programlevel/edit`, qs);
   dispatch({
     type: LIST_ALL_PROGRAM_LEVELS,
     payload: data.data,
@@ -103,9 +107,7 @@ export const EditProgramLevels = (qs) => async (dispatch) => {
 };
 export const DeleteProgramLevels = (qs) => async (dispatch) => {
   console.log(qs);
-  const data = await axios.post(
-    `${ENV.baseUrl}/programlevel/delete`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/programlevel/delete`, qs);
   dispatch({
     type: LIST_ALL_PROGRAM_LEVELS,
     payload: data.data,
@@ -138,9 +140,7 @@ export const listProgramCategorys = (qs) => async (dispatch) => {
   });
 };
 export const EditProgramCategorys = (qs) => async (dispatch) => {
-  const data = await axios.put(
-    `${ENV.baseUrl}/programcategory/edit`, qs
-  );
+  const data = await axios.put(`${ENV.baseUrl}/programcategory/edit`, qs);
   dispatch({
     type: LIST_ALL_PROGRAM_CATEGORYS,
     payload: data.data,
@@ -148,9 +148,7 @@ export const EditProgramCategorys = (qs) => async (dispatch) => {
 };
 export const DeleteProgramCategorys = (qs) => async (dispatch) => {
   console.log(qs);
-  const data = await axios.post(
-    `${ENV.baseUrl}/programcategory/delete`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/programcategory/delete`, qs);
   dispatch({
     type: LIST_ALL_PROGRAM_CATEGORYS,
     payload: data.data,
@@ -183,9 +181,7 @@ export const listQualificationTypes = (qs) => async (dispatch) => {
   });
 };
 export const EditQualificationTypes = (qs) => async (dispatch) => {
-  const data = await axios.put(
-    `${ENV.baseUrl}/qualificationtype/edit`, qs
-  );
+  const data = await axios.put(`${ENV.baseUrl}/qualificationtype/edit`, qs);
   dispatch({
     type: LIST_ALL_QUALIFICATION_TYPES,
     payload: data.data,
@@ -193,9 +189,7 @@ export const EditQualificationTypes = (qs) => async (dispatch) => {
 };
 export const DeleteQualificationTypes = (qs) => async (dispatch) => {
   console.log(qs);
-  const data = await axios.post(
-    `${ENV.baseUrl}/qualificationtype/delete`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/qualificationtype/delete`, qs);
   dispatch({
     type: LIST_ALL_QUALIFICATION_TYPES,
     payload: data.data,
@@ -220,16 +214,17 @@ export const listUniversityTypes = (qs) => async (dispatch) => {
   const data = await axios.get(
     `${ENV.baseUrl}/universitytype/listUniversityTypes?${qs}`
   );
-  console.log("data.data of list university type uni in action file", data.data.data);
+  console.log(
+    "data.data of list university type uni in action file",
+    data.data.data
+  );
   dispatch({
     type: LIST_ALL_UNIVERSITY_TYPES,
     payload: data.data,
   });
 };
 export const EditUniversityTypes = (qs) => async (dispatch) => {
-  const data = await axios.put(
-    `${ENV.baseUrl}/universitytype/edit`, qs
-  );
+  const data = await axios.put(`${ENV.baseUrl}/universitytype/edit`, qs);
   dispatch({
     type: LIST_ALL_UNIVERSITY_TYPES,
     payload: data.data,
@@ -237,9 +232,7 @@ export const EditUniversityTypes = (qs) => async (dispatch) => {
 };
 export const DeleteUniversityTypes = (qs) => async (dispatch) => {
   console.log(qs);
-  const data = await axios.post(
-    `${ENV.baseUrl}/universitytype/delete`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/universitytype/delete`, qs);
   dispatch({
     type: LIST_ALL_UNIVERSITY_TYPES,
     payload: data.data,
@@ -270,9 +263,7 @@ export const listLeadGroups = (qs) => async (dispatch) => {
   });
 };
 export const EditLeadGroups = (qs) => async (dispatch) => {
-  const data = await axios.put(
-    `${ENV.baseUrl}/leadgroup/edit`, qs
-  );
+  const data = await axios.put(`${ENV.baseUrl}/leadgroup/edit`, qs);
   dispatch({
     type: LIST_ALL_LEAD_GROUPS,
     payload: data.data,
@@ -280,9 +271,7 @@ export const EditLeadGroups = (qs) => async (dispatch) => {
 };
 export const DeleteLeadGroups = (qs) => async (dispatch) => {
   console.log(qs);
-  const data = await axios.post(
-    `${ENV.baseUrl}/leadgroup/delete`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/leadgroup/delete`, qs);
   dispatch({
     type: LIST_ALL_LEAD_GROUPS,
     payload: data.data,
@@ -315,9 +304,7 @@ export const listInterestedPrograms = (qs) => async (dispatch) => {
   });
 };
 export const EditInterestedPrograms = (qs) => async (dispatch) => {
-  const data = await axios.put(
-    `${ENV.baseUrl}/interestedprogram/edit`, qs
-  );
+  const data = await axios.put(`${ENV.baseUrl}/interestedprogram/edit`, qs);
   dispatch({
     type: LIST_ALL_INTERESTED_PROGRAMS,
     payload: data.data,
@@ -325,9 +312,7 @@ export const EditInterestedPrograms = (qs) => async (dispatch) => {
 };
 export const DeleteInterestedPrograms = (qs) => async (dispatch) => {
   console.log(qs);
-  const data = await axios.post(
-    `${ENV.baseUrl}/interestedprogram/delete`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/interestedprogram/delete`, qs);
   dispatch({
     type: LIST_ALL_INTERESTED_PROGRAMS,
     payload: data.data,
@@ -515,19 +500,14 @@ export const listCommissionInvoices = (qs) => async (dispatch) => {
   });
 };
 
-
-
 export const filterlistCommissionInvoices = (qs) => async (dispatch) => {
-  const data = await axios.post(
-    `${ENV.baseUrl}/commissioninvoice/search`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/commissioninvoice/search`, qs);
   console.log("data.data of list uni nn action file", data);
   dispatch({
     type: LIST_ALL_COMMISSION_INVOICES,
     payload: data.data,
   });
 };
-
 
 export const viewCommissionInvoice = (id) => async (dispatch) => {
   console.log(" commisionInvoice param id in action method", id);
@@ -540,6 +520,34 @@ export const viewCommissionInvoice = (id) => async (dispatch) => {
   console.log("data of view invoice module status in action", data);
   dispatch({
     type: VIEW_COMMISSION_INVOICE,
+    payload: data.data,
+  });
+};
+// The Edit and Delete will be on the module page itself
+// Module: Invoice (2)
+export const listGeneralInvoices = (qs) => async (dispatch) => {
+  console.log("api url in action file", ENV.baseUrl);
+  const data = await axios.get(`${ENV.baseUrl}/GeneralInvoice/list?${qs}`);
+  console.log(
+    "data.data of list invoice module status GeneralInvoice in action file",
+    data
+  );
+  dispatch({
+    type: LIST_ALL_GENERAL_INVOICES,
+    payload: data.data,
+  });
+};
+export const viewGeneralInvoice = (id) => async (dispatch) => {
+  console.log(" GeneralInvoice param id in action method", id);
+  // console.log(" Umni param action in action method", action);
+
+  const data = await axios.get(
+    `${ENV.baseUrl}/GeneralInvoice/get/${id}`
+    //
+  );
+  console.log("data of view invoice module status in action", data);
+  dispatch({
+    type: VIEW_GENERAL_INVOICE,
     payload: data.data,
   });
 };
@@ -653,11 +661,11 @@ export const viewDepitAndCredit = (id) => async (dispatch) => {
 //
 // END
 export const listUniversities = (qs) => async (dispatch) => {
-  console.log("api url in action file", ENV.baseUrl);
+  // console.log("api url in action file", ENV.baseUrl);
   const data = await axios.get(
     `${ENV.baseUrl}/university/listUniversity?${qs}`
   );
-  console.log("data.data of list uni nn action file", data);
+  // console.log("data.data of list uni nn action file", data);
   dispatch({
     type: LIST_ALL_UNIVERSITIES,
     payload: data.data,
@@ -665,10 +673,8 @@ export const listUniversities = (qs) => async (dispatch) => {
 };
 
 export const filterUniversities = (qs) => async (dispatch) => {
-  const data = await axios.post(
-    `${ENV.baseUrl}/university/search`, qs
-  );
-  console.log("data.data of list uni nn action file", data);
+  const data = await axios.post(`${ENV.baseUrl}/university/search`, qs);
+  // console.log("data.data of list uni nn action file", data);
   dispatch({
     type: LIST_ALL_UNIVERSITIES,
     payload: data.data,
@@ -684,9 +690,7 @@ export const listProgramms = (qs) => async (dispatch) => {
 };
 
 export const filterProgramms = (qs) => async (dispatch) => {
-  const data = await axios.post(
-    `${ENV.baseUrl}/programme/search`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/programme/search`, qs);
   console.log("data.data of list uni nn action file", data);
   dispatch({
     type: LIST_PROGRAMMS,
@@ -721,11 +725,8 @@ export const listApplications = (qs) => async (dispatch) => {
   });
 };
 
-
 export const filterlistApplications = (qs) => async (dispatch) => {
-  const data = await axios.post(
-    `${ENV.baseUrl}/applicants/search`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/applicants/search`, qs);
   console.log("data.data of list uni nn action file", data);
   dispatch({
     type: LIST_ALL_APPLICATIONS,
@@ -741,8 +742,8 @@ export const listCurrencies = (qs) => async (dispatch) => {
   });
 };
 
-export const listAllCurrencies = () => async (dispatch) => {
-  const data = await axios.get(`${ENV.baseUrl}/currencies/get`);
+export const listAllCurrencies = (qs) => async (dispatch) => {
+  const data = await axios.get(`${ENV.baseUrl}/currencies/list?${qs}`);
   console.log("dfd", data);
   dispatch({
     type: VIEW_ALL_CURRECY,
@@ -770,15 +771,13 @@ export const listBranches =
     });
   };
 
-  export const filterListBranches = (qs) => async (dispatch) => {
-    const data = await axios.post(
-      `${ENV.baseUrl}/branch/search`, qs
-    );
-    dispatch({
-      type: LIST_ALL_BRANCHES,
-      payload: data.data,
-    });
-  };
+export const filterListBranches = (qs) => async (dispatch) => {
+  const data = await axios.post(`${ENV.baseUrl}/branch/search`, qs);
+  dispatch({
+    type: LIST_ALL_BRANCHES,
+    payload: data.data,
+  });
+};
 
 export const listUsers =
   (qs = "") =>
@@ -790,25 +789,8 @@ export const listUsers =
     });
   };
 
-  export const EditUsers =
-  (qs) =>
-  async (dispatch) => {
-    console.log("sdfsf111111111",qs);
-    const config = {
-      headers: { "content-type": "multipart/form-data" },
-    };
-    const data = await axios.put(`${ENV.baseUrl}/users/edit`, qs, config);
-    dispatch({
-      type: LIST_ALL_USERS,
-      payload: data.data,
-    });
-    return data;
-  };
-  
 export const filterViewUser = (qs) => async (dispatch) => {
-  const data = await axios.post(
-    `${ENV.baseUrl}/users/search`, qs
-  );
+  const data = await axios.post(`${ENV.baseUrl}/users/search`, qs);
   console.log("data.data of list uni nn action file", data);
   dispatch({
     type: LIST_ALL_USERS,
@@ -891,7 +873,6 @@ export const viewCurrency = (id) => async (dispatch) => {
     payload: data.data,
   });
 };
-
 
 export const viewBranch = (id) => async (dispatch) => {
   console.log(" branch param id in action method", id);
@@ -1010,8 +991,8 @@ export const loginUser = (user) => async (dispatch) => {
   try {
     let data = await axios.post(`${ENV.baseUrl}/users/login`, user);
     dispatch({
-      type: LIST_CURRENT_USER,
-      payload: data,
+      type: LIST_ALL_USERS,
+      payload: data.data,
     });
     localStorage.setItem("access", data.data.dataValues.role);
     localStorage.setItem("name", data.data.dataValues.name);
