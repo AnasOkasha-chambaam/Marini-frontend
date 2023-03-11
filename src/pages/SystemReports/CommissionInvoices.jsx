@@ -24,7 +24,7 @@ export function CommissionInvoices() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, Commission_voice_data, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'CommissionInvoices Report.xlsx');
+    writeFile(wb, 'Movie Report.xlsx');
   }
 
   const handleExportCsv = () => {
@@ -36,7 +36,7 @@ export function CommissionInvoices() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, Commission_voice_data, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'CommissionInvoices Report.csv');
+    writeFile(wb, 'Movie Report.csv');
   }
 
   return (

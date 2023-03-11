@@ -33,7 +33,7 @@ export function ApplicationByLevel() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, applications?.data?.faqs, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'ApplicationByLevel Report.xlsx');
+    writeFile(wb, 'Movie Report.xlsx');
   }
 
   const handleExportCsv = () => {
@@ -45,7 +45,7 @@ export function ApplicationByLevel() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, applications?.data?.faqs, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'ApplicationByLevel Report.csv');
+    writeFile(wb, 'Movie Report.csv');
   }
   // END
   return (

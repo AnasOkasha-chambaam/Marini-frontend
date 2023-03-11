@@ -17,9 +17,6 @@ import {
   EditProgramCategorys,
   EditQualificationTypes,
   EditInterestedPrograms,
-  EditApplicationmodulestatus,
-  EditLeadsmanagmentmodulestatus,
-  EditInvoicemodulestatus,
   EditLeadGroups,
   EditUniversityTypes,
   DeleteProgramLevels,
@@ -27,10 +24,7 @@ import {
   DeleteQualificationTypes,
   DeleteInterestedPrograms,
   DeleteLeadGroups,
-  DeleteUniversityTypes,
-  DeleteApplicationmodulestatus,
-  DeleteLeadsmanagmentmodulestatus,
-  DeleteInvoicemodulestatus
+  DeleteUniversityTypes
 } from '../../redux/actions/actions';
 
 export function PropertyCard({ title, type = 0, toView, method }) {
@@ -62,13 +56,10 @@ export function PropertyCard({ title, type = 0, toView, method }) {
   const handleEdit = (e) => {
     switch (type) {
       case "applicationmodulestatus":
-        dispatch(EditApplicationmodulestatus(e));
         break;
       case "leadsmanagmentmodulestatus":
-        dispatch(EditLeadsmanagmentmodulestatus(e));
         break;
       case "invoicemodulestatus":
-        dispatch(EditInvoicemodulestatus(e));
         break;
       case "programlevel":
         dispatch(EditProgramLevels(e));
@@ -97,13 +88,10 @@ export function PropertyCard({ title, type = 0, toView, method }) {
   const handleDelete = (e) => {
     switch (type) {
       case "applicationmodulestatus":
-        dispatch(DeleteApplicationmodulestatus(e));
         break;
       case "leadsmanagmentmodulestatus":
-        dispatch(DeleteLeadsmanagmentmodulestatus(e));
         break;
       case "invoicemodulestatus":
-        dispatch(DeleteInvoicemodulestatus(e));
         break;
       case "programlevel":
         dispatch(DeleteProgramLevels(e));
