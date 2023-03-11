@@ -29,7 +29,7 @@ export function General() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, Commission_voice_data, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'General Report.xlsx');
+    writeFile(wb, 'Movie Report.xlsx');
   }
 
   const handleExportCsv = () => {
@@ -41,7 +41,7 @@ export function General() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, Commission_voice_data, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'General Report.csv');
+    writeFile(wb, 'Movie Report.csv');
   }
 
   return (

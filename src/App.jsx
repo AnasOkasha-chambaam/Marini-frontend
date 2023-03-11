@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import ApplicantHome from "./pages/Applicant/ApplicantHome";
 import { createContext, useState, useEffect } from "react";
 import useWindowSize from "./hooks/useWindowSize";
-import { useDispatch } from "react-redux";
-import { GetCurrentUser } from "@/redux/actions/actions";
 import ApplicantDashboard from "./layouts/ApplicantDashboard";
 import SettingsManagement from "./pages/settings/SettingsManagement";
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,8 +20,6 @@ const initialStatusColor = {
 };
 
 function App() {
-
-  const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const [navbar, setNavbar] = useState({
@@ -61,14 +57,6 @@ function App() {
     }
     if(!localStorage?.access) navigate("/");
   }, [windowSize]);
-
-  useEffect(() => {
-    dispatch(GetCurrentUser({
-      name: localStorage.name, 
-      role: localStorage.access,
-      state: 0
-    }));
-  }, []);
 
   return (
     <Routes>

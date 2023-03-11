@@ -606,7 +606,6 @@ import {
   listLeadsManagmentModuleStatuss,
   listQualificationTypes,
   listLeadGroups,
-  viewBranch
 } from "@/redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 import FullPageLoader from "@/FullPageLoader/FullPageLoader";
@@ -625,26 +624,13 @@ export function CreateLead() {
   } = useSelector((state) =>
     state?.universitiesReducer ? state?.universitiesReducer : {}
   );
-
-  const [branchID, setBranchID] = useState();
-  const ViewBranch = useSelector(state => state?.universitiesReducer?.viewBranch)
-
   useEffect(() => {
     dispatch(listUniversities("limit=100000"));
     dispatch(listInterestedPrograms("limit=100000"));
     dispatch(listLeadsManagmentModuleStatuss("limit=100000"));
     dispatch(listQualificationTypes("limit=100000"));
     dispatch(listLeadGroups("limit=100000"));
-    dispatch(viewBranch());
   }, []);
-
-  useEffect(() =>{
-    ViewBranch && ViewBranch?.branch?.map(item => item.role === localStorage.access && setBranchID(item.id));
-  }, [ViewBranch])
-
-  useEffect(() => {
-    console.log("dsf",branchID);
-  }, [branchID])
   // End
   /*{ toAdd, setToAdd,  open,close,  setOpenAddModal,  formsData,  setFormsData,  handleFormsDataChange,  section,} */
   // const [openModal, setOpenModal] = useState(false);
@@ -672,8 +658,7 @@ export function CreateLead() {
   const [newuid, setNewuid] = useState('')
 
   useEffect(() => {
-    uidsd();
-
+    uidsd()
   }, []);
 
   const uidsd = () => {
@@ -745,7 +730,7 @@ export function CreateLead() {
   }, [leadData?.lead?.programmeDetails]);
 
   const handlefileChange = (file) => {
-    console.log("file", file[0]);
+    console.log("file", file);
     setFile(file);
     //
     let reader = new FileReader();
@@ -813,13 +798,10 @@ export function CreateLead() {
     formData.append("cert", cert);
     formData.append("comments", comments);
     formData.append("logo", file[0]);
-    formData.append("branchID", branchID);
 
     const config = {
       headers: { "content-type": "multipart/form-data" },
     };
-
-    console.log("final", formData);
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
       `${ENV.baseUrl}/lead/${params.action == 2 ? "edit" : "createLead"}`,

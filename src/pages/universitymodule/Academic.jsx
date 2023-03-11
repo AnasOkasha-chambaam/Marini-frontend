@@ -74,7 +74,7 @@ export function Academic() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, programmsData?.data?.faqs, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Academic Report.xlsx');
+    writeFile(wb, 'Movie Report.xlsx');
   }
 
   const handleExportCsv = () => {
@@ -86,7 +86,7 @@ export function Academic() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, programmsData?.data?.faqs, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Academic Report.csv');
+    writeFile(wb, 'Movie Report.csv');
   }
 
   // list all programms

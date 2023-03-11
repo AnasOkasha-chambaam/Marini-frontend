@@ -16,7 +16,6 @@ import {
   VIEW_CURRENCY_DETAILS,
   LIST_ALL_BACKUPS,
   VIEW_ALL_BRANCH,
-  LIST_CURRENT_USER,
   VIEW_ALL_USERS,
   VIEW_ALL_CURRECY,
   //
@@ -361,28 +360,6 @@ export const listApplicationModuleStatuss = (qs) => async (dispatch) => {
     payload: data.data,
   });
 };
-
-export const EditApplicationmodulestatus = (qs) => async (dispatch) => {
-  const data = await axios.put(
-    `${ENV.baseUrl}/applicationmodulestatus/edit`, qs
-  );
-  dispatch({
-    type: LIST_ALL_APPLICATION_MODULE_STATUSS,
-    payload: data.data,
-  });
-};
-export const DeleteApplicationmodulestatus = (qs) => async (dispatch) => {
-  console.log(qs);
-  const data = await axios.post(
-    `${ENV.baseUrl}/applicationmodulestatus/delete`, qs
-  );
-  dispatch({
-    type: LIST_ALL_APPLICATION_MODULE_STATUSS,
-    payload: data.data,
-  });
-};
-
-
 export const viewApplicationModuleStatus = (id) => async (dispatch) => {
   console.log(" Umni param id in action method", id);
   // console.log(" Umni param action in action method", action);
@@ -412,29 +389,6 @@ export const listLeadsManagmentModuleStatuss = (qs) => async (dispatch) => {
     payload: data.data,
   });
 };
-
-export const EditLeadsmanagmentmodulestatus = (qs) => async (dispatch) => {
-  const data = await axios.put(
-    `${ENV.baseUrl}/leadsmanagmentmodulestatus/edit`, qs
-  );
-  dispatch({
-    type: LIST_ALL_LEADS_MANAGMENT_MODULE_STATUS,
-    payload: data.data,
-  });
-};
-
-export const DeleteLeadsmanagmentmodulestatus = (qs) => async (dispatch) => {
-  console.log(qs);
-  const data = await axios.post(
-    `${ENV.baseUrl}/leadsmanagmentmodulestatus/delete`, qs
-  );
-  dispatch({
-    type: LIST_ALL_LEADS_MANAGMENT_MODULE_STATUS,
-    payload: data.data,
-  });
-};
-
-
 export const viewLeadsManagmentModuleStatus = (id) => async (dispatch) => {
   console.log(" Umni param id in action method", id);
   // console.log(" Umni param action in action method", action);
@@ -464,28 +418,6 @@ export const listInvoiceModuleStatuss = (qs) => async (dispatch) => {
     payload: data.data,
   });
 };
-
-export const EditInvoicemodulestatus = (qs) => async (dispatch) => {
-  const data = await axios.put(
-    `${ENV.baseUrl}/invoicemodulestatus/edit`, qs
-  );
-  dispatch({
-    type: LIST_ALL_INVOICE_MODULE_STATUSS,
-    payload: data.data,
-  });
-};
-
-export const DeleteInvoicemodulestatus = (qs) => async (dispatch) => {
-  console.log(qs);
-  const data = await axios.post(
-    `${ENV.baseUrl}/invoicemodulestatus/delete`, qs
-  );
-  dispatch({
-    type: LIST_ALL_INVOICE_MODULE_STATUSS,
-    payload: data.data,
-  });
-};
-
 export const viewInvoiceModuleStatus = (id) => async (dispatch) => {
   console.log(" Umni param id in action method", id);
   // console.log(" Umni param action in action method", action);
@@ -514,7 +446,6 @@ export const listCommissionInvoices = (qs) => async (dispatch) => {
     payload: data.data,
   });
 };
-
 
 
 export const filterlistCommissionInvoices = (qs) => async (dispatch) => {
@@ -790,20 +721,6 @@ export const listUsers =
     });
   };
 
-  export const EditUsers =
-  (qs) =>
-  async (dispatch) => {
-    console.log("sdfsf111111111",qs);
-    const config = {
-      headers: { "content-type": "multipart/form-data" },
-    };
-    const data = await axios.put(`${ENV.baseUrl}/users/edit`, qs, config);
-    dispatch({
-      type: LIST_ALL_USERS,
-      payload: data.data,
-    });
-    return data;
-  };
   
 export const filterViewUser = (qs) => async (dispatch) => {
   const data = await axios.post(
@@ -1010,29 +927,16 @@ export const loginUser = (user) => async (dispatch) => {
   try {
     let data = await axios.post(`${ENV.baseUrl}/users/login`, user);
     dispatch({
-      type: LIST_CURRENT_USER,
-      payload: data,
+      type: LIST_ALL_USERS,
+      payload: data.data,
     });
-    localStorage.setItem("access", data.data.dataValues.role);
-    localStorage.setItem("name", data.data.dataValues.name);
+    localStorage.setItem("access", data.data.roles);
+    localStorage.setItem("name", data.data.username);
     return { success: true };
   } catch (err) {
     return { error: err.response.data.message };
   }
 };
-
-export const GetCurrentUser = (user) => async (dispatch) => {
-  try {
-    console.log(user);
-    let data = await axios.post(`${ENV.baseUrl}/users/getUser`, user);
-    dispatch({
-      type: LIST_CURRENT_USER,
-      payload: data,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
 
 export const signUp = (user) => async (dispatch) => {
   try {

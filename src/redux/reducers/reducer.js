@@ -21,7 +21,6 @@ import {
   DOWNLOAD_BACKUP_FILE,
   RESTORE_BACKUP_FILE,
   VIEW_ALL_CURRECY,
-  LIST_CURRENT_USER,
   // Anasite - Edits: adding properties
   VIEW_PROGRAM_LEVEL,
   LIST_ALL_PROGRAM_LEVELS,
@@ -75,7 +74,6 @@ const initialState = {
   backups: [],
   branch: [null],
   users: [],
-  current_users: [],
   activities: [],
   properties: [],
   //
@@ -413,11 +411,6 @@ const universitiesReducer = (state = initialState, action) => {
         ...state,
         viewUser: action.payload,
       };
-    case LIST_CURRENT_USER:
-      return {
-        ...state,
-        current_users: action.payload
-      }
     default:
       return state;
   }
