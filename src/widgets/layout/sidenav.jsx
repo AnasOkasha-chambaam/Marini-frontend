@@ -9,8 +9,9 @@ import userpt from "../../../public/img/sidebar/userpt.png";
 import logout from "../../../public/img/sidebar/logout.svg";
 import menu from '../../../public/img/burger-2.png';
 import { NavbarCtx } from "@/App";
+import { ENV } from "@/config";
 import { useContext } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signOut } from '../../redux/actions/actions';
 import bubble from '../../../public/img/bubble.png'
 export function Sidenav({ brandImg, brandName, routes, role, lay }) {
@@ -18,6 +19,7 @@ export function Sidenav({ brandImg, brandName, routes, role, lay }) {
   const { navbar, setNavbar } = useContext(NavbarCtx);
   const dispatch = useDispatch();
   const Navigate = useNavigate();
+  const current_user = useSelector(state => state?.universitiesReducer?.current_users?.data?.dataValues);
   return (
     <>
       {navbar.isMobile ?
@@ -89,7 +91,7 @@ export function Sidenav({ brandImg, brandName, routes, role, lay }) {
                               </div>
                             </div>
                           )}
-                        </NavLink>  
+                        </NavLink>
                         {id === "leads" && !navbar.isMobile && !navbar.desktopExpand ? (<img width={12} className="absolute bottom-4 right-7" src={bubble} />) : id === "leads" ? (
                           <span className="font-500 absolute right-10 -translate-y-1/2 top-1/2 h-[28px] w-[40px] rounded-[20px] bg-[#DB0D4B] p-1 text-center text-[14px] text-white">
                             10
@@ -101,13 +103,18 @@ export function Sidenav({ brandImg, brandName, routes, role, lay }) {
               ))}
               <div className="flex justify-around py-5">
                 <div className="flex flex-row">
-                    <img src={userpt} onClick={() => Navigate('/dashboard/profile')} style={{ cursor: "pointer", width: 50}}/>
-                    <div className={`left-5 mx-4 ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`}>
-                      <p className={` text-white ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`}>USER</p>
-                      <p className={`text-[#AAABAF] ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`}>
-                        {localStorage.name}
-                      </p>
-                    </div>
+                  <img src={
+                    (current_user?.image &&
+                      `${ENV.imageUrl}${current_user?.image}`) ||
+                      userpt} onClick={() => Navigate('/dashboard/profile')} style={{ cursor: "pointer", width: 50, borderRadius: "50%" }} />
+                  <div className={`left-5 mx-4 ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`}>
+                    <p className={` text-white ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`}>{
+                      current_user && current_user?.email
+                    }</p>
+                    <p className={`text-[#AAABAF] ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`}>
+                      {current_user && current_user?.name}
+                    </p>
+                  </div>
                   <Link to="/" className="flex items-center center" onClick={() => dispatch(signOut({ name: localStorage.name, role: localStorage.access }))}>
                     <img className={`ml-6  ${(!navbar.isMobile && navbar.desktopExpand) || (navbar.isMobile && navbar.mobileExpand) ? 'block' : 'hidden'}`} src={logout} />
                   </Link>

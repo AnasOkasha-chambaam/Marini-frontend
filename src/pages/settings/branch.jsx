@@ -19,6 +19,7 @@ import { listBranches, filterListBranches } from "@/redux/actions/actions";
 import { viewBranch } from "@/redux/actions/actions";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Modal from "../universitymodule/Modal";
 import FullPageLoader from "@/FullPageLoader/FullPageLoader";
 import { ENV } from "@/config";
 // import { Toast } from "react-toastify/dist/types";
@@ -144,9 +145,45 @@ export function Branch() {
 
   const countryArr = ["pakistan", "India", "China"];
 
+  const [idToDelete, setIdToDelete] = useState("");
+  const [dropdownID, setDropdownID] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const onConfirmation = async () => {
+    // here we will delete call
+    console.log("User deleted");
+    console.log(params.id);
+    const data = await axios.delete(
+      `${ENV.baseUrl}/branch/delete/${idToDelete}`
+    );
+    console.log("deleted data", data);
+    // // alert("whppp");
+    // here we will delete call
+    dispatch(listBranches(pagination));
+    setDropdownID("");
+    // // alert("whppp");
+  };
+  const toggleDropdown = (ind) => {
+    // console.log("toggle dropdown ", dropdownID, " _ ", ind);
+
+    // ***
+    return () => {
+      // const dropdown = document.getElementById(`dropdown${ind}`);
+      // dropdown.classList.toggle("hidden");
+      // dropdown.classList.toggle("block");
+      if (ind === dropdownID) return setDropdownID("");
+      setDropdownID(ind);
+    };
+  };
+
   return (
     <>
       {isLoading && <FullPageLoader />}
+      <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        onConfirmation={onConfirmation}
+      />
       <div
         className={` flex w-full flex-col gap-8 bg-[#E8E9EB] font-display ${
           branchstate ? "" : "hidden"
@@ -321,9 +358,10 @@ export function Branch() {
                       <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium">
                         <button
                           className="rounded-full text-[#636363]/50 hover:text-[#7a7a7a]"
-                          id="dropdownDefaultButton"
-                          data-dropdown-toggle="dropdown"
+                          id={`dropdownDefaultButton${ind}`}
+                          data-dropdown-toggle={`dropdown${ind}`}
                           type="button"
+                          onClick={toggleDropdown(ele?.id)}
                         >
                           <svg
                             className="h-8 w-8 fill-current"
@@ -336,11 +374,15 @@ export function Branch() {
                         </button>
                         <div
                           id="dropdown"
-                          class="z-10 hidden w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                          className={
+                            "z-10 w-24 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700" +
+                            (dropdownID === ele?.id ? "" : " hidden ")
+                          }
                         >
                           <ul
-                            class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                            aria-labelledby="dropdownDefaultButton"
+                            className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                            // aria-labelledby="dropdownDefaultButton"
+                            aria-labelledby={`dropdownDefaultButton${ind}`}
                           >
                             <li>
                               <button
@@ -357,7 +399,10 @@ export function Branch() {
                             <li>
                               <button
                                 onClick={
-                                  () => setShowModal(true)
+                                  () => {
+                                  setIdToDelete(ele?.id);
+                                  setShowModal(true)
+                                  }
                                   // navigate(
                                   //   `/dashboard/Leadsmodule/${ele?.id}`
                                   // )
