@@ -44,7 +44,7 @@ export function Leads() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, leadsData?.data?.faqs, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Movie Report.xlsx');
+    writeFile(wb, 'Leads Report.xlsx');
   }
 
   const handleExportCsv = () => {
@@ -56,7 +56,7 @@ export function Leads() {
     utils.sheet_add_aoa(ws, headings);
     utils.sheet_add_json(ws, leadsData?.data?.faqs, { origin: 'A2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Movie Report.csv');
+    writeFile(wb, 'Leads Report.csv');
   }
 
   const onConfirmation = async () => {
@@ -300,7 +300,7 @@ export function Leads() {
                                   onClick={
                                     () =>
                                       navigate(
-                                        `/dashboard/ApplicationModule/1/${ele?.id}`
+                                        `/dashboard/Leadsmodule/1/${ele?.id}`
                                       )
                                     // /dashboard/university_module/${e.target.value}/${ele.id}
                                   }
@@ -377,7 +377,7 @@ export function Leads() {
                                         className="btn btn-primary"
                                         onClick={() =>
                                           navigate(
-                                            `/dashboard/ApplicationModule/2/${ele?.id}`
+                                            `/dashboard/Leadsmodule/2/${ele?.id}`
                                           )
                                         }
                                       >
@@ -446,7 +446,7 @@ export function Leads() {
                                 onClick={
                                   () =>
                                     navigate(
-                                      `/dashboard/ApplicationModule/1/${ele?.id}`
+                                      `/dashboard/Leadsmodule/1/${ele?.id}`
                                     )
                                   // /dashboard/university_module/${e.target.value}/${ele.id}
                                 }
@@ -523,7 +523,7 @@ export function Leads() {
                                       className="btn btn-primary"
                                       onClick={() =>
                                         navigate(
-                                          `/dashboard/ApplicationModule/2/${ele?.id}`
+                                          `/dashboard/Leadsmodule/2/${ele?.id}`
                                         )
                                       }
                                     >

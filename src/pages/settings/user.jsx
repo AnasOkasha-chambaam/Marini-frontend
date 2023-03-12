@@ -143,9 +143,10 @@ export function User() {
   // }, [params.id]);
 
   useEffect(() => {
-    if (viewUsers?.user) setFormValues(viewUsers?.user);
+    if (viewUsers?.user) setFormValues({...viewUsers?.user, password: ""});
   }, [viewUsers.user]);
   useEffect(() => {
+    console.log("params",params);
     if (params.id && params.id !== "*") dispatch(viewUser(params.id));
 
     if (params.action == 1) {
@@ -590,13 +591,13 @@ export function User() {
                 >
                   <option value={""}>Select Role</option>
 
-                  <option value={"SuperAdmin"}>Super Admin</option>
-                  <option value={"AdminHQ"}>Admin HQ</option>
-                  <option value={"CounselorHQ"}>Counselor HQ</option>
-                  <option value={"AccountantHQ"}>Accountant HQ</option>
-                  <option value={"AdminBranch"}>Admin Branch</option>
-                  <option value={"CounselorBranch"}>Counselor Branch</option>
-                  <option value={"AccountantBranch"}>Accountant Branch</option>
+                  <option value={"superAdmin"}>Super Admin</option>
+                  <option value={"admin"}>Admin HQ</option>
+                  <option value={"counselor"}>Counselor HQ</option>
+                  <option value={"accountant"}>Accountant HQ</option>
+                  <option value={"adminBranch"}>Admin Branch</option>
+                  <option value={"counselorBranch"}>Counselor Branch</option>
+                  <option value={"accountantBranch"}>Accountant Branch</option>
 
                   {/*     <option value={"superAdmin"}>Super Admin</option>
                   <option value={"admin"}>Admin HQ</option>

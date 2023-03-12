@@ -4,10 +4,14 @@ import { Button } from "@material-tailwind/react/components/Button";
 import universityLogo from "../../../public/img/universityLogo.svg";
 import saveIcon from "../../../public/img/saveIcon.svg";
 import { FileUploader } from "react-drag-drop-files";
-import { listUsers, listBranches } from "@/redux/actions/actions";
-import { useState } from "react";
+import { listUsers, listBranches, listLeadGroups, EditUsers, GetCurrentUser } from "@/redux/actions/actions";
+import { useState, useEffect } from "react";
 import AddField from "@/helpers/Addfield";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { ENV } from "@/config";
+import axios from "axios";
 
 export function Profiles() {
   // let [personalDataNewFields, setPersonalDataNewFields] = useState([]);
@@ -15,34 +19,161 @@ export function Profiles() {
 
   /*{ toAdd, setToAdd,  open,close,  setOpenAddModal,  formsData,  setFormsData,  handleFormsDataChange,  section,} */
   // const [openModal, setOpenModal] = useState(false);
-  const [ProfileState, setProfileState] = useState(true);
   const [openProfileAddModal, setOpenProfileAddModal] = useState(false);
   const [ProfileNewFields, setProfileNewFields] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [allFormsData, setAllFormsData] = useState({});
+  const params = useParams();
+  const [isViewMode, setIsViewMode] = useState(true);
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [documentFile, setDocumentFile] = useState({});
+
+  const allUsers = useSelector((state) => state?.universitiesReducer?.users);
+
+  const viewUsers = useSelector(
+    (state) => state?.universitiesReducer?.current_users?.data?.dataValues
+  );
+
+  
+  const allLeadGroup = useSelector(state => state?.universitiesReducer?.leadGroups)
+
+  React.useEffect(() => {
+    dispatch(listBranches());
+    dispatch(listUsers());
+    dispatch(listLeadGroups());
+    dispatch(GetCurrentUser({
+      name: localStorage.name, 
+      role: localStorage.access,
+      state: 0
+    }));
+    // dis
+  }, []);
+
   const handleAllFormsDataChange = (e) => {
     let { name, value } = e.target;
     setAllFormsData({ ...allFormsData, [name]: value });
   };
 
-  const allUsers = useSelector((state) => state?.universitiesReducer?.users);
+  const initialValues = {
+    
+    name:viewUsers && viewUsers.name,
+    email:viewUsers && viewUsers.email,
+    number:viewUsers && viewUsers.number,
+    position:viewUsers && viewUsers.position,
+    passportNo: "",
+    password: "",
+    id: "",
+    image:viewUsers && viewUsers.image
+    //
+  };
+  const [formValues, setFormValues] = useState(initialValues);
 
-  const viewUsers = useSelector(
-    (state) => state?.universitiesReducer?.viewUser
-  );
 
   React.useEffect(() => {
-    dispatch(listBranches());
-    dispatch(listUsers());
-  }, []);
+    setFormValues({...viewUsers, password: ""});
+  }, [viewUsers])
+
+
+  useEffect(() => {
+    if (params.id) dispatch(viewApplication(params.id));
+    if (params.action != 1) {
+      setIsViewMode(true);
+    } else {
+      setIsViewMode(false);
+    }
+    if (!params.action) {
+      setIsViewMode(false);
+    }
+  }, [params.id]);
+
+  const handlefileChange = (file) => {
+    setFile(file);
+    //
+    let reader = new FileReader();
+    reader.onload = function () {
+      let output = document.getElementById("university-logo");
+      output.src = reader.result;
+      console.log("fileSRc", reader.result);
+    };
+    if (file[0]) {
+      reader.readAsDataURL(file[0]);
+      console.log("reader", reader);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (applicationsData?.applicant) setFormValues(applicationsData?.applicant);
+  // }, [applicationsData.applicant]);
+
+  // useEffect(() => {
+  //   if (applicationsData?.applicant?.programmeDetails)
+  //     setAppDetailValue(applicationsData?.applicant?.programmeDetails);
+  // }, [applicationsData?.applicant?.programmeDetails]);
+
+  // ApplicationDetails
+
+  const handleSubmit = async (e) => {
+    console.log("submittin the main form");
+    e.preventDefault();
+    // setIsLoading(true);
+    const {
+      name,
+      email,
+      phoneNumber,
+      id,
+      password,
+      country,
+      passportNo,
+      //
+      // applicantsId,
+    } = formValues;
+
+
+    let formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("password", password);
+    formData.append("country", country);
+    formData.append("passportNo", passportNo);
+    formData.append("logo", file[0]);
+    formData.append("Uname", localStorage.name);
+    formData.append("role", localStorage.access);
+    formValues.Uname = localStorage.name;
+    formValues.role = localStorage.access;
+
+    
+
+    const apiCall = await dispatch(EditUsers(formData));
+
+    setIsLoading(false);
+    console.log("applicant created successfully ", apiCall);
+
+    if (apiCall.data?.success) {
+      let { message } = apiCall.data;
+      toast.success(message, {
+        position: toast.POSITION.TOP_RIGHT,
+        hideProgressBar: false,
+        autoClose: 3000,
+      });
+      localStorage.setItem("name", name);
+    }
+    navigate(-1)
+  };
 
   // End
 
-  const handleChange = (file) => {
-    setFile(file);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    // console.log("formValues ===>", formValues);
+    setFormValues({ ...formValues, [name]: value });
+    // console.log("appDetailValues ===>", appDetailValues);
   };
   const fileTypes = ["JPEG", "PNG", "GIF"];
-  const [file, setFile] = useState(null);
 
   return (
     <div className="w-full bg-[#E8E9EB] font-display">
@@ -85,19 +216,37 @@ export function Profiles() {
             Photo
           </p>
           <div className="flex flex-col items-center justify-center">
-            <img className="mb-3 rounded-2xl" src={universityLogo} alt="..." />
-            <FileUploader
-              multiple={true}
-              handleChange={handleChange}
-              name="file"
-              types={fileTypes}
-            >
-              <button className="w-[150px] ">
-                <p className="rounded-2xl border-[1px] border-[#cbd2dc]/50 py-3 text-sm font-medium text-[#333333] shadow-md">
-                  Upload Logo
-                </p>
-              </button>
-            </FileUploader>
+            <img
+              id="university-logo"
+              className="width:156px mb-3 rounded-2xl"
+              style={{ width: "156px" }}
+              src={
+                preview ||
+                (formValues?.image &&
+                  `${ENV.imageUrl}${formValues?.image}`) ||
+                universityLogo
+              }
+              onError={function (e) {
+                e.target.src = universityLogo;
+              }}
+              alt="..."
+            />
+            {isViewMode ? (
+              ""
+            ) : (
+              <FileUploader
+                multiple={true}
+                handleChange={handlefileChange}
+                name="file" //
+              // types={fileTypes}
+              >
+                <button className="w-[150px] ">
+                  <p className="rounded-2xl border-[1px] border-[#cbd2dc]/50 py-3 text-sm font-medium text-[#333333] shadow-md">
+                    Upload Logo
+                  </p>
+                </button>
+              </FileUploader>
+            )}
           </div>
         </div>
         <form>
@@ -107,16 +256,16 @@ export function Profiles() {
                 Full Name
               </label>
 
-              <input list="browsers" className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500" name="name" id="browser" />
+              <input list="browsers" className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500" name="name" id="browser" placeholder="Full Name" value={formValues?.name} onChange={handleChange} />
 
-                <datalist id="browsers">
-                  {
-                    allUsers &&
-                    allUsers?.data?.faqs?.map((ele, ind) =>
-                      <option key={ind} >{ele.name}</option>
-                    )
-                  }
-                </datalist>
+              <datalist id="browsers">
+                {
+                  allUsers &&
+                  allUsers?.data?.faqs?.map((ele, ind) =>
+                    <option key={ind} value={ele.name}>{ele.name}</option>
+                  )
+                }
+              </datalist>
             </div>
             <div>
               <label className="mb-2 block text-sm font-semibold text-[#333333]">
@@ -126,6 +275,9 @@ export function Profiles() {
                 type="text"
                 className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                 placeholder="0123 456 789"
+                name="passportNo"
+                onChange={handleChange}
+                value={formValues?.passportNo}
                 required
               />
             </div>
@@ -135,10 +287,16 @@ export function Profiles() {
               </label>
               <select
                 className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                value={""}
-                onChange={() => { }}
+                name="leadgroup"
+                value={formValues?.leadgroup}
+                onChange={handleChange}
               >
-                <option>Select Group</option>
+                {
+                  allLeadGroup &&
+                  allLeadGroup?.data?.faqs.map((item, id) =>
+                    <option key={id} value={item.name}>{item.name}</option>
+                  )
+                }
               </select>
             </div>
             <div>
@@ -147,6 +305,9 @@ export function Profiles() {
               </label>
               <select
                 className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                name="position"
+                onChange={handleChange}
+                value={formValues?.position}
               // value={""}
               >
                 <option>Select Country</option>
@@ -408,31 +569,32 @@ export function Profiles() {
               <label className="mb-2 block text-sm font-semibold text-[#333333]">
                 Phone Number
               </label>
-              <input list="numbers" className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500" name="number" id="number" />
+              <input list="numbers" className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500" name="number" id="number" onChange={handleChange}
+                value={formValues?.number} />
 
-                <datalist id="numbers">
-                  {
-                    allUsers &&
-                    allUsers?.data?.faqs?.map((ele, ind) =>
-                      <option key={ind} >{ele.number}</option>
-                    )
-                  }
-                </datalist>
+              <datalist id="numbers">
+                {
+                  allUsers &&
+                  allUsers?.data?.faqs?.map((ele, ind) =>
+                    <option key={ind} >{ele.number}</option>
+                  )
+                }
+              </datalist>
             </div>
             <div>
               <label className="mb-2 block text-sm font-semibold text-[#333333]">
                 Email Address
               </label>
-              <input list="emails" className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500" name="email" id="email" />
+              <input list="emails" className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500" name="email" id="email" value={formValues?.email} onChange={handleChange} />
 
-                <datalist id="emails">
-                  {
-                    allUsers &&
-                    allUsers?.data?.faqs?.map((ele, ind) =>
-                      <option key={ind} >{ele.email}</option>
-                    )
-                  }
-                </datalist>
+              <datalist id="emails">
+                {
+                  allUsers &&
+                  allUsers?.data?.faqs?.map((ele, ind) =>
+                    <option key={ind} value={ele?.email}>{ele.email}</option>
+                  )
+                }
+              </datalist>
             </div>
             {/* {personalDataNewFields.map()} */}
 
@@ -462,6 +624,9 @@ export function Profiles() {
                 type="password"
                 className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                 placeholder="***********"
+                name="password"
+                onChange={handleChange}
+                value={formValues?.password}
                 required
               />
             </div>
@@ -478,10 +643,7 @@ export function Profiles() {
             </div>
           </div>
         </form>
-      </div>
-
-      <NavLink to="">
-        <Button className="rounded-[15px]  bg-[#280559]">
+        <Button className="rounded-[15px]  bg-[#280559]" type="submit" onClick={handleSubmit}>
           <div className="flex flex-row items-center justify-center">
             <img src={saveIcon} alt="..." />
             <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
@@ -489,6 +651,9 @@ export function Profiles() {
             </p>
           </div>
         </Button>
+      </div>
+
+      <NavLink to="">
       </NavLink>
     </div>
   );
