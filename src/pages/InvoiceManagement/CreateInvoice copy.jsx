@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@material-tailwind/react/components/Button";
 import saveIcon from "../../../public/img/saveIcon.svg";
@@ -98,10 +98,6 @@ export function CreateInvoice() {
         role: localStorage.access,
       }
     );
-    if (mailing?.data?.success === true) {
-      toast.success(mailing?.data?.message, toasOptions);
-      setAllFormsData({ ...allFormsData, mailing: {} });
-    }
     // await axios.post(`${ENV.baseUrl}/mailinginfo/create`, {
     //   mailing: {
     //     ...allFormsData?.mailing,
@@ -110,6 +106,10 @@ export function CreateInvoice() {
     //   },
     // });
     // console.log("create mailing", mailing);
+    if (mailing?.data?.success === true) {
+      toast.success(mailing?.data?.message, toasOptions);
+      setAllFormsData({ ...allFormsData, mailing: {} });
+    }
 
     let billing = await axios[params.action == 2 ? "put" : "post"](
       `${ENV.baseUrl}/billinginfo/${params.action == 2 ? "edit" : "create"}`,
@@ -141,32 +141,6 @@ export function CreateInvoice() {
         role: localStorage.access,
       }
     );
-    if (invoice?.data?.success === true) {
-      toast.success(invoice?.data?.message, toasOptions);
-      setAllFormsData({});
-      navigate(-1);
-    }
-    items?.map(async (invoiceItem) => {
-      let item = await axios[params.action == 2 ? "put" : "post"](
-        `${ENV.baseUrl}/${
-          type === "general" ? "generalinvoiceitem" : "commissioninvoiceitem"
-        }/${params.action == 2 ? "edit" : "create"}`,
-        {
-          item: {
-            ...invoiceItem,
-            invoiceID: invoice.data?.data?.ID,
-            Uname: localStorage.name,
-            role: localStorage.access,
-          },
-          Uname: localStorage.name,
-          role: localStorage.access,
-        }
-      );
-      if (item?.data?.success === true) {
-        toast.success(item?.data?.message, toasOptions);
-        // setAllFormsData({ ...allFormsData, item: {} });
-      }
-    });
     //  await axios.post(
     //   `${ENV.baseUrl}/${
     //     type === "general" ? "generalinvoice" : "commissioninvoice"
@@ -180,33 +154,15 @@ export function CreateInvoice() {
     //     role: localStorage.access,
     //   }
     // );
+    if (invoice?.data?.success === true) {
+      toast.success(invoice?.data?.message, toasOptions);
+      setAllFormsData({});
+      navigate(-1);
+    }
     // console.log(
     // "create " + (type === "general" ? "general" : "commission") + " invoice",
     // invoice
     // );
-  };
-  const initialSingleItem = { name: "", price: "", quantity: "", total: "" };
-  const [items, setItems] = useState([{ ...initialSingleItem }]);
-  const handleItemsChange = (index, event) => {
-    const values = [...items];
-    values[index][event.target.name.split("-")[0]] = event.target.value;
-
-    if (event.target.name === "price" || event.target.name === "quantity") {
-      values[index].total = values[index].price * values[index].quantity;
-    }
-
-    setItems(values);
-  };
-
-  const handleAddItem = () => {
-    const values = [...items];
-    values.push({
-      name: "",
-      price: "",
-      quantity: "",
-      total: "",
-    });
-    setItems(values);
   };
 
   // Edit/View
@@ -251,13 +207,7 @@ export function CreateInvoice() {
       mailing: singleGeneralInvoice?.generalInvoices?.MailingInfo,
       billing: singleGeneralInvoice?.generalInvoices?.BillingInfo,
     });
-    console.log("Single Commission >>@@>> ", singleGeneralInvoice);
-    let invoiceItems = singleGeneralInvoice?.generalInvoices
-      ?.GeneralInvoiceItems
-      ? [...singleGeneralInvoice?.generalInvoices?.GeneralInvoiceItems]
-      : [{ initialSingleItem }];
-    setItems(invoiceItems);
-  }, [singleGeneralInvoice?.generalInvoices]);
+  }, [singleGeneralInvoice.generalInvoices]);
   useEffect(() => {
     if (!params.action || !params.id) return;
     if (singleCommissionInvoice?.commissionInvoice)
@@ -271,13 +221,7 @@ export function CreateInvoice() {
       mailing: singleCommissionInvoice?.commissionInvoice?.MailingInfo,
       billing: singleCommissionInvoice?.commissionInvoice?.BillingInfo,
     });
-    console.log("Single Commission >>@@>> ", singleCommissionInvoice);
-    let invoiceItems = singleCommissionInvoice?.commissionInvoice
-      ?.CommissionInvoiceItems
-      ? [...singleCommissionInvoice?.commissionInvoice?.CommissionInvoiceItems]
-      : [{ initialSingleItem }];
-    setItems(invoiceItems);
-  }, [singleCommissionInvoice?.commissionInvoice]);
+  }, [singleCommissionInvoice.commissionInvoice]);
   return (
     <div className="mt-12 w-full bg-[#E8E9EB] font-display">
       <div className="my-10">
@@ -796,11 +740,11 @@ export function CreateInvoice() {
               </label>
               <select
                 className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                name="country"
+                // value={""}
+                name={"country"}
                 value={allFormsData?.billing?.country || ""}
                 disabled={isViewMode}
                 onChange={handleBillingInfoChange}
-                // value={""}
               >
                 <option>Select Country</option>
                 <option value="Afghanistan">Afghanistan</option>
@@ -1108,8 +1052,8 @@ export function CreateInvoice() {
               </select>
               {/* <select
                 className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                value={allFormsData?.mailing?.country || ""}
-                onChange={handleMailingInfoChange}
+                value={""}
+                onChange={() => {}}
               >
                 <option value={""}>Select Country</option>
               </select> */}
@@ -1198,6 +1142,56 @@ export function CreateInvoice() {
             </div>
             <div>
               <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                Item Name
+              </label>
+              <input
+                type="text"
+                className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                placeholder="Item Name"
+                name={"service"}
+                value={allFormsData["service"] || ""}
+                disabled={isViewMode}
+                onChange={handleAllFormsDataChange}
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                Item Quantity
+              </label>
+              <input
+                type="number"
+                className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                placeholder="1"
+                name={"amount"}
+                value={allFormsData["amount"] || ""}
+                disabled={isViewMode}
+                onChange={handleAllFormsDataChange}
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                Price
+              </label>
+              <div className="relative">
+                <span className="absolute left-0 top-0 flex h-full items-center rounded-xl bg-[#E5E8ED] p-3 text-base font-medium uppercase text-[#333]">
+                  usd:
+                </span>
+                <input
+                  type="text"
+                  className="block h-full w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 pl-16 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="0.00"
+                  name={"price"}
+                  value={allFormsData["price"] || ""}
+                  disabled={isViewMode}
+                  onChange={handleAllFormsDataChange}
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-[#333333]">
                 Univeristy
               </label>
               <select
@@ -1222,37 +1216,6 @@ export function CreateInvoice() {
                       value={university?.id}
                     >
                       {university?.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                Branch
-              </label>
-              <select
-                className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                // value={""}
-                name={"branchID"}
-                value={allFormsData?.branchID || ""}
-                disabled={isViewMode}
-                onChange={handleAllFormsDataChange}
-              >
-                <option value={""}>Select Branch</option>
-                {branch?.data?.faqs.map((singleBranch) => {
-                  return (
-                    <option
-                      key={
-                        singleBranch?.createdAt +
-                        singleBranch?.id +
-                        "any for a key" +
-                        singleBranch?.name +
-                        singleBranch?.createdAt
-                      }
-                      value={singleBranch?.id}
-                    >
-                      {singleBranch?.name}
                     </option>
                   );
                 })}
@@ -1289,6 +1252,37 @@ export function CreateInvoice() {
                 })}
               </select>
             </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                Branch
+              </label>
+              <select
+                className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                // value={""}
+                name={"branchID"}
+                value={allFormsData?.branchID || ""}
+                disabled={isViewMode}
+                onChange={handleAllFormsDataChange}
+              >
+                <option value={""}>Select Branch</option>
+                {branch?.data?.faqs.map((singleBranch) => {
+                  return (
+                    <option
+                      key={
+                        singleBranch?.createdAt +
+                        singleBranch?.id +
+                        "any for a key" +
+                        singleBranch?.name +
+                        singleBranch?.createdAt
+                      }
+                      value={singleBranch?.id}
+                    >
+                      {singleBranch?.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
             <div className="mb-6 grid grid-cols-1 gap-6">
               {/* <div>
               <label className="mb-2 block text-sm font-semibold text-[#333333]">
@@ -1319,79 +1313,6 @@ export function CreateInvoice() {
               )}
             </div>
           </div>
-
-          {items?.map((item, index) => (
-            <Fragment key={index + "lloollS"}>
-              <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
-                <p className="mb-8 text-2xl font-semibold text-[#333333]">
-                  {item.name ? item.name : "Item " + (index + 1)}
-                </p>
-                <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Item Name
-                    </label>
-                    <input
-                      type="text"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="Item Name"
-                      name={`name-${index}`}
-                      value={item.name || ""}
-                      disabled={isViewMode}
-                      onChange={(e) => handleItemsChange(index, e)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Item Price
-                    </label>
-                    <input
-                      type="number"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="Item Price"
-                      name={`price-${index}`}
-                      value={item.price || ""}
-                      disabled={isViewMode}
-                      onChange={(e) => handleItemsChange(index, e)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Item Quantity
-                    </label>
-                    <input
-                      type="number"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="Item Quantity"
-                      name={`quantity-${index}`}
-                      value={item.quantity || ""}
-                      disabled={isViewMode}
-                      onChange={(e) => handleItemsChange(index, e)}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            </Fragment>
-          ))}
-          {isViewMode ? (
-            ""
-          ) : (
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                Add Item
-              </label>
-              <button
-                onClick={() => handleAddItem()}
-                type="button"
-                className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-[#F8F9FB] p-2.5 font-medium text-[#BEBFC3]"
-              >
-                Click to add more items
-              </button>
-            </div>
-          )}
         </form>
       </div>
       {/* <NavLink to="commission"> */}
@@ -1410,7 +1331,6 @@ export function CreateInvoice() {
       <Button
         onClick={() => {
           setAllFormsData({});
-          setItems([{ ...initialSingleItem }]);
           return navigate(-1);
         }}
         className="rounded-[15px]  bg-[#280559]"

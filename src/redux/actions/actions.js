@@ -1008,13 +1008,17 @@ export const loginUser = (user) => async (dispatch) => {
       // type: LIST_ALL_USERS,
       // payload: data.data,
       type: LIST_CURRENT_USER,
-      payload: data,
+      payload: data.data,
     });
-    localStorage.setItem("access", data.data.dataValues.role);
-    localStorage.setItem("name", data.data.dataValues.name);
+    console.log("data from action", data);
+    localStorage.setItem("access", data.data.roles);
+    localStorage.setItem("name", data.data.username);
+    // localStorage.setItem("access", data.data.dataValues.role);
+    // localStorage.setItem("name", data.data.dataValues.name);
     return { success: true };
-  } catch (err) {
-    return { error: err.response.data.message };
+  } catch (error) {
+    console.log("Error on Action:", error);
+    return { error: error.response?.data?.message };
   }
 };
 
@@ -1038,7 +1042,8 @@ export const signUp = (user) => async (dispatch) => {
       return { success: true };
     }
   } catch (error) {
-    return { error: err.response.data.message };
+    console.log("Error on Action:", error);
+    return { error: err.response?.data?.message };
   }
 };
 
@@ -1048,6 +1053,7 @@ export const signOut = (user) => async (dispatch) => {
     localStorage.clear();
     let data = await axios.post(`${ENV.baseUrl}/users/signout`, user);
   } catch (error) {
-    return { error: err.response.data.message };
+    console.log("Error on Action:", error);
+    return { error: err.response?.data?.message };
   }
 };
