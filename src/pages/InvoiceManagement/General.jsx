@@ -216,7 +216,10 @@ export function General() {
                     >
                       Email
                     </th>
-                    <th
+                    <th className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                      Items
+                    </th>
+                    {/* <th
                       scope="col"
                       className="w-[78px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                     >
@@ -227,7 +230,7 @@ export function General() {
                       className="w-[115px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                     >
                       Amount
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
                       className="w-[115px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
@@ -260,6 +263,7 @@ export function General() {
                         service: Service,
                         amount: Amount,
                         InvoiceModuleStatus: Status,
+                        GeneralInvoiceItems,
                         // color,
                       },
                       ind
@@ -282,12 +286,15 @@ export function General() {
                         <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333] underline">
                           {BillingInfo.email}
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
+                        <th className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                          {GeneralInvoiceItems?.length}
+                        </th>
+                        {/* <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
                           {Service}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
                           {Amount}
-                        </td>
+                        </td> */}
                         <td>
                           <p
                             // className="mx-auto w-fit rounded-2xl px-5 py-2 text-center text-xs font-medium normal-case"

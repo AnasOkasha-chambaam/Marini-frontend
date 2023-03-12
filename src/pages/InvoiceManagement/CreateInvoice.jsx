@@ -1376,7 +1376,7 @@ export function CreateInvoice() {
               </div>
             </Fragment>
           ))}
-          {isViewMode ? (
+          {isViewMode || params.action == 1 || params.action == 2 ? (
             ""
           ) : (
             <div>
