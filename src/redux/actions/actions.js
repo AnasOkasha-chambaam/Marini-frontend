@@ -1009,6 +1009,7 @@ export const listProperties = () => async (dispatch) => {
 export const loginUser = (user) => async (dispatch) => {
   try {
     let data = await axios.post(`${ENV.baseUrl}/users/login`, user);
+    console.log(data);
     dispatch({
       type: LIST_CURRENT_USER,
       payload: data,

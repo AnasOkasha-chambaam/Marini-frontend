@@ -25,13 +25,13 @@ export function SignIn() {
     authType === "main" ?
     data = await dispatch(loginUser({mail, password, state: 0})):
     data = await dispatch(loginUser({mail, password, state: 1}));
-    console.log(data);
     
     if (data.success) {
       toast("welcome to our site!");
-      if(authType !== "applicant"){
+      if(authType === "main"){
         navigate("/dashboard");
       } else {
+        localStorage.access = "leads";
         navigate("/applicant");
       }
     } else {
