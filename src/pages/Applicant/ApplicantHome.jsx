@@ -1,14 +1,47 @@
 import download from "../../../public/img/download02.svg";
+import React , {useEffect} from 'react';
 import { applicantData } from "@/data/applicant-data";
 import { NavLink } from "react-router-dom";
 import { Button, Menu, MenuHandler, MenuList, MenuItem, Checkbox } from "@material-tailwind/react";
 import plus from "../../../public/img/plus.svg";
 import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
+import { read, utils, writeFile } from 'xlsx';
+import { useDispatch, useSelector } from "react-redux";
+import {
+  listApplicationModuleStatuss,
+  listLeadsManagmentModuleStatuss,
+  listInvoiceModuleStatuss,
+} from "@/redux/actions/actions";
 import dropdown from '../../../public/img/dropdown.svg'
 
 
 const ApplicantHome = () => {
+
+  const dispatch = useDispatch();
+
+  const {
+    invoiceModuleStatuss,
+    leadsManagmentModuleStatuss,
+    applicationModuleStatuss,
+  } = useSelector((state) =>
+    state?.universitiesReducer ? state.universitiesReducer : {}
+  );
+
+  useEffect(() => {
+    console.log("werwr", applicationModuleStatuss?.data);
+  
+    // return () => {
+    //   second
+    // }
+  }, [applicationModuleStatuss])
+  
+
+  useEffect(() => {
+    dispatch(listApplicationModuleStatuss("limit=100"));
+    dispatch(listLeadsManagmentModuleStatuss("limit=100"));
+    dispatch(listInvoiceModuleStatuss("limit=100"));
+  }, []);
 
   const handleExportXlsx = () => {
     const headings = [[
@@ -44,7 +77,7 @@ const ApplicantHome = () => {
       <div className="mt-[30px] w-full bg-[#E8E9EB] font-display">
         <div className="rounded-[34px] bg-white p-6 md:p-12 flex flex-col gap-10 lg:flex-row lg:gap-24">
           <div className="relative w-[200px] h-[200px] mx-auto">
-            <p className="font-semibold text-[50px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">73%</p>
+            <p className="font-semibold text-[50px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{applicationModuleStatuss?.data?.faqs.length * 10 }%</p>
             <div className="w-full h-full">
               <svg className="w-full h-full transform translate-x-1 translate-y-1" x-cloak aria-hidden="true">
                 <circle
@@ -61,8 +94,8 @@ const ApplicantHome = () => {
                   strokeWidth="20"
                   strokeLinecap="round"
                   stroke="currentColor"
-                  strokeDasharray={450}
-                  strokeDashoffset={70}
+                  strokeDasharray={565}
+                  strokeDashoffset={565 * (10 - applicationModuleStatuss?.data?.faqs.length) * 0.1 }
                   fill="transparent"
                   r="90"
                   cx="100"
@@ -138,7 +171,7 @@ const ApplicantHome = () => {
             <div>
               <p className="font-semibold text-3xl mb-10">What does the color mean?</p>
               <div className="flex gap-6">
-                <div className="h-[175px] rounded-2xl bg-[#0066FF] px-5 flex justify-center items-center font-semibold text-white text-xl">73%</div>
+                <div className="h-[175px] rounded-2xl bg-[#0066FF] px-5 flex justify-center items-center font-semibold text-white text-xl">{applicationModuleStatuss?.data?.faqs.length * 10 }%</div>
                 <div className="flex flex-col justify-between">
                   <p>EMGS Has Received your passport</p>
                   <p>We will now submit it to the Immigration Department for the issuance of student pass sticker</p>

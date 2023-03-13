@@ -229,7 +229,7 @@ export function University() {
                       scope="col"
                       className="w-[346px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                     >
-                      Location
+                      Campus Address
                     </th>
                     <th
                       scope="col"

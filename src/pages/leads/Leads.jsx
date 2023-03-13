@@ -247,7 +247,7 @@ export function Leads() {
                         scope="col"
                         className="w-[115px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                       >
-                        Option
+                        Options
                       </th>
                     </tr>
                   </thead>
@@ -279,17 +279,14 @@ export function Leads() {
                                   className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                                   style={{
                                     color:
-                                      ele?.ApplicationDetail
-                                        ?.ApplicationModuleStatus?.Color || "#333",
-                                    backgroundColor: `${ele?.ApplicationDetail
-                                      ?.ApplicationModuleStatus?.Color || "#333"
+                                      ele?.LeadsManagmentModuleStatus?.Color || "#333",
+                                    backgroundColor: `${ele?.LeadsManagmentModuleStatus?.Color || "#333"
                                       }1a`,
                                   }}
                                 >
                                   {/* {ele?.status} */}
                                   {/* {applicationsData?.data?.applicantDetail[0].status} */}
-                                  {ele?.ApplicationDetail?.ApplicationModuleStatus
-                                    ?.name || "GD"}
+                                  {ele?.LeadsManagmentModuleStatus?.name || "GD"}
                                 </p>
                               </td>
                               <td>
@@ -425,17 +422,14 @@ export function Leads() {
                                 className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                                 style={{
                                   color:
-                                    ele?.ApplicationDetail
-                                      ?.ApplicationModuleStatus?.Color || "#333",
-                                  backgroundColor: `${ele?.ApplicationDetail
-                                    ?.ApplicationModuleStatus?.Color || "#333"
+                                    ele?.LeadsManagmentModuleStatus?.Color || "#333",
+                                  backgroundColor: `${ele?.LeadsManagmentModuleStatus?.Color || "#333"
                                     }1a`,
                                 }}
                               >
                                 {/* {ele?.status} */}
                                 {/* {applicationsData?.data?.applicantDetail[0].status} */}
-                                {ele?.ApplicationDetail?.ApplicationModuleStatus
-                                  ?.name || "GD"}
+                                {ele?.LeadsManagmentModuleStatus?.name || "GD"}
                               </p>
                             </td>
                             <td>

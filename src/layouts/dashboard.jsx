@@ -99,7 +99,7 @@ export function Dashboard() {
   const [defaultRoleType, setDefaultRoleType] = React.useState("counselor");
   useEffect(() => {
     
-    setDefaultRoleType(localStorage.access !== "user" ? localStorage.access : "counselor")
+    setDefaultRoleType(localStorage.access !== "leads" ? localStorage.access : "applicant")
   }, [])
   
   

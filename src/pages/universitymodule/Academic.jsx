@@ -194,13 +194,13 @@ export function Academic() {
                       scope="col"
                       className="w-[346px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                     >
-                      Intake
+                      Program Intake
                     </th>
                     <th
                       scope="col"
                       className="w-[113px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                     >
-                      Certificate
+                      Program Certificate
                     </th>
                     <th
                       scope="col"
@@ -217,7 +217,7 @@ export function Academic() {
                   </tr>
                 </thead>
                 <tbody className="border-none">
-                  {programmsData?.data?.faqs?.map((ele, ind) => (
+                  {programmsData?.data?.faqs?.map((ele, ind) => ( 
                     <tr
                       key={
                         ele.name +
