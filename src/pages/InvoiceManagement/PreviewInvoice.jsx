@@ -3,8 +3,9 @@ import { Button, Dialog, DialogBody } from "@material-tailwind/react";
 import print from "../../../public/img/print01.svg";
 import invoice01 from "../../../public/img/invoice01.png";
 import downloadIcon from "../../../public/img/downloadIcon.svg";
+import PrintStyles from "./css/print.css";
 
-const PreviewInvoice = ({ open, close }) => {
+const PreviewInvoice = ({ open, close, formValues, formItems }) => {
   return (
     <Dialog
       className="custom-scroll h-[96vh] overflow-auto rounded-[24px] font-display"
@@ -12,7 +13,11 @@ const PreviewInvoice = ({ open, close }) => {
       open={open}
     >
       <DialogBody>
-        <div className="relative h-full w-full md:h-auto">
+        <div
+          className={
+            "relative h-full w-full md:h-auto" + (open ? " toprint" : "")
+          }
+        >
           <div className="relative bg-white dark:bg-gray-700">
             <div className="flex items-start justify-between rounded-t p-4 dark:border-gray-600">
               <h3 className=" pt-3 text-2xl font-semibold text-[#333333] dark:text-white">
@@ -25,12 +30,22 @@ const PreviewInvoice = ({ open, close }) => {
               </Button>
             </div>
 
-            <div className="mx-[50px] space-y-6 bg-[#D9D9D9] py-[54px]">
-              <img className="m-auto w-auto" src={invoice01} alt="..." />
+            <div className="toprint-container mx-[50px] space-y-6 bg-[#D9D9D9] py-[54px]">
+              <div className="print:max-w-8.3 max-w-full p-4 print:mx-auto print:p-0">
+                <h1 id="Header">Hi</h1>
+                <img className="m-auto w-auto" src={invoice01} alt="..." />
+                {/* <link rel="stylesheet" href="" /> */}
+              </div>
             </div>
+            <style type="text/css" media="print">
+              {PrintStyles}
+            </style>
 
             <div className="mx-7  flex flex-row justify-end space-x-2 rounded-b border-gray-200 p-6 dark:border-gray-600">
-              <Button className="rounded-[15px]  bg-[#280559]" onClick={close}>
+              <Button
+                className="rounded-[15px]  bg-[#280559]"
+                onClick={() => window.print()}
+              >
                 <div className="flex flex-row items-center justify-center">
                   <img src={downloadIcon} alt="..." />
                   <p className="p-1 px-[11px] text-base font-medium normal-case text-white">

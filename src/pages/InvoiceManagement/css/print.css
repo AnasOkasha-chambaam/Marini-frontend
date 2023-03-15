@@ -1,0 +1,35 @@
+@media print {
+  /* Hide everything except the page content */
+  /* body *:not(.toprint-container) {
+    display: none;
+    --number: 2;
+  } */
+  .toprint .toprint-container {
+    display: block;
+  }
+  button {
+    display: none;
+  }
+  .toprint .max-w-full {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    display: block !important;
+    background-color: red !important;
+  }
+  .toprint .max-w-full * {
+    display: block !important;
+  }
+  .toprint .flex.items-center.justify-center {
+    display: block;
+    background-color: red;
+  }
+  .toprint #Header {
+    display: block;
+    text-align: center;
+  }
+}

@@ -302,7 +302,10 @@ export function CreateInvoice() {
               <div>
                 <Button
                   className="rounded-[15px]  bg-[#280559]"
-                  onClick={() => setOpenPreviewModal(true)}
+                  onClick={() => {
+                    // window.print();
+                    setOpenPreviewModal(true);
+                  }}
                 >
                   <div className="flex items-center justify-center">
                     <img src={print} alt="..." />
@@ -313,6 +316,8 @@ export function CreateInvoice() {
                 </Button>
                 <PreviewInvoice
                   open={openPreviewModal}
+                  formValues={allFormsData}
+                  formItems={items}
                   close={() => setOpenPreviewModal(false)}
                 />
               </div>
@@ -332,7 +337,7 @@ export function CreateInvoice() {
             Create or edit invoice
           </p>
           <div className="mt-6 flex w-full flex-wrap items-center justify-center gap-6 pr-8 md:hidden">
-            <div>
+            {/* <div>
               <Button
                 className="mr-auto rounded-[15px] bg-[#280559]"
                 onClick={() => setOpenPreviewModal(true)}
@@ -348,7 +353,7 @@ export function CreateInvoice() {
                 open={openPreviewModal}
                 close={() => setOpenPreviewModal(false)}
               />
-            </div>
+            </div> */}
             <NavLink to="commission">
               <Button className="rounded-[15px]  bg-[#280559]">
                 <div className="flex items-center justify-center">
