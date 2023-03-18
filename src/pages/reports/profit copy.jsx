@@ -1,37 +1,87 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+// const revenue = [
+//   {
+//     name: "Sales Revenue",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Service Revenue",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Interest Revenue",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Gain of Sales of Assets",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+// ];
 
+// const expenses = [
+//   {
+//     name: "Advertising",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Delivery/Freight Expense",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Depriciation",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Insurance",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Wages",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Office Supplies",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Rent/Lease",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Utilities/Telephone Expenses",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+//   {
+//     name: "Other Expenses",
+//     currency: "USD",
+//     amount: "$120.00",
+//   },
+// ];
+
+import React from "react";
 import filterIcon from "../../../public/img/filterIcon.svg";
-import Currency from "@/data/assets-props";
 import print from "../../../public/img/print.svg";
-import {
-  listAssets,
-  viewAsset,
-  listLiabilities,
-  viewLiabilitie,
-} from "@/redux/actions/actions";
-// import universitiesReducer from "@/redux/reducers/reducer";
 
-export function Reports({
-  generalInvoicesPayable,
-  commissionInvoicesPayable,
-  salesPayable,
-}) {
-  const dispatch = useDispatch();
-  const { assets, liabilities } = useSelector(
-    (state) => state?.universitiesReducer
-  );
-  console.log("assets in reports", assets);
-  console.log("liabilities in reports", liabilities);
-  useEffect(() => {
-    dispatch(listAssets("limit=10000"));
-    dispatch(listLiabilities("limit=10000"));
-  }, []);
+export function Profit({ revenue, totalRevenue, expenses, totalExpenses }) {
   return (
     <div className="mt-[30px] w-full bg-[#E8E9EB] font-display">
       <div className="mb-5">
         <div className=" rounded-[34px] bg-white p-6 md:p-12">
-          <p className=" text-2xl font-bold text-black">Balance Sheet</p>
+          <p className=" text-2xl font-bold text-black">
+            Profit Loss Statement
+          </p>
           <div className="mb-3 mt-12 grid grid-cols-1 gap-3 rounded-[20px] bg-[#F8F9FB] p-5 2xl:grid-cols-2">
             <form className="h-full">
               <div className="relative h-full">
@@ -81,7 +131,7 @@ export function Reports({
           </div>
         </div>
         <div className=" mt-[30px] rounded-[34px] bg-white p-6 md:p-12">
-          <p className=" text-2xl font-bold text-black">Assets</p>
+          <p className=" text-2xl font-bold text-black">Revenue</p>
           <div className="mb-3 mt-12 rounded-[20px]">
             <div className="flex flex-col overflow-x-auto">
               <table className="relative w-full border-none">
@@ -110,27 +160,19 @@ export function Reports({
                   </tr>
                 </thead>
                 <tbody className="border-none">
-                  <tr>
-                    <td className="py-5 text-lg font-bold">Current assets</td>
-                  </tr>
-                  {assets?.data?.faqs.map(({ name, price }, i) => (
+                  {revenue.map(({ name, currency, amount }) => (
                     <tr key={name}>
                       <td
-                        className={`whitespace-nowrap ${
-                          "font-bold" + "pl-4 font-normal"
-                        } py-4 text-lg text-[#333]`}
+                        className={`whitespace-nowrap py-4 text-lg text-[#333]`}
                       >
                         {name}
                       </td>
                       <td className="px-6 py-4" />
                       <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium text-[#333]">
-                        USD
+                        {currency}
                       </td>
-                      <td
-                        className="whitespace-nowrap px-6 py-4 text-center text-lg font-semibold text-[#333]"
-                        // style={{}}
-                      >
-                        ${(+price).toFixed(2)}
+                      <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-semibold text-[#333]">
+                        {amount}
                       </td>
                     </tr>
                   ))}
@@ -146,15 +188,13 @@ export function Reports({
               </table>
             </div>
             <div className="mt-6 flex items-center justify-between gap-4 rounded-[20px] py-4 px-6 font-bold text-[#333]">
-              <p className="text-[22px] capitalize">Total Assets</p>
-              <p className="ml-auto text-2xl">
-                ${assets.data?.totalPrice.toFixed(2)}
-              </p>
+              <p className="text-[22px] capitalize">Total Revenue</p>
+              <p className="ml-auto text-2xl">$2,316.00</p>
             </div>
           </div>
         </div>
         <div className=" mt-[30px] rounded-[34px] bg-white p-6 md:p-12">
-          <p className=" text-2xl font-bold text-black">Liabilities</p>
+          <p className=" text-2xl font-bold text-black">Expenses</p>
           <div className="mb-3 mt-12 rounded-[20px]">
             <div className="flex flex-col overflow-x-auto">
               <table className="relative w-full border-none">
@@ -183,30 +223,19 @@ export function Reports({
                   </tr>
                 </thead>
                 <tbody className="border-none">
-                  <tr>
-                    <td className="py-5 text-lg font-bold ">
-                      {/* <td className="py-5 text-lg font-bold"> */}
-                      Current Liabilities
-                    </td>
-                  </tr>
-                  {liabilities?.data?.faqs.map(({ name, price }, i) => (
+                  {expenses.map(({ name, currency, amount }) => (
                     <tr key={name}>
                       <td
-                        className={`whitespace-nowrap ${
-                          "font-bold" + "pl-4 font-normal"
-                        } py-4 text-lg text-[#333]`}
+                        className={`whitespace-nowrap py-4 text-lg text-[#333]`}
                       >
                         {name}
                       </td>
                       <td className="px-6 py-4" />
                       <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-medium text-[#333]">
-                        USD
+                        {currency}
                       </td>
-                      <td
-                        className="whitespace-nowrap px-6 py-4 text-center text-lg font-semibold text-[#333]"
-                        // style={{}}
-                      >
-                        ${(+price).toFixed(2)}
+                      <td className="whitespace-nowrap px-6 py-4 text-center text-lg font-semibold text-[#333]">
+                        {amount}
                       </td>
                     </tr>
                   ))}
@@ -222,24 +251,17 @@ export function Reports({
               </table>
             </div>
             <div className="mt-6 flex items-center justify-between gap-4 rounded-[20px] py-4 px-6 font-bold text-[#333]">
-              <p className="text-[22px] capitalize">Total Liabilities</p>
-              <p className="ml-auto text-2xl">
-                ${liabilities.data?.totalPrice.toFixed(2)}
-              </p>
+              <p className="text-[22px] capitalize">Total Expenses</p>
+              <p className="ml-auto text-2xl">$1,101.00</p>
             </div>
           </div>
         </div>
         <div className=" mt-[30px] rounded-[34px] bg-white p-6 md:p-12">
-          <p className=" text-2xl font-bold text-black">Owner's Equity</p>
+          <p className=" text-2xl font-bold text-black">Net Profit (Loss)</p>
           <div className="mb-3 mt-12 rounded-[20px]">
             <div className="flex items-center justify-between gap-4 text-2xl font-semibold">
-              <p className="text-[#333]">Cash</p>
-              <p className="text-[#449E3C]">
-                $
-                {(
-                  assets.data?.totalPrice - liabilities.data?.totalPrice
-                ).toFixed(2)}
-              </p>
+              <p className="text-[#333]">Total Net Profit (Loss)</p>
+              <p className="text-[#449E3C]">$1,215.00</p>
             </div>
           </div>
         </div>
@@ -248,4 +270,4 @@ export function Reports({
   );
 }
 
-export default Reports;
+export default Profit;

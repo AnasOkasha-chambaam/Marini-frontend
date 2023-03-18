@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import filterIcon from "../../../public/img/filterIcon.svg";
 import print from "../../../public/img/print.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { listExpenses } from "@/redux/actions/actions";
-import { data } from "autoprefixer";
+
 import { useState } from "react";
 
 // const expenses = [
@@ -59,27 +58,8 @@ import { useState } from "react";
 //   },
 // ];
 
-export function Expenses() {
+export function Expenses({ expenses, total }) {
   const dispatch = useDispatch();
-  const [total, setTotal] = useState(0);
-
-  const { expenses } = useSelector((state) => state?.universitiesReducer);
-  console.log("Expenses from report module", expenses);
-  useEffect(() => {
-    dispatch(listExpenses());
-  }, []);
-  useEffect(() => {
-    setTotal(
-      expenses?.data?.faqs
-        .reduce((a, one) => {
-          // console.log(one.amount, total);
-          return +a + +one.amount;
-          // console.log(ind, total);
-          // setTotal(newAmount);
-        }, 0)
-        .toFixed(2)
-    );
-  }, [expenses]);
   return (
     <div className="mt-[30px] w-full bg-[#E8E9EB] font-display">
       <div className="mb-5">

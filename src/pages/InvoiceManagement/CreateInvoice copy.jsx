@@ -230,7 +230,7 @@ export function CreateInvoice() {
             Create Invoice
           </p>
           <div className="hidden items-center justify-center gap-6 md:flex">
-            <div>
+            {/* <div>
               <Button
                 className="rounded-[15px]  bg-[#280559]"
                 onClick={() => setOpenPreviewModal(true)}
@@ -246,7 +246,7 @@ export function CreateInvoice() {
                 open={openPreviewModal}
                 close={() => setOpenPreviewModal(false)}
               />
-            </div>
+            </div> */}
             <NavLink to="commission">
               <Button className="rounded-[15px]  bg-[#280559]">
                 <div className="flex flex-row items-center justify-center">
@@ -261,7 +261,7 @@ export function CreateInvoice() {
         </div>
         <p className=" font text-base text-[#9898A3]">Create or edit invoice</p>
         <div className="mt-6 flex w-full flex-wrap items-center justify-center gap-6 pr-8 md:hidden">
-          <div>
+          {/* <div>
             <Button
               className="mr-auto rounded-[15px] bg-[#280559]"
               onClick={() => setOpenPreviewModal(true)}
@@ -277,7 +277,7 @@ export function CreateInvoice() {
               open={openPreviewModal}
               close={() => setOpenPreviewModal(false)}
             />
-          </div>
+          </div> */}
           <NavLink to="commission">
             <Button className="rounded-[15px]  bg-[#280559]">
               <div className="flex items-center justify-center">

@@ -704,7 +704,7 @@ import DatePicker from "@/components/DatePicker";
 import dropdown from "../../../public/img/dropdown.svg";
 import AddField from "@/helpers/Addfield";
 import { useSelector, useDispatch } from "react-redux";
-import { listCurrencies } from "@/redux/actions/actions";
+import { listCurrencies, viewDefaultCurrency } from "@/redux/actions/actions";
 import axios from "axios";
 import { ENV } from "@/config";
 import FullPageLoader from "@/FullPageLoader/FullPageLoader";
@@ -772,6 +772,9 @@ export function Currency() {
   const currencyData = useSelector(
     (state) => state?.universitiesReducer?.currency
   );
+  const { defaultCurrency } = useSelector(
+    (state) => state?.universitiesReducer
+  );
 
   const allCurrencyData = useSelector(
     (state) => state?.universitiesReducer?.allcurrency
@@ -786,7 +789,7 @@ export function Currency() {
     exRate: "",
     status: "",
   };
-  const [defaultCurrency, setDefaultCurrency] = useState({ ...initialValue });
+  // const [defaultCurrency, setDefaultCurrency] = useState({ ...initialValue });
   const [formValues, setFormValues] = useState(initialValue);
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -794,20 +797,22 @@ export function Currency() {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  React.useEffect(() => {
-    currencyData?.data?.faqs && setDefaultCurrency(currencyData?.data?.faqs[0]);
-  }, [currencyData]);
+  // React.useEffect(() => {
+  //   console.log("this is default ", defaultCurrency);
+  //   defaultCurrency?.currency && setDefaultCurrency(currencyData?.data?.faqs[0]);
+  // }, [defaultCurrency]);
 
   const handleDefaultCurrecyChange = (e) => {
-    let newDefaultCurrency = { ...defaultCurrency };
-    Object.keys(defaultCurrency).forEach((key) => {
-      newDefaultCurrency[key] = currencyData?.data?.faqs
-        ? currencyData?.data?.faqs[e.target.value][key]
-        : "";
-    });
-    newDefaultCurrency["index"] = e.target.value;
-    setDefaultCurrency(newDefaultCurrency);
+    // console.log("value of new def curr", e.target.value);
+    // let newDefaultCurrency = { ...defaultCurrency };
+    // Object.keys(defaultCurrency).forEach((key) => {
+    //   newDefaultCurrency[key] = currencyData?.data?.faqs
+    //     ? currencyData?.data?.faqs[e.target?.value][key]
+    //     : "";
+    // });
+    // newDefaultCurrency["index"] = e.target.value;
     // console.log("ojojoiwwwwwwwwj", newDefaultCurrency);
+    dispatch(viewDefaultCurrency(e.target.value));
   };
 
   const handleSubmit = async (e) => {
@@ -998,7 +1003,7 @@ export function Currency() {
                       </label>
                       <select
                         className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                        value={`${defaultCurrency.index}`}
+                        value={`${defaultCurrency.currency.id}`}
                         name={"defaultcurrency"}
                         onChange={handleDefaultCurrecyChange}
                       >
@@ -1023,7 +1028,7 @@ export function Currency() {
                                   currency.name
                                 }
                                 data-exrate={currency.exRate}
-                                value={index}
+                                value={currency.id}
                               >
                                 {currency.name + " (" + currency.iso + ")"}
                               </option>
@@ -1039,7 +1044,7 @@ export function Currency() {
                         type="text"
                         className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Exchange Rate"
-                        value={defaultCurrency.exRate}
+                        value={defaultCurrency.currency.exRate}
                         disabled
                         required
                       />

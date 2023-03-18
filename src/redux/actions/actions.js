@@ -82,6 +82,15 @@ import {
   LIST_ALL_DEPIT_AND_CREDITS,
   VIEW_DEPIT_AND_CREDIT,
   //
+  // Module: Reports (Assets)
+  LIST_ALL_ASSETS,
+  VIEW_ASSET,
+  //
+  // Module: Reports (liabilities)
+  LIST_ALL_LIABILITIES,
+  VIEW_LIABILITIE,
+  VIEW_DEFAULT_CURRENCY,
+  //
 } from "./actionType";
 import axios from "axios";
 import { ENV } from "@/config";
@@ -660,6 +669,56 @@ export const viewDepitAndCredit = (id) => async (dispatch) => {
   });
 };
 //
+// Module: Report (Assets)
+export const listAssets = (qs) => async (dispatch) => {
+  console.log("api url in action file", ENV.baseUrl);
+  const data = await axios.get(`${ENV.baseUrl}/Assets/list?${qs}`);
+  console.log("data.data of list Assets in Accounting file", data);
+  dispatch({
+    type: LIST_ALL_ASSETS,
+    payload: data.data,
+  });
+};
+export const viewAsset = (id) => async (dispatch) => {
+  console.log(" Assets param id in accounting method", id);
+  // console.log(" Umni param action in action method", action);
+
+  const data = await axios.get(
+    `${ENV.baseUrl}/Assets/get/${id}`
+    //
+  );
+  console.log("data of view Assets in action", data);
+  dispatch({
+    type: VIEW_ASSET,
+    payload: data.data,
+  });
+};
+//
+// Module: Report (Liabilities)
+export const listLiabilities = (qs) => async (dispatch) => {
+  console.log("api url in action file", ENV.baseUrl);
+  const data = await axios.get(`${ENV.baseUrl}/Liabilities/list?${qs}`);
+  console.log("data.data of list Liabilities in Accounting file", data);
+  dispatch({
+    type: LIST_ALL_LIABILITIES,
+    payload: data.data,
+  });
+};
+export const viewLiabilitie = (id) => async (dispatch) => {
+  console.log(" Liabilities param id in accounting method", id);
+  // console.log(" Umni param action in action method", action);
+
+  const data = await axios.get(
+    `${ENV.baseUrl}/Liabilities/get/${id}`
+    //
+  );
+  console.log("data of view Liabilities in action", data);
+  dispatch({
+    type: VIEW_LIABILITIE,
+    payload: data.data,
+  });
+};
+//
 // END
 export const listUniversities = (qs) => async (dispatch) => {
   console.log("api url in action file", ENV.baseUrl);
@@ -884,6 +943,20 @@ export const viewCurrency = (id) => async (dispatch) => {
   console.log("data of view currency in action", data);
   dispatch({
     type: VIEW_CURRENCY_DETAILS,
+    payload: data.data,
+  });
+};
+export const viewDefaultCurrency = (id) => async (dispatch) => {
+  console.log(" currency param id in action method", id);
+  // console.log(" Umni param action in action method", action);
+
+  const data = await axios.get(
+    `${ENV.baseUrl}/currencies/get/${id}`
+    //
+  );
+  console.log("data of view currency in action", data);
+  dispatch({
+    type: VIEW_DEFAULT_CURRENCY,
     payload: data.data,
   });
 };

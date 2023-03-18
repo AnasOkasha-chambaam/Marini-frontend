@@ -67,6 +67,12 @@ import {
   VIEW_EXPENSE,
   LIST_ALL_DEPIT_AND_CREDITS,
   VIEW_DEPIT_AND_CREDIT,
+  //
+  LIST_ALL_ASSETS,
+  VIEW_ASSET,
+  LIST_ALL_LIABILITIES,
+  VIEW_LIABILITIE,
+  VIEW_DEFAULT_CURRENCY,
   // END
 } from "../actions/actionType";
 
@@ -148,6 +154,15 @@ const initialState = {
   depitAndCredits: [null],
   viewDepitAndCredit: [null],
   //
+  // Module: Reports (Assets)
+  assets: [null],
+  viewAsset: [null],
+  //
+  // Module: Reports (Liabilities)
+  liabilities: [null],
+  viewLiabilitie: [null],
+  //
+  defaultCurrency: [null],
   // END
 };
 const universitiesReducer = (state = initialState, action) => {
@@ -331,6 +346,30 @@ const universitiesReducer = (state = initialState, action) => {
         viewDepitAndCredit: action.payload,
       };
     //
+    // Module: Report (Assets)
+    case LIST_ALL_ASSETS:
+      return {
+        ...state,
+        assets: action.payload,
+      };
+    case VIEW_ASSET:
+      return {
+        ...state,
+        viewAsset: action.payload,
+      };
+    //
+    // Module: Report (Liabilities)
+    case LIST_ALL_LIABILITIES:
+      return {
+        ...state,
+        liabilities: action.payload,
+      };
+    case VIEW_LIABILITIE:
+      return {
+        ...state,
+        viewLiabilitie: action.payload,
+      };
+    //
     // END
     case LIST_ALL_UNIVERSITIES:
       return {
@@ -408,6 +447,11 @@ const universitiesReducer = (state = initialState, action) => {
       return {
         ...state,
         viewCurrency: action.payload,
+      };
+    case VIEW_DEFAULT_CURRENCY:
+      return {
+        ...state,
+        defaultCurrency: action.payload,
       };
     case VIEW_ALL_BRANCH:
       return {

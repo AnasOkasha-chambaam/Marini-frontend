@@ -9,6 +9,7 @@ import AddField from "@/helpers/Addfield";
 import axios from "axios";
 import { ENV } from "@/config";
 import { toast } from "react-toastify";
+import PrintStyles from "./css/print.css";
 import {
   listInvoiceModuleStatuss,
   listUniversities,
@@ -18,6 +19,7 @@ import {
 } from "@/redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 import FullPageLoader from "@/FullPageLoader/FullPageLoader";
+import InvoicePDF from "./InvoicePDF";
 
 export function CreateInvoice() {
   const navigate = useNavigate();
@@ -303,8 +305,12 @@ export function CreateInvoice() {
                 <Button
                   className="rounded-[15px]  bg-[#280559]"
                   onClick={() => {
-                    // window.print();
-                    setOpenPreviewModal(true);
+                    // setOpenPreviewModal(true);
+                    // setTimeout(() => {
+                    window.print();
+                    // setOpenPreviewModal(false);
+                    // }, 500);
+                    // setOpenPreviewModal(false);
                   }}
                 >
                   <div className="flex items-center justify-center">
@@ -314,12 +320,12 @@ export function CreateInvoice() {
                     </p>
                   </div>
                 </Button>
-                <PreviewInvoice
+                {/* <PreviewInvoice
+                  formsData={allFormsData}
+                  invoiceItems={items}
                   open={openPreviewModal}
-                  formValues={allFormsData}
-                  formItems={items}
                   close={() => setOpenPreviewModal(false)}
-                />
+                /> */}
               </div>
               <NavLink to="commission">
                 <Button className="rounded-[15px]  bg-[#280559]">
@@ -367,6 +373,14 @@ export function CreateInvoice() {
           </div>
         </div>
         <div className="mr-8 rounded-[34px] bg-white p-[39px]">
+          <InvoicePDF
+            formsData={allFormsData}
+            invoiceItems={items}
+            display={openPreviewModal}
+          />
+          <style type="text/css" media="print">
+            {PrintStyles}
+          </style>
           <p className="mb-8 text-2xl font-semibold text-[#333333]">
             Invoice Mailing Info
           </p>
