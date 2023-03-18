@@ -1003,7 +1003,7 @@ export function Currency() {
                       </label>
                       <select
                         className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                        value={`${defaultCurrency.currency.id}`}
+                        value={`${defaultCurrency?.currency?.id}`}
                         name={"defaultcurrency"}
                         onChange={handleDefaultCurrecyChange}
                       >
@@ -1044,7 +1044,7 @@ export function Currency() {
                         type="text"
                         className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Exchange Rate"
-                        value={defaultCurrency.currency.exRate}
+                        value={defaultCurrency?.currency?.exRate}
                         disabled
                         required
                       />
