@@ -59,7 +59,7 @@ export function Sales() {
     formData.append("description", description);
     formData.append("date", date);
     formData.append("statusID", statusID);
-    if (ID) formData.append("id", ID);
+    if (ID) formData.append("ID", ID);
     if (params.id) formData.append("id", params.id);
 
     // console.log("Salllleee", sale);

@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap");
 @media print {
   /* Hide everything except the page content */
   body * {
@@ -20,8 +21,13 @@
     /* height: 100vh; */
     background-color: white;
     padding: 20px;
-    padding-top: 0 !important;
+    /* padding-top: 0 !important; */
     z-index: 99999;
+    font-family: "Roboto Condensed", sans-serif;
+  }
+
+  #InvoiceToPrint .temp-logo-container {
+    width: 160%;
   }
 
   #InvoiceToPrint .temp-header {
@@ -61,6 +67,7 @@
     font-weight: bolder;
   }
   #InvoiceToPrint .temp-date-and-number .temp-data-and-number-content table {
+    max-width: 170px;
     margin: auto;
     margin-bottom: 20px;
     width: 85%;

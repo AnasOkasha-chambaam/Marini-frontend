@@ -44,7 +44,6 @@ export function Cost() {
   useEffect(() => {
     dispatch(listCostOfSales());
     dispatch(listInvoiceModuleStatuss("limit=100000"));
-
   }, []);
   const handleSubmit = async () => {
     // setCostState(true);
@@ -56,8 +55,9 @@ export function Cost() {
     formData.append("description", description);
     formData.append("date", date);
     formData.append("statusID", statusID);
-    if (ID) formData.append("id", ID);
+    if (ID) formData.append("ID", ID);
     if (params.id) formData.append("id", params.id);
+    console.log("forms to submit", allFormsData);
 
     // console.log("Salllleee", sale);
     const config = {
@@ -84,7 +84,7 @@ export function Cost() {
       });
       setCostState(true);
       setAction(0);
-      setAllFormsData({ date: Date.now() });
+      setAllFormsData({});
       setIdToDelete();
       setIdToView();
       setDropdownID();
@@ -134,9 +134,12 @@ export function Cost() {
   const [costState, setCostState] = useState(true);
   const [openCostAddModal, setOpenCostAddModal] = useState(false);
   const [costNewFields, setCostNewFields] = useState([]);
-  const [allFormsData, setAllFormsData] = useState({ date: Date.now() });
+  const [allFormsData, setAllFormsData] = useState({});
   const handleAllFormsDataChange = (e) => {
     let { name, value } = e.target;
+    if (name === "date") {
+      console.log("datee...", value);
+    }
     setAllFormsData({ ...allFormsData, [name]: value });
   };
 
@@ -151,7 +154,15 @@ export function Cost() {
     return () => {
       // setAction(1);
       setCostState(false);
-      setAllFormsData({ name, description, amount, date, statusID, ID });
+      setAllFormsData({
+        name,
+        description,
+        amount,
+        date: new Date(date).toISOString().substr(0, 10),
+        statusID,
+        ID,
+      });
+      console.log("dateeee...", new Date(date).toISOString().substr(0, 10));
       setIdToView(ID);
     };
   };
@@ -177,7 +188,7 @@ export function Cost() {
       });
       setCostState(true);
       setAction(0);
-      setAllFormsData({ date: Date.now() });
+      setAllFormsData({});
       setIdToDelete();
       setIdToView();
     }
@@ -219,7 +230,11 @@ export function Cost() {
                 Cost of Sales
               </p>
               <Button
-                onClick={() => setCostState(false)}
+                onClick={() => {
+                  setCostState(false);
+                  setAllFormsData({});
+                  setIsViewMode(false);
+                }}
                 className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6"
               >
                 <img className="m-1 w-[20px]" src={plus} alt="..." />
@@ -436,19 +451,19 @@ export function Cost() {
                                   Edit
                                 </button>
                               </li>
-                              {
-                              (localStorage.access !== "accountant" && localStorage.access !== "adminBranch") &&
-                                <li>
-                                  <button
-                                    onClick={() => {
-                                      setShowModal(true);
-                                      setIdToDelete(ID);
-                                    }}
-                                  >
-                                    Delete
-                                  </button>
-                                </li>
-                              }
+                              {localStorage.access !== "accountant" &&
+                                localStorage.access !== "adminBranch" && (
+                                  <li>
+                                    <button
+                                      onClick={() => {
+                                        setShowModal(true);
+                                        setIdToDelete(ID);
+                                      }}
+                                    >
+                                      Delete
+                                    </button>
+                                  </li>
+                                )}
                             </ul>
                           </div>
                         </td>
@@ -635,10 +650,7 @@ export function Cost() {
                   placeholder="DD/MM/YYYY"
                   name="date"
                   onChange={handleAllFormsDataChange}
-                  value={
-                    new Date(allFormsData.date).toISOString().substr(0, 10) ||
-                    ""
-                  }
+                  value={allFormsData.date || ""}
                   disabled={isViewMode}
                   required
                 />
@@ -734,7 +746,10 @@ export function Cost() {
           )}
           {"   "}
           <Button
-            onClick={() => setCostState(true)}
+            onClick={() => {
+              setCostState(true);
+              setAllFormsData({});
+            }}
             className="rounded-[15px]  bg-[#280559]"
           >
             <div className="flex flex-row items-center justify-center px-[33px] py-[10px]">

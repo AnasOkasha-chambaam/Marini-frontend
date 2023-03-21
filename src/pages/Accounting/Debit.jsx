@@ -4,8 +4,16 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import print from "../../../public/img/print.svg";
 import Sales_recording_data from "@/data/Sales-recording-data";
 // Anasite - Edits
+
 import { useParams } from "react-router-dom";
-import { listDepitAndCredits } from "@/redux/actions/actions";
+import {
+  listDepitAndCredits,
+  listExpenses,
+  listCostOfSales,
+  listSales,
+  listGeneralInvoices,
+  listCommissionInvoices,
+} from "@/redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { ENV } from "@/config";
 import axios from "axios";
@@ -17,13 +25,49 @@ export function Debit() {
   const dispatch = useDispatch();
   const params = useParams();
 
-  const { depitAndCredits } = useSelector(
-    (state) => state?.universitiesReducer
-  );
+  const {
+    depitAndCredits,
+    commissionInvoices,
+    generalInvoices,
+    expenses,
+    sales,
+    costOfSales,
+  } = useSelector((state) => state?.universitiesReducer);
   console.log("depitAndCredits from accounting ====>", depitAndCredits);
+  console.log("commissionInvoices from accounting ====>", commissionInvoices);
+  console.log("generalInvoices from accounting ====>", generalInvoices);
+  console.log("expenses from accounting ====>", expenses);
+  console.log("costOfSales from accounting ====>", costOfSales);
+  console.log("sales from accounting ====>", sales);
   useEffect(() => {
     dispatch(listDepitAndCredits());
+    dispatch(listCommissionInvoices("limit=100000"));
+    dispatch(listGeneralInvoices("limit=100000"));
+    dispatch(listCostOfSales("limit=100000"));
+    dispatch(listSales("limit=100000"));
+    dispatch(listExpenses("limit=100000"));
   }, []);
+  // Calcualte depit and credit:
+
+  useEffect(() => {
+    let depit = 0,
+      credit = 0;
+    credit += +sales.data?.totalPrice || 0;
+    credit += +commissionInvoices.data?.totalCredited || 0;
+    credit += +generalInvoices.data?.totalCredited || 0;
+
+    depit += +costOfSales.data?.totalPrice || 0;
+    depit += +sales.data?.totalPrice || 0;
+    depit +=
+      +commissionInvoices.data?.totalPrice -
+        +commissionInvoices.data?.totalCredited || 0;
+    depit +=
+      +generalInvoices.data?.totalPrice -
+        +generalInvoices.data?.totalCredited || 0;
+    setTotalCredit(credit);
+    setTotalDepit(depit);
+  }, [expenses, sales, costOfSales, generalInvoices, commissionInvoices]);
+  // end
   const [totalDepit, setTotalDepit] = useState(0);
   const [totalCredit, setTotalCredit] = useState(0);
   let depit = 0,
@@ -172,16 +216,139 @@ export function Debit() {
                 </tr>
               </thead>
               <tbody className="border-none">
-                {depitAndCredits?.data?.faqs.map(
-                  ({ ID, date, name, description, amount, type }) => {
-                    if (type === 0) {
-                      // setTotalDepit(totalDepit + amount);
-                      credit += +amount;
-                    } else {
-                      depit += +amount;
-                      // setTotalCredit(0);
-                    }
+                {sales?.data?.faqs.map((sale) => {
+                  let { ID, date, name, description, amount } = sale;
+                  // console.log("single sale", sales, sale);
 
+                  return (
+                    <tr key={name + ID + "lkj-om998-" + description}>
+                      <td className="whitespace-nowrap py-3 pr-6">
+                        <Checkbox />
+                      </td>
+                      <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
+                        {new Date(date).toLocaleDateString(undefined, {
+                          dateStyle: "medium",
+                        })}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        {name}
+                      </td>
+                      <td className="px-6 py-4 text-lg" />
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        <span style={{ color: "#333" }}>
+                          {/* {type === 0 ? "" : "$" + amount} */}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        <span style={{ color: "#449E3C" }}>
+                          {"$" + (+amount).toFixed(2)}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {expenses?.data?.faqs.map((expense) => {
+                  let { ID, date, name, description, amount } = expense;
+                  // console.log("single expense", expenses, expense);
+                  return (
+                    <tr key={name + ID + "lkj-om998-" + description}>
+                      <td className="whitespace-nowrap py-3 pr-6">
+                        <Checkbox />
+                      </td>
+                      <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
+                        {new Date(date).toLocaleDateString(undefined, {
+                          dateStyle: "medium",
+                        })}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        {name}
+                      </td>
+                      <td className="px-6 py-4 text-lg" />
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        <span style={{ color: "#333" }}>
+                          {"$" + (+amount).toFixed(2)}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        <span style={{ color: "#449E3C" }}>
+                          {/* {"$" + amount} */}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {costOfSales?.data?.faqs.map((cost) => {
+                  let { ID, date, name, description, amount } = cost;
+                  // console.log("single sale", sales, sale);
+
+                  return (
+                    <tr key={name + ID + "lkj-om998-" + description}>
+                      <td className="whitespace-nowrap py-3 pr-6">
+                        <Checkbox />
+                      </td>
+                      <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
+                        {new Date(date).toLocaleDateString(undefined, {
+                          dateStyle: "medium",
+                        })}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        {name}
+                      </td>
+                      <td className="px-6 py-4 text-lg" />
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        <span style={{ color: "#333" }}>
+                          {"$" + (+amount).toFixed(2)}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        <span style={{ color: "#449E3C" }}>
+                          {/* {"$" + amount} */}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {costOfSales?.data?.faqs.map((sale) => {
+                  let { ID, date, name, description, amount } = sale;
+                  // console.log("single sale", sales, sale);
+                  return (
+                    <tr key={name + ID + "lkj-om998-" + description}>
+                      <td className="whitespace-nowrap py-3 pr-6">
+                        <Checkbox />
+                      </td>
+                      <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
+                        {new Date(date).toLocaleDateString(undefined, {
+                          dateStyle: "medium",
+                        })}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        {name}
+                      </td>
+                      <td className="px-6 py-4 text-lg" />
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        <span style={{ color: "#333" }}>
+                          {"$" + (+amount).toFixed(2)}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                        <span style={{ color: "#449E3C" }}>
+                          {/* {"$" + amount} */}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {commissionInvoices?.data?.faqs.map((commissionInvoice) =>
+                  commissionInvoice.CommissionInvoiceItems?.map((item) => {
+                    let {
+                      ID,
+                      updatedAt: date,
+                      name,
+                      description,
+                      price: amount,
+                    } = item;
+                    let type = commissionInvoice.InvoiceModuleStatus?.name;
+                    // console.log("single item", commissionInvoice, item);
                     return (
                       <tr key={name + ID + "lkj-om998-" + description}>
                         <td className="whitespace-nowrap py-3 pr-6">
@@ -198,18 +365,66 @@ export function Debit() {
                         <td className="px-6 py-4 text-lg" />
                         <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
                           <span style={{ color: "#333" }}>
-                            {type === 0 ? "" : "$" + amount}
+                            {type?.startsWith("credit")
+                              ? ""
+                              : "$" + (+amount).toFixed(2)}
                           </span>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
                           <span style={{ color: "#449E3C" }}>
-                            {type === 0 ? "$" + amount : ""}
+                            {type?.startsWith("credit")
+                              ? "$" + (+amount).toFixed(2)
+                              : ""}
                           </span>
                         </td>
                       </tr>
                     );
-                  }
+                  })
                 )}
+                {generalInvoices?.data?.faqs.map((generalInvoice) =>
+                  generalInvoice.GeneralInvoiceItems?.map((item) => {
+                    let {
+                      ID,
+                      updatedAt: date,
+                      name,
+                      description,
+                      price: amount,
+                    } = item;
+                    let type = generalInvoice.InvoiceModuleStatus?.name;
+                    // console.log("single item", generalInvoice, item);
+                    return (
+                      <tr key={name + ID + "lkj-om998-" + description}>
+                        <td className="whitespace-nowrap py-3 pr-6">
+                          <Checkbox />
+                        </td>
+                        <td className="whitespace-nowrap py-4 text-lg font-normal text-[#333]">
+                          {new Date(date).toLocaleDateString(undefined, {
+                            dateStyle: "medium",
+                          })}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                          {name}
+                        </td>
+                        <td className="px-6 py-4 text-lg" />
+                        <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                          <span style={{ color: "#333" }}>
+                            {type?.startsWith("credit")
+                              ? ""
+                              : "$" + (+amount).toFixed(2)}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-lg font-semibold text-[#333]">
+                          <span style={{ color: "#449E3C" }}>
+                            {type?.startsWith("credit")
+                              ? "$" + (+amount).toFixed(2)
+                              : ""}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+
                 <tr>
                   <td className="py-2">&nbsp;</td>
                   <td className="py-2">&nbsp;</td>
@@ -224,8 +439,8 @@ export function Debit() {
           <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-[20px] py-4 px-6 font-bold text-[#333] md:flex-row md:gap-0">
             <p className="text-[22px] capitalize">total cost</p>
             <div className="flex items-center justify-center gap-10 text-2xl md:ml-auto md:justify-start">
-              <p>${depit}</p>
-              <p>${credit}</p>
+              <p>${totalCredit.toFixed(2)}</p>
+              <p>${totalDepit.toFixed(2)}</p>
             </div>
           </div>
         </div>

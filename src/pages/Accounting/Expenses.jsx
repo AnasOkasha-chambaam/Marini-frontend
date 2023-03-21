@@ -56,7 +56,7 @@ export function Expenses() {
     formData.append("description", description);
     formData.append("date", date);
     formData.append("statusID", statusID);
-    if (ID) formData.append("id", ID);
+    if (ID) formData.append("ID", ID);
     if (params.id) formData.append("id", params.id);
 
     // console.log("Salllleee", sale);
@@ -83,7 +83,7 @@ export function Expenses() {
       });
       setExpstate(true);
       setAction(0);
-      setAllFormsData({ date: Date.now() });
+      setAllFormsData({});
       setIdToDelete();
       setIdToView();
       setDropdownID();
@@ -134,9 +134,12 @@ export function Expenses() {
   const [expstate, setExpstate] = useState(true);
   const [openExpAddModal, setOpenExpAddModal] = useState(false);
   const [ExpNewFields, setExpNewFields] = useState([]);
-  const [allFormsData, setAllFormsData] = useState({ date: Date.now() });
+  const [allFormsData, setAllFormsData] = useState({});
   const handleAllFormsDataChange = (e) => {
     let { name, value } = e.target;
+    if (name === "date") {
+      console.log("date from change", value);
+    }
     setAllFormsData({ ...allFormsData, [name]: value });
   };
 
@@ -151,7 +154,15 @@ export function Expenses() {
     return () => {
       // setAction(1);
       setExpstate(false);
-      setAllFormsData({ name, description, amount, date, statusID, ID });
+      console.log("dateee....", date);
+      setAllFormsData({
+        name,
+        description,
+        amount,
+        date: date ? new Date(date).toISOString().substr(0, 10) : "",
+        statusID,
+        ID,
+      });
       setIdToView(ID);
     };
   };
@@ -177,7 +188,7 @@ export function Expenses() {
       });
       setExpstate(true);
       setAction(0);
-      setAllFormsData({ date: Date.now() });
+      setAllFormsData({});
       setIdToDelete();
       setIdToView();
     }
@@ -631,10 +642,7 @@ export function Expenses() {
                   placeholder="DD/MM/YYYY"
                   name="date"
                   onChange={handleAllFormsDataChange}
-                  value={
-                    new Date(allFormsData.date).toISOString().substr(0, 10) ||
-                    ""
-                  }
+                  value={allFormsData.date || ""}
                   required
                 />
               </div>

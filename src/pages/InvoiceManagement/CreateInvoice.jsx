@@ -301,42 +301,50 @@ export function CreateInvoice() {
               Create Invoice
             </p>
             <div className="hidden items-center justify-center gap-6 md:flex">
-              <div>
-                <Button
-                  className="rounded-[15px]  bg-[#280559]"
-                  onClick={() => {
-                    // setOpenPreviewModal(true);
-                    // setTimeout(() => {
-                    window.print();
-                    // setOpenPreviewModal(false);
-                    // }, 500);
-                    // setOpenPreviewModal(false);
-                  }}
-                >
-                  <div className="flex items-center justify-center">
-                    <img src={print} alt="..." />
-                    <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                      Print / Preview
-                    </p>
-                  </div>
-                </Button>
-                {/* <PreviewInvoice
+              {!isViewMode ? (
+                ""
+              ) : (
+                <div>
+                  <Button
+                    className="rounded-[15px]  bg-[#280559]"
+                    onClick={() => {
+                      // setOpenPreviewModal(true);
+                      // setTimeout(() => {
+                      window.print();
+                      // setOpenPreviewModal(false);
+                      // }, 500);
+                      // setOpenPreviewModal(false);
+                    }}
+                  >
+                    <div className="flex items-center justify-center">
+                      <img src={print} alt="..." />
+                      <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                        Print / Preview
+                      </p>
+                    </div>
+                  </Button>
+                  {/* <PreviewInvoice
                   formsData={allFormsData}
                   invoiceItems={items}
                   open={openPreviewModal}
                   close={() => setOpenPreviewModal(false)}
                 /> */}
-              </div>
-              <NavLink to="commission">
-                <Button className="rounded-[15px]  bg-[#280559]">
-                  <div className="flex flex-row items-center justify-center">
-                    <img src={saveIcon} alt="..." />
-                    <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
-                      Save Changes
-                    </p>
-                  </div>
-                </Button>
-              </NavLink>
+                </div>
+              )}
+              {isViewMode ? (
+                ""
+              ) : (
+                <NavLink to="commission">
+                  <Button className="rounded-[15px]  bg-[#280559]">
+                    <div className="flex flex-row items-center justify-center">
+                      <img src={saveIcon} alt="..." />
+                      <p className="p-1 px-[11px] text-base font-medium normal-case text-white">
+                        Save Changes
+                      </p>
+                    </div>
+                  </Button>
+                </NavLink>
+              )}
             </div>
           </div>
           <p className=" font text-base text-[#9898A3]">
@@ -1221,7 +1229,7 @@ export function CreateInvoice() {
             <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  Recipient
+                  Recipient Name
                 </label>
                 <input
                   type="text"

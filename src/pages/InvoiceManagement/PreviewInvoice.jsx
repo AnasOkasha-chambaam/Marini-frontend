@@ -4,7 +4,8 @@ import print from "../../../public/img/print01.svg";
 import invoice01 from "../../../public/img/invoice01.png";
 import downloadIcon from "../../../public/img/downloadIcon.svg";
 import PrintStyles from "./css/print.css";
-import logo from "../../../public/img/loginlogo.svg";
+// import logo from "../../../public/img/loginlogo.svg";
+import logo from "../../../public/img/logo.svg";
 
 const PreviewInvoice = ({ open, close, invoiceItems, formsData }) => {
   const handlePrint = () => {

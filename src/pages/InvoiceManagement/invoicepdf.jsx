@@ -3,7 +3,8 @@ import { Button, Dialog, DialogBody } from "@material-tailwind/react";
 import print from "../../../public/img/print01.svg";
 import invoice01 from "../../../public/img/invoice01.png";
 import downloadIcon from "../../../public/img/downloadIcon.svg";
-import logo from "../../../public/img/loginlogo.svg";
+// import logo from "../../../public/img/loginlogo.svg";
+import logo from "../../../public/img/logo.svg";
 const InvoicePDF = ({ open, close, invoiceItems, formsData }) => {
   const handlePrint = () => {
     window.print();
