@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Menu,
   MenuHandler,
@@ -10,34 +10,50 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
 import Commission_voice_data from "@/data/Commission-voice-data";
 import print from "../../../public/img/print.svg";
-import { read, utils, writeFile } from 'xlsx';
+import { read, utils, writeFile } from "xlsx";
 import dropdown from "../../../public/img/dropdown.svg";
+import { listCommissionInvoices } from "@/redux/actions/actions";
+import { useSelector, useDispatch } from "react-redux";
+import Paginate from "@/paginate";
 
 export function CommissionInvoices() {
+  const dispatch = useDispatch();
+
+  let { commissionInvoices } = useSelector(
+    (state) => state?.universitiesReducer
+  );
+
+  console.log("Commission invoices on Sytem Reports", commissionInvoices);
+
+  useEffect(() => {
+    dispatch(listCommissionInvoices());
+  }, []);
 
   const handleExportXlsx = () => {
-    const headings = [[
-      ...Object.keys(Commission_voice_data[0])
-    ]];
+    const headings = [[...Object.keys(Commission_voice_data[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, Commission_voice_data, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Movie Report.xlsx');
-  }
+    utils.sheet_add_json(ws, Commission_voice_data, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Movie Report.xlsx");
+  };
 
   const handleExportCsv = () => {
-    const headings = [[
-      ...Object.keys(Commission_voice_data[0])
-    ]];
+    const headings = [[...Object.keys(Commission_voice_data[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, Commission_voice_data, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Movie Report.csv');
-  }
+    utils.sheet_add_json(ws, Commission_voice_data, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Invoice Report.csv");
+  };
 
   return (
     <div className="mt-[30px] w-full bg-[#E8E9EB] font-display">
@@ -84,10 +100,16 @@ export function CommissionInvoices() {
                   </button>
                 </MenuHandler>
                 <MenuList>
-                  <MenuItem onClick={() => handleExportCsv()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                  <MenuItem
+                    onClick={() => handleExportCsv()}
+                    className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                  >
                     Export as .csv
                   </MenuItem>
-                  <MenuItem onClick={() => handleExportXlsx()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                  <MenuItem
+                    onClick={() => handleExportXlsx()}
+                    className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                  >
                     Export as .xlsx
                   </MenuItem>
                 </MenuList>
@@ -153,15 +175,15 @@ export function CommissionInvoices() {
                 </tr>
               </thead>
               <tbody className="border-none">
-                {Commission_voice_data.map(
+                {commissionInvoices?.data?.faqs.map(
                   ({
                     ID,
-                    ItemDate,
-                    Recipient,
-                    university,
-                    Service,
+                    updatedAt: ItemDate,
+                    recipient: Recipient,
+                    University: university,
+                    CommissionInvoiceItems: Service,
                     Amount,
-                    Status,
+                    InvoiceModuleStatus: Status,
                     color,
                   }) => (
                     <tr key={ID}>
@@ -181,23 +203,26 @@ export function CommissionInvoices() {
                         {Recipient}
                       </td>
                       <td className="px-6 py-4 text-lg font-normal text-[#333]">
-                        {university}
+                        {university.name}
                       </td>
                       <td className="px-6 py-4 text-lg font-normal text-[#333]">
-                        {Service}
+                        {Service.length}
                       </td>
                       <td className="px-6 py-4 text-center text-lg font-semibold text-[#333]">
-                        {Amount}
+                        {Service?.reduce((a, one) => {
+                          return a + +one.price;
+                        }, 0)}
                       </td>
                       <td>
                         <p
-                          className="mx-auto w-fit rounded-2xl px-5 py-2 text-center text-xs font-medium normal-case"
+                          // className="mx-auto w-fit rounded-2xl px-5 py-2 text-center text-xs font-medium normal-case"
+                          className="neumorphism mx-auto w-fit rounded-lg bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                           style={{
-                            color,
-                            backgroundColor: `${color}10`,
+                            color: Status?.Color,
+                            backgroundColor: `${Status?.Color}10`,
                           }}
                         >
-                          {Status}
+                          {Status?.name}
                         </p>
                       </td>
                     </tr>
@@ -206,7 +231,11 @@ export function CommissionInvoices() {
               </tbody>
             </table>
           </div>
-          <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-[20px] bg-[#F8F9FB] py-4 px-6 md:flex-row md:gap-0">
+          <Paginate
+            pagination={commissionInvoices.data?.pagination}
+            method={listCommissionInvoices}
+          />
+          {/* <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-[20px] bg-[#F8F9FB] py-4 px-6 md:flex-row md:gap-0">
             <p className="px-5 text-base text-[#92929D]">
               <span className="text-[#280559]">1</span>-5 of 56
             </p>
@@ -266,7 +295,7 @@ export function CommissionInvoices() {
                 </svg>
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
