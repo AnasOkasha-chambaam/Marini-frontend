@@ -1,4 +1,4 @@
-import ApplicantHome from "@/pages/Applicant/ApplicantHome";
+import ApplicantHome from "@/pages/Applicant/Applicant";
 import { useContext } from "react";
 import { NavbarCtx } from "@/App";
 import { Route } from "react-router-dom";

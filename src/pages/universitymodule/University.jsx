@@ -181,7 +181,15 @@ export function University() {
                   <input
                     type="text"
                     // onKeyDown={handleKeyDown}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.keyCode == 13) {
+                        e.preventDefault();
+                        disptach(filterUniversities({ name: search }));
+                      }
+                    }}
                     value={search}
                     placeholder="Search"
                     className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
@@ -189,14 +197,34 @@ export function University() {
                 </div>
               </form>
               <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                <button
-                  className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md"
-                  onClick={() => disptach(filterUniversities({ name: search }))}
-                >
-                  <img className="w-[20px]" src={filterIcon} alt="..." />
-                  <p className="mx-3 text-[16px] ">Filters</p>
-                </button>
-
+                <Menu>
+                  <MenuHandler>
+                    <button className="flex h-[57px] w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
+                      <img className="w-[20px]" src={filterIcon} alt="..." />
+                      <p className="mx-3 ">Filters</p>
+                    </button>
+                  </MenuHandler>
+                  <MenuList>
+                    <MenuItem
+                      onClick={() => {}}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      University name
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {}}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      Campus
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {}}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      Campus address
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
                 <Menu>
                   <MenuHandler>
                     <button className="flex h-[57px] w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
@@ -235,13 +263,13 @@ export function University() {
                       scope="col"
                       className="w-[346px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                     >
-                      Location
+                      Campus
                     </th>
                     <th
                       scope="col"
                       className="w-[113px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                     >
-                      Universty Info
+                      Campus address
                     </th>
                     <th
                       scope="col"
@@ -251,7 +279,7 @@ export function University() {
                     </th>
                     <th
                       scope="col"
-                      className="w-[115px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
+                      className="w-[115px] px-6 py-3 text-center text-base font-medium text-[#92929D]"
                     >
                       Option
                     </th>
@@ -263,12 +291,11 @@ export function University() {
                       <td className="whitespace-nowrap px-6 py-4 text-lg font-medium text-[#333]">
                         {ele?.name}
                       </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
-                        {ele?.Campuses[0]?.address1}
-                        {/* {ele?.Campuses?.address1 ? "a" : "b"} */}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-lg font-normal text-[#333]">
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-medium text-[#333]">
                         {ele?.Campuses[0]?.name}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-lg font-medium text-[#333]">
+                        {ele?.Campuses[0]?.address1}
                       </td>
                       <td className="w-[115px] px-3">
                         <Button
@@ -341,33 +368,41 @@ export function University() {
                             className="py-2 text-sm text-gray-700 dark:text-gray-200"
                             aria-labelledby={`dropdownDefaultButton${ind}`}
                           >
-                            <li>
-                              <button
-                                className="btn btn-primary"
-                                onClick={() =>
-                                  navigate(
-                                    `/dashboard/university_module/2/${ele?.id}`
-                                  )
-                                }
-                              >
-                                Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={
-                                  () => {
-                                    setShowModal(true);
-                                    setIdToDelete(ele?.id);
-                                  }
-                                  // navigate(
-                                  //   `/dashboard/Leadsmodule/${ele?.id}`
-                                  // )
-                                }
-                              >
-                                Delete
-                              </button>
-                            </li>
+                            {localStorage.access !== "adminBranch" &&
+                              localStorage.access !== "counselorBranch" && (
+                                <li>
+                                  <button
+                                    className="btn btn-primary"
+                                    onClick={() =>
+                                      navigate(
+                                        `/dashboard/university_module/2/${ele?.id}`
+                                      )
+                                    }
+                                  >
+                                    Edit
+                                  </button>
+                                </li>
+                              )}
+
+                            {localStorage.access !== "counselor" &&
+                              localStorage.access !== "adminBranch" &&
+                              localStorage.access !== "counselorBranch" && (
+                                <li>
+                                  <button
+                                    onClick={
+                                      () => {
+                                        setShowModal(true);
+                                        setIdToDelete(ele?.id);
+                                      }
+                                      // navigate(
+                                      //   `/dashboard/Leadsmodule/${ele?.id}`
+                                      // )
+                                    }
+                                  >
+                                    Delete
+                                  </button>
+                                </li>
+                              )}
                           </ul>
                         </div>
                       </td>

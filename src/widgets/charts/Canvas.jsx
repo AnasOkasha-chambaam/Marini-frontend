@@ -1,7 +1,22 @@
 import { Card, CardBody } from '@material-tailwind/react'
+import { useDispatch, useSelector } from "react-redux";
 import React, { useRef, useEffect } from 'react'
 
-const Canvas = ({color='#0066ff', angle=120, text="2,358"}) => {
+const Canvas = ({color='#0066ff'}) => {
+
+  const [text, setText] = React.useState(0);
+  const [angle, setAngle] = React.useState(0);
+
+  const applicationsData = useSelector(
+    (state) => state?.universitiesReducer?.applications
+  );
+
+  useEffect(() => {
+    let count = 0;
+    applicationsData?.data?.faqs.map(item => item.createdAt !== item.updatedAt && count ++);
+    setText(count);
+    setAngle((180/applicationsData?.data?.faqs.length)*count)
+  }, [applicationsData]);
   
   const canvasRef = useRef(null)
   
@@ -65,7 +80,7 @@ const Canvas = ({color='#0066ff', angle=120, text="2,358"}) => {
     context.beginPath();
     context.font = "15px Inter";
     context.fillStyle='#92929d';
-    context.fillText("2900", centerX*2-25, centerY+15);
+    context.fillText(applicationsData?.data?.faqs.length, centerX*2-25, centerY+15);
     
     context.beginPath();
     context.font = "20px Inter";

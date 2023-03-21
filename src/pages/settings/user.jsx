@@ -110,19 +110,24 @@ export function User() {
       formValues;
 
     const payload = {
-      name,
-      email,
-      number,
-      role,
-      branch,
-      position,
-      date,
-      password,
+      name: name,
+      email: email,
+      number: number,
+      role: role,
+      branch: branch,
+      position: position,
+      date: date,
+      password: password,
       Uname: localStorage.name,
       Urole: localStorage.access,
       // role,
     };
-    if ((name, email, number, role, branch, position, date, password)) {
+    if (params.action == 2) {
+      payload.id = params.id;
+    }
+
+    if (payload) {
+      console.log("*****************", payload);
       const apiCall = await axios[params.action == 2 ? "put" : "post"](
         `${ENV.baseUrl}/users/${params.action == 2 ? "edit" : "create"}`,
         payload
@@ -190,7 +195,7 @@ export function User() {
     console.log(params.id);
     const data = await axios.delete(
       `${ENV.baseUrl}/users/delete/${idToDelete}`,
-      { Uname: localStorage.name, Urole: localStorage.access }
+      { Uname: localStorage.name, role: localStorage.access }
     );
     console.log("deleted data", data);
     // // alert("whppp");
@@ -266,7 +271,15 @@ export function User() {
                   <input
                     type="text"
                     // onKeyDown={handleKeyDown}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.keyCode == 13) {
+                        e.preventDefault();
+                        disptach(filterViewUser({ name: search }));
+                      }
+                    }}
                     value={search}
                     placeholder="Search"
                     className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
@@ -561,21 +574,23 @@ export function User() {
           </p>
           <form onSubmit={handleSubmit}>
             <div className="mt-4 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Name"
-                  name="name"
-                  value={formValues.name}
-                  onChange={handleChange}
-                  disabled={isViewMode}
-                />
-                {console.log("Is View Mode", ">>", isViewMode)}
-              </div>
+              {!isViewMode && (
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Name"
+                    name="name"
+                    value={formValues.name}
+                    onChange={handleChange}
+                    disabled={isViewMode}
+                  />
+                  {console.log("Is View Mode", ">>", isViewMode)}
+                </div>
+              )}
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
                   Email Address
@@ -619,13 +634,13 @@ export function User() {
                 >
                   <option value={""}>Select Role</option>
 
-                  <option value={"SuperAdmin"}>Super Admin</option>
-                  <option value={"Admin"}>Admin HQ</option>
-                  <option value={"Counselor"}>Counselor HQ</option>
-                  <option value={"Accountant"}>Accountant HQ</option>
-                  <option value={"AdminBranch"}>Admin Branch</option>
-                  <option value={"CounselorBranch"}>Counselor Branch</option>
-                  <option value={"AccountantBranch"}>Accountant Branch</option>
+                  <option value={"superAdmin"}>Super Admin</option>
+                  <option value={"admin"}>Admin HQ</option>
+                  <option value={"counselor"}>Counselor HQ</option>
+                  <option value={"accountant"}>Accountant HQ</option>
+                  <option value={"adminBranch"}>Admin Branch</option>
+                  <option value={"counselorBranch"}>Counselor Branch</option>
+                  <option value={"accountantBranch"}>Accountant Branch</option>
 
                   {/*     <option value={"superAdmin"}>Super Admin</option>
                   <option value={"admin"}>Admin HQ</option>
@@ -757,31 +772,53 @@ export function User() {
             ) : (
               <>
                 <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Password
-                    </label>
-                    <input
-                      required
-                      type="password"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder=""
-                      name="password"
-                      value={formValues.password}
-                      onChange={handleChange}
-                      disabled={isViewMode}
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Confirm Password
-                    </label>
-                    <input
-                      type="password"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="***********"
-                    />
-                  </div>
+                  {/* {
+                    params.action == 2 &&
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                        Current Password
+                      </label>
+                      <input
+                        required
+                        type="password"
+                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                        name="cur_password"
+                        value={formValues.cur_password}
+                        onChange={handleChange}
+                        placeholder="***********"
+                        disabled={isViewMode}
+                      />
+                    </div>
+                  } */}
+                  {!isViewMode && (
+                    <>
+                      <div>
+                        <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                          New Password
+                        </label>
+                        <input
+                          required
+                          type="password"
+                          className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                          name="password"
+                          value={formValues.password}
+                          onChange={handleChange}
+                          placeholder="***********"
+                          disabled={isViewMode}
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                          Confirm Password
+                        </label>
+                        <input
+                          type="password"
+                          className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                          placeholder="***********"
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
                 {/* <NavLink to=""> */}
                 <Button

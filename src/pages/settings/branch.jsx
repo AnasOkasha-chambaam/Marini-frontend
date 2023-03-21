@@ -94,8 +94,11 @@ export function Branch() {
       manager,
       id,
       Uname: localStorage.name,
-      Urole: localStorage.access,
+      role: localStorage.access,
     };
+    if (params.action == 2) {
+      payload.id = params.id;
+    }
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
       `${ENV.baseUrl}/branch/${params.action == 2 ? "edit" : "create"}`,
@@ -159,7 +162,7 @@ export function Branch() {
     console.log(params.id);
     const data = await axios.delete(
       `${ENV.baseUrl}/branch/delete/${idToDelete}`,
-      { Uname: localStorage.name, Urole: localStorage.access }
+      { Uname: localStorage.name, role: localStorage.access }
     );
     console.log("deleted data", data);
     // // alert("whppp");
@@ -253,7 +256,15 @@ export function Branch() {
                   <input
                     type="text"
                     // onKeyDown={handleKeyDown}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.keyCode == 13) {
+                        e.preventDefault();
+                        disptach(filterListBranches({ name: search }));
+                      }
+                    }}
                     value={search}
                     placeholder="Search"
                     className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
@@ -263,7 +274,7 @@ export function Branch() {
 
               <button
                 className="flex h-[57px] w-[135px] items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md"
-                onClick={() => dispatch(filterListBranches({ name: search }))}
+                onClick={() => dispatch()}
               >
                 <img className="w-[20px]" src={filterIcon} alt="..." />
                 <p className="mx-3 text-[16px] ">Filters</p>

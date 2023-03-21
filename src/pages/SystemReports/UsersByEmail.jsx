@@ -106,7 +106,7 @@ export function UsersByEmail() {
               </thead>
               <tbody className="border-none">
                 {users?.data?.faqs.map(
-                  ({ id, name, email, number: phone, position, Branch }) => (
+                  ({ id, name, email, number: phone, position, branch }) => (
                     <tr key={id + name + email}>
                       <td className="whitespace-nowrap py-3 pr-6">
                         <Checkbox />
@@ -127,7 +127,7 @@ export function UsersByEmail() {
                         {position}
                       </td>
                       <td className="px-6 py-4 text-lg font-normal text-[#333]">
-                        {Branch?.name || "No Branch"}
+                        {branch || "No Branch"}
                       </td>
                     </tr>
                   )

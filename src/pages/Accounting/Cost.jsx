@@ -56,7 +56,7 @@ export function Cost() {
     formData.append("description", description);
     formData.append("date", date);
     formData.append("statusID", statusID);
-    if (ID) formData.append("ID", ID);
+    if (ID) formData.append("id", ID);
     if (params.id) formData.append("id", params.id);
 
     // console.log("Salllleee", sale);
@@ -436,21 +436,19 @@ export function Cost() {
                                   Edit
                                 </button>
                               </li>
-                              <li>
-                                <button
-                                  onClick={
-                                    () => {
-                                      setIdToDelete(ID);
+                              {
+                              (localStorage.access !== "accountant" && localStorage.access !== "adminBranch") &&
+                                <li>
+                                  <button
+                                    onClick={() => {
                                       setShowModal(true);
-                                    }
-                                    // navigate(
-                                    //   `/dashboard/Leadsmodule/${ele?.id}`
-                                    // )
-                                  }
-                                >
-                                  Delete
-                                </button>
-                              </li>
+                                      setIdToDelete(ID);
+                                    }}
+                                  >
+                                    Delete
+                                  </button>
+                                </li>
+                              }
                             </ul>
                           </div>
                         </td>

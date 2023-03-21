@@ -172,7 +172,15 @@ export function Leads() {
                     <input
                       type="text"
                       // onKeyDown={handleKeyDown}
-                      onChange={(e) => setSearch(e.target.value)}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.keyCode == 13) {
+                          e.preventDefault();
+                          disptach(filterListLeads({ name: search }));
+                        }
+                      }}
                       value={search}
                       placeholder="Search"
                       className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
@@ -180,13 +188,28 @@ export function Leads() {
                   </div>
                 </form>
                 <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                  <button
-                    className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md"
-                    onClick={() => disptach(filterListLeads({ name: search }))}
-                  >
-                    <img className="w-[20px]" src={filterIcon} alt="..." />
-                    <p className="mx-3 text-[16px] ">Filters</p>
-                  </button>
+                  <Menu>
+                    <MenuList>
+                      <MenuItem
+                        onClick={() => {}}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
+                        Date
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {}}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
+                        Name
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {}}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
+                        Email
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
 
                   <Menu>
                     <MenuHandler>
@@ -289,7 +312,7 @@ export function Leads() {
                               </td>
                               <td>
                                 <p
-                                  className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                                  className="neumorphism mx-auto  w-fit rounded-2xl  bg-gray-100 p-6 px-5 py-2 text-center  text-xs font-medium  normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                                   style={{
                                     color:
                                       ele?.ProgrameDetail
@@ -412,16 +435,20 @@ export function Leads() {
                                         Edit
                                       </button>
                                     </li>
-                                    <li>
-                                      <button
-                                        onClick={() => {
-                                          setShowModal(true);
-                                          setIdToDelete(ele?.id);
-                                        }}
-                                      >
-                                        Delete
-                                      </button>
-                                    </li>
+                                    {localStorage.access !== "counselor" &&
+                                      localStorage.access !==
+                                        "counselorBranch" && (
+                                        <li>
+                                          <button
+                                            onClick={() => {
+                                              setShowModal(true);
+                                              setIdToDelete(ele?.id);
+                                            }}
+                                          >
+                                            Delete
+                                          </button>
+                                        </li>
+                                      )}
                                   </ul>
                                 </div>
                               </td>
@@ -449,7 +476,7 @@ export function Leads() {
                             </td>
                             <td>
                               <p
-                                className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                                className="neumorphism mx-auto w-fit rounded-2xl  bg-gray-100 p-6 px-5 py-2 text-center  text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                                 // style={{
                                 //   color:
                                 //     ele?.ApplicationDetail
@@ -572,16 +599,20 @@ export function Leads() {
                                       Edit
                                     </button>
                                   </li>
-                                  <li>
-                                    <button
-                                      onClick={() => {
-                                        setShowModal(true);
-                                        setIdToDelete(ele?.id);
-                                      }}
-                                    >
-                                      Delete
-                                    </button>
-                                  </li>
+                                  {localStorage.access !== "counselor" &&
+                                    localStorage.access !==
+                                      "counselorBranch" && (
+                                      <li>
+                                        <button
+                                          onClick={() => {
+                                            setShowModal(true);
+                                            setIdToDelete(ele?.id);
+                                          }}
+                                        >
+                                          Delete
+                                        </button>
+                                      </li>
+                                    )}
                                 </ul>
                               </div>
                             </td>

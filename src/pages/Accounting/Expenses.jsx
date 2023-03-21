@@ -56,7 +56,7 @@ export function Expenses() {
     formData.append("description", description);
     formData.append("date", date);
     formData.append("statusID", statusID);
-    if (ID) formData.append("ID", ID);
+    if (ID) formData.append("id", ID);
     if (params.id) formData.append("id", params.id);
 
     // console.log("Salllleee", sale);
@@ -436,21 +436,19 @@ export function Expenses() {
                                   Edit
                                 </button>
                               </li>
-                              <li>
-                                <button
-                                  onClick={
-                                    () => {
-                                      setIdToDelete(ID);
-                                      setShowModal(true);
-                                    }
-                                    // navigate(
-                                    //   `/dashboard/Leadsmodule/${ele?.id}`
-                                    // )
-                                  }
-                                >
-                                  Delete
-                                </button>
-                              </li>
+                              {localStorage.access !== "accountant" &&
+                                localStorage.access !== "adminBranch" && (
+                                  <li>
+                                    <button
+                                      onClick={() => {
+                                        setShowModal(true);
+                                        setIdToDelete(ID);
+                                      }}
+                                    >
+                                      Delete
+                                    </button>
+                                  </li>
+                                )}
                             </ul>
                           </div>
                         </td>

@@ -1,3 +1,4 @@
+import React from "react";
 import filterIcon from "../../../public/img/filterIcon.svg";
 import print from "../../../public/img/print.svg";
 
@@ -84,6 +85,7 @@ export function Income({ revenue, totalRevenue }) {
                     </th>
                   </tr>
                 </thead>
+
                 <tbody className="border-none">
                   {Object.values(revenue)?.map(
                     ({ name, currency, amount, symbol }) => (

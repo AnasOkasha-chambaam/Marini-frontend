@@ -151,7 +151,16 @@ export function Academic() {
                   <input
                     type="text"
                     // onKeyDown={handleKeyDown}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                    onKeyDown={e => {
+                      if (e.keyCode == 13) {
+                        e.preventDefault();
+                        disptach(filterProgramms({ name: search }));
+                      }
+                    }
+                    }
                     value={search}
                     placeholder="Search"
                     className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
@@ -204,13 +213,13 @@ export function Academic() {
                       scope="col"
                       className="w-[346px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                     >
-                      Intake
+                      Program Intake
                     </th>
                     <th
                       scope="col"
                       className="w-[113px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                     >
-                      Certificate
+                      Program Level
                     </th>
                     <th
                       scope="col"
@@ -246,6 +255,7 @@ export function Academic() {
                         {/* {ele?.createdAt} */}
                         {ele?.ProgramLevel?.name}
                       </td>
+
                       <td className="w-[115px] px-3">
                         <Button
                           variant="outlined"
@@ -334,33 +344,41 @@ export function Academic() {
                             // aria-labelledby="dropdownDefaultButton"
                             aria-labelledby={`dropdownDefaultButton${ind}`}
                           >
-                            <li>
-                              <button
-                                className="btn btn-primary"
-                                onClick={() =>
-                                  navigate(
-                                    `/dashboard/university_module/a/2/${ele?.id}`
-                                  )
-                                }
-                              >
-                                Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={
-                                  () => {
-                                    setShowModal(true);
-                                    setIdToDelete(ele?.id);
+                            {
+                              (localStorage.access !== "adminBranch" && localStorage.access !== "counselorBranch") &&
+                              <li>
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={() =>
+                                    navigate(
+                                      `/dashboard/university_module/a/2/${ele?.id}`
+                                    )
                                   }
-                                  // navigate(
-                                  //   `/dashboard/Leadsmodule/${ele?.id}`
-                                  // )
-                                }
-                              >
-                                Delete
-                              </button>
-                            </li>
+                                >
+                                  Edit
+                                </button>
+                              </li>
+                            }
+
+                            {
+                              (localStorage.access !== "counselor" && localStorage.access !== "adminBranch" && localStorage.access !== "counselorBranch") &&
+                              <li>
+                                <button
+                                  onClick={
+                                    () => {
+                                      setShowModal(true);
+                                      setIdToDelete(ele?.id);
+                                    }
+                                    // navigate(
+                                    //   `/dashboard/Leadsmodule/${ele?.id}`
+                                    // )
+                                  }
+                                >
+                                  Delete
+                                </button>
+                              </li>
+                            }
+
                           </ul>
                         </div>
                       </td>

@@ -6,7 +6,7 @@ import ApplicantHome from "./pages/Applicant/ApplicantHome";
 import { createContext, useState, useEffect } from "react";
 import useWindowSize from "./hooks/useWindowSize";
 import { useDispatch } from "react-redux";
-import { GetCurrentUser } from "@/redux/actions/actions";
+import { GetCurrentUser, allListLeads } from "@/redux/actions/actions";
 import ApplicantDashboard from "./layouts/ApplicantDashboard";
 import SettingsManagement from "./pages/settings/SettingsManagement";
 import 'react-toastify/dist/ReactToastify.css';
@@ -68,6 +68,8 @@ function App() {
       role: localStorage.access,
       state: 0
     }));
+    dispatch(allListLeads("limit=1000"));
+
   }, []);
 
   return (

@@ -216,6 +216,7 @@ export function CreateUniversity() {
     // formData.append("role", localStorage.access);
 
     if (params.id) formData.append("id", params.id);
+    console.log("sdfsf", campusValues, JSON.stringify(campusValues));
     formData.append("campuses", JSON.stringify(campusValues));
     formData.append("visaAppFee", visaAppFee);
     formData.append("addmissionFee", addmissionFee);
@@ -493,240 +494,129 @@ export function CreateUniversity() {
           </div>
           {/* </form> */}
           {/* </div> */}
-          <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
-            <p className="mb-8 text-2xl font-semibold text-[#333333]">
-              Main Campus
-            </p>
-            {/* <form onSubmit={handleSubmit}> */}
-            <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {campusValues &&
+            campusValues.map((ele, id) => (
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  Campus Name
-                </label>
-                <input
-                  type="text"
-                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Campus Name"
-                  name="name0" //
-                  value={campusValues[0]?.name}
-                  onChange={handeCampusChange}
-                  disabled={isViewMode}
-                  required
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  Address (line 1)
-                </label>
-                <input
-                  type="text"
-                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Address line 1"
-                  name="address10" //
-                  value={campusValues[0].address1}
-                  onChange={handeCampusChange}
-                  disabled={isViewMode}
-                  required
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  Address (line 2)
-                </label>
-                <input
-                  type="text"
-                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Address line 2"
-                  name="address20" //
-                  value={campusValues[0].address2}
-                  onChange={handeCampusChange}
-                  disabled={isViewMode}
-                  required
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  Campus Phone Number
-                </label>
-                <input
-                  type="tel"
-                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="+60123456789"
-                  // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-                  name="phone0" //
-                  value={campusValues[0].phone}
-                  onChange={handeCampusChange}
-                  disabled={isViewMode}
-                  required
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="example@email.com"
-                  name="email0" //
-                  value={campusValues[0].email}
-                  onChange={handeCampusChange}
-                  disabled={isViewMode}
-                  required
-                />
-              </div>
-              {isViewMode ? (
-                ""
-              ) : (
-                <AddField
-                  open={openSecondCreateUniversityAddModal}
-                  close={() => setOpenSecondCreateUniversityAddModal(false)}
-                  toAdd={SecondCreateUniversityNewFields}
-                  setOpenAddModal={setOpenSecondCreateUniversityAddModal}
-                  setToAdd={setSecondCreateUniversityNewFields}
-                  formsData={formValues}
-                  setFormsData={setFormValues}
-                  handleFormsDataChange={handleChange}
-                  section={"university-SecondCreateUniversity"}
-                />
-              )}
-              {/* <div>
-                  <label className="mb-2 block text-sm font-semibold">
-                    &nbsp;
-                  </label>
-                  <button
-                    type="button"
-                    className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-[#F8F9FB] p-2.5 font-medium text-[#BEBFC3]"
-                  >
-                    Click to add more field
-                  </button>
-                </div> */}
-            </div>
-            {/* </form> */}
-          </div>
-          <div className="my-[30px] mr-8 rounded-[34px] bg-white ">
-            {list.map((item, id) => (
-              <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
-                <p className="mb-8 text-2xl font-semibold text-[#333333]">
-                  Campus {id + 2}
-                </p>
-                <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Campus Name
-                    </label>
-                    <input
-                      type="text"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="Campus Name"
-                      name="name1" //
-                      value={campusValues[1].name}
-                      onChange={handeCampusChange}
-                      disabled={isViewMode}
-                    />
+                <div className="my-[30px] mr-8 rounded-[34px] bg-white p-[39px]">
+                  <p className="mb-8 text-2xl font-semibold text-[#333333]">
+                    {id === 0 ? "Main Campus" : `Campus ${id}`}
+                  </p>
+                  {/* <form onSubmit={handleSubmit}> */}
+                  <div className="mt-12 mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                        Campus Name
+                      </label>
+                      <input
+                        type="text"
+                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="Campus Name"
+                        name={`name${id}`} //
+                        value={ele?.name}
+                        onChange={handeCampusChange}
+                        disabled={isViewMode}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                        Address (line 1)
+                      </label>
+                      <input
+                        type="text"
+                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="Address line 1"
+                        name={`address1${id}`} //
+                        value={ele.address1}
+                        onChange={handeCampusChange}
+                        disabled={isViewMode}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                        Address (line 2)
+                      </label>
+                      <input
+                        type="text"
+                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="Address line 2"
+                        name={`address2${id}`} //
+                        value={ele.address2}
+                        onChange={handeCampusChange}
+                        disabled={isViewMode}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                        Campus Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="+60123456789"
+                        // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+                        name={`phone${id}`} //
+                        value={ele.phone}
+                        onChange={handeCampusChange}
+                        disabled={isViewMode}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#333333]">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="example@email.com"
+                        name={`email${id}`} //
+                        value={ele.email}
+                        onChange={handeCampusChange}
+                        disabled={isViewMode}
+                        required
+                      />
+                    </div>
+                    {isViewMode ? (
+                      ""
+                    ) : (
+                      <AddField
+                        open={openSecondCreateUniversityAddModal}
+                        close={() =>
+                          setOpenSecondCreateUniversityAddModal(false)
+                        }
+                        toAdd={SecondCreateUniversityNewFields}
+                        setOpenAddModal={setOpenSecondCreateUniversityAddModal}
+                        setToAdd={setSecondCreateUniversityNewFields}
+                        formsData={formValues}
+                        setFormsData={setFormValues}
+                        handleFormsDataChange={handleChange}
+                        section={"university-SecondCreateUniversity"}
+                      />
+                    )}
                   </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Address (line 1)
-                    </label>
-                    <input
-                      type="text"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="Address line 1"
-                      name="Address11" //
-                      value={campusValues[1].address1}
-                      onChange={handeCampusChange}
-                      disabled={isViewMode}
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Address (line 2)
-                    </label>
-                    <input
-                      type="text"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="Address line 2"
-                      name="Address21" //
-                      value={campusValues[1].address2}
-                      onChange={handeCampusChange}
-                      disabled={isViewMode}
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Campus Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="+60123456789"
-                      // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-                      name="phone1" //
-                      value={campusValues[1].phone}
-                      onChange={handeCampusChange}
-                      disabled={isViewMode}
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#333333]">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="example@email.com"
-                      name="email1" //
-                      value={campusValues[1].email}
-                      onChange={handeCampusChange}
-                      disabled={isViewMode}
-                    />
-                  </div>
-                  {isViewMode ? (
-                    ""
-                  ) : (
-                    <AddField
-                      open={openThirdCreateUniversityAddModal}
-                      close={() => setOpenThirdCreateUniversityAddModal(false)}
-                      toAdd={ThirdCreateUniversityNewFields}
-                      setOpenAddModal={setOpenThirdCreateUniversityAddModal}
-                      setToAdd={setThirdCreateUniversityNewFields}
-                      formsData={formValues}
-                      setFormsData={setFormValues}
-                      handleFormsDataChange={handleChange}
-                      section={"university-ThirdCreateUniversity"}
-                    />
-                  )}
-                  {/* <div>
-                  <label className="mb-2 block text-sm font-semibold">
-                    &nbsp;
-                  </label>
-                  <button
-                    type="button"
-                    className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-[#F8F9FB] p-2.5 font-medium text-[#BEBFC3]"
-                  >
-                    Click to add more field
-                  </button>
-                </div> */}
                 </div>
               </div>
             ))}
+          {campusValues.length > 1 && !isViewMode && (
             <div>
-              {/* <span className="w-[150px] m-[10px] ml-[39px] p-[10px] border rounded-2xl cursor-pointer border-slate-300 border-solid" onClick={() => {setList([...list, "1"])}}>
-                More Detail
-              </span> */}
               <span
                 className="border-slate-300 m-[10px] ml-[39px] w-[150px] cursor-pointer rounded-2xl border border-solid p-[10px]"
                 onClick={() => {
-                  setList(
-                    list.filter((ite, id) => id < list.length - 1 && "1")
-                  );
+                  campusValues.length > 1 &&
+                    setCampusValues(
+                      campusValues.filter(
+                        (ite, id) => id < campusValues.length - 1
+                      )
+                    );
                 }}
               >
                 Remove
               </span>
             </div>
-          </div>
+          )}
           {isViewMode ? (
             ""
           ) : (
@@ -744,8 +634,24 @@ export function CreateUniversity() {
               /> */}
               <div
                 className="border-slate-300 w-full cursor-pointer  rounded-2xl border border-solid p-[10px] text-center font-display"
+                toAdd={FourthCreateUniversityNewFields}
+                setOpenAddModal={setOpenFourthCreateUniversityAddModal}
+                setToAdd={setFourthCreateUniversityNewFields}
+                formsData={formValues}
+                setFormsData={setFormValues}
+                handleFormsDataChange={handleChange}
+                section={"university-FourthCreateUniversity"}
                 onClick={() => {
-                  setList([...list, "1"]);
+                  setCampusValues([
+                    ...campusValues,
+                    {
+                      name: "",
+                      address1: "",
+                      address2: "",
+                      phone: "",
+                      email: "",
+                    },
+                  ]);
                 }}
               >
                 click to add more field

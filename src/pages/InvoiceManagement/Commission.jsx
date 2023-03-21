@@ -141,7 +141,16 @@ export function Commission() {
                   <input
                     type="text"
                     // onKeyDown={handleKeyDown}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                    onKeyDown={e => {
+                      if (e.keyCode == 13) {
+                        e.preventDefault();
+                        disptach(filterlistCommissionInvoices({ name: search }));
+                      }
+                    }
+                    }
                     value={search}
                     placeholder="Search"
                     className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
@@ -149,15 +158,28 @@ export function Commission() {
                 </div>
               </form>
               <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                <button
-                  className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md"
-                  onClick={() =>
-                    dispatch(filterlistCommissionInvoices({ name: search }))
-                  }
-                >
-                  <img className="w-[20px]" src={filterIcon} alt="..." />
-                  <p className="mx-3 text-[16px] ">Filters</p>
-                </button>
+                <Menu>
+                  <MenuList>
+                    <MenuItem
+                      onClick={() => { }}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      Date
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => { }}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      Name
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => { }}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      Email
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
 
                 <Menu>
                   <MenuHandler>
@@ -188,9 +210,8 @@ export function Commission() {
               </div>
             </div>
             <div
-              className={`flex flex-col ${
-                windowWidth ? "overflow-x-hidden" : "overflow-x-auto"
-              }`}
+              className={`flex flex-col ${windowWidth ? "overflow-x-hidden" : "overflow-x-auto"
+                }`}
             >
               <table className=" w-full border-none">
                 <thead>
@@ -379,16 +400,20 @@ export function Commission() {
                                   Edit
                                 </button>
                               </li>
-                              <li>
-                                <button
-                                  onClick={() => {
-                                    setShowModal(true);
-                                    setIdToDelete(ID);
-                                  }}
-                                >
-                                  Delete
-                                </button>
-                              </li>
+                              {
+                                (localStorage.access !== "accountant" && localStorage.access !== "adminBranch") &&
+                                <li>
+                                  <button
+                                    onClick={() => {
+                                      setShowModal(true);
+                                      setIdToDelete(ID);
+                                    }}
+                                  >
+                                    Delete
+                                  </button>
+                                </li>
+                              }
+
                             </ul>
                           </div>
                         </td>

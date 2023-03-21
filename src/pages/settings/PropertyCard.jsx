@@ -17,6 +17,9 @@ import {
   EditProgramCategorys,
   EditQualificationTypes,
   EditInterestedPrograms,
+  EditApplicationmodulestatus,
+  EditLeadsmanagmentmodulestatus,
+  EditInvoicemodulestatus,
   EditLeadGroups,
   EditUniversityTypes,
   DeleteProgramLevels,
@@ -25,6 +28,9 @@ import {
   DeleteInterestedPrograms,
   DeleteLeadGroups,
   DeleteUniversityTypes,
+  DeleteApplicationmodulestatus,
+  DeleteLeadsmanagmentmodulestatus,
+  DeleteInvoicemodulestatus,
 } from "../../redux/actions/actions";
 
 export function PropertyCard({ title, type = 0, toView, method }) {
@@ -56,10 +62,13 @@ export function PropertyCard({ title, type = 0, toView, method }) {
   const handleEdit = (e) => {
     switch (type) {
       case "applicationmodulestatus":
+        dispatch(EditApplicationmodulestatus(e));
         break;
       case "leadsmanagmentmodulestatus":
+        dispatch(EditLeadsmanagmentmodulestatus(e));
         break;
       case "invoicemodulestatus":
+        dispatch(EditInvoicemodulestatus(e));
         break;
       case "programlevel":
         dispatch(EditProgramLevels(e));
@@ -88,10 +97,13 @@ export function PropertyCard({ title, type = 0, toView, method }) {
   const handleDelete = (e) => {
     switch (type) {
       case "applicationmodulestatus":
+        dispatch(DeleteApplicationmodulestatus(e));
         break;
       case "leadsmanagmentmodulestatus":
+        dispatch(DeleteLeadsmanagmentmodulestatus(e));
         break;
       case "invoicemodulestatus":
+        dispatch(DeleteInvoicemodulestatus(e));
         break;
       case "programlevel":
         dispatch(DeleteProgramLevels(e));
@@ -263,7 +275,7 @@ export function PropertyCard({ title, type = 0, toView, method }) {
                             className={`whitespace-nowrap px-6 py-4 text-center text-lg font-medium`}
                           >
                             <p
-                              className="neumorphism mx-auto w-fit rounded-2xl rounded-lg bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                              className="neumorphism mx-auto w-fit rounded-2xl bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                               style={{
                                 color: Color,
                                 backgroundColor: `${Color}10`,
@@ -353,7 +365,7 @@ export function PropertyCard({ title, type = 0, toView, method }) {
                       <td
                         className={`whitespace-nowrap px-6 py-4 text-center text-lg font-medium`}
                       >
-                        <p className="neumorphism mx-auto w-fit rounded-2xl rounded-lg bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400">
+                        <p className="neumorphism mx-auto w-fit rounded-2xl  bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400">
                           No Data
                         </p>
                       </td>

@@ -14,7 +14,10 @@ import filterIcon from "../../../public/img/filterIcon.svg";
 import down from "../../../public/img/downIcon.svg";
 import dropdown from "../../../public/img/dropdown.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { listApplications, filterlistApplications } from "@/redux/actions/actions";
+import {
+  listApplications,
+  filterlistApplications,
+} from "@/redux/actions/actions";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +25,7 @@ import { useParams } from "react-router-dom";
 import Modal from "../universitymodule/Modal";
 import Paginate from "@/paginate";
 import { NavbarCtx } from "@/App";
-import { read, utils, writeFile } from 'xlsx';
+import { read, utils, writeFile } from "xlsx";
 import { ENV } from "@/config";
 
 export function Applications() {
@@ -84,28 +87,30 @@ export function Applications() {
     };
   };
   const handleExportXlsx = () => {
-    const headings = [[
-      ...Object.keys(applicationsData?.data?.faqs[0])
-    ]];
+    const headings = [[...Object.keys(applicationsData?.data?.faqs[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, applicationsData?.data?.faqs, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Movie Report.xlsx');
-  }
+    utils.sheet_add_json(ws, applicationsData?.data?.faqs, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Applications Report.xlsx");
+  };
 
   const handleExportCsv = () => {
-    const headings = [[
-      ...Object.keys(applicationsData?.data?.faqs[0])
-    ]];
+    const headings = [[...Object.keys(applicationsData?.data?.faqs[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, applicationsData?.data?.faqs, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Movie Report.csv');
-  }
+    utils.sheet_add_json(ws, applicationsData?.data?.faqs, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Applications Report.csv");
+  };
   // END
 
   return (
@@ -129,18 +134,19 @@ export function Applications() {
                 <p className="text-2xl font-bold text-black sm:text-3xl">
                   Applications
                 </p>
-                {
-                  (localStorage.access !== "accountant" && localStorage.access !== "adminBranch" && localStorage.access !== "counselorBranch" && localStorage.access !== "accountantBranch") &&
-                  <NavLink to="createApplicant">
-                    <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
-                      <img className="m-1 w-[20px]" src={plus} alt="..." />
-                      <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
-                        Add New Application
-                      </p>
-                    </Button>
-                  </NavLink>
-                }
-
+                {localStorage.access !== "accountant" &&
+                  localStorage.access !== "adminBranch" &&
+                  localStorage.access !== "counselorBranch" &&
+                  localStorage.access !== "accountantBranch" && (
+                    <NavLink to="createApplicant">
+                      <Button className="ml-auto flex h-[60px] flex-row items-center rounded-2xl bg-[#280559] p-2 sm:py-3 sm:px-6">
+                        <img className="m-1 w-[20px]" src={plus} alt="..." />
+                        <p className="m-1 text-sm font-medium normal-case text-white sm:text-base">
+                          Add New Application
+                        </p>
+                      </Button>
+                    </NavLink>
+                  )}
               </div>
               <div className="my-3 flex flex-col items-center justify-between gap-3 rounded-[20px] bg-[#F8F9FB] p-5 md:flex-row">
                 <form className="h-full w-full">
@@ -162,7 +168,15 @@ export function Applications() {
                     <input
                       type="text"
                       // onKeyDown={handleKeyDown}
-                      onChange={(e) => setSearch(e.target.value)}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.keyCode == 13) {
+                          e.preventDefault();
+                          disptach(filterlistApplications({ name: search }));
+                        }
+                      }}
                       value={search}
                       placeholder="Search"
                       className="w-full rounded-[15px] border-[1px] border-[#cbd2dc]/50 bg-white py-3 pt-4 pl-12 pr-4 text-gray-500 shadow-md focus:bg-white"
@@ -170,10 +184,34 @@ export function Applications() {
                   </div>
                 </form>
                 <div className="flex h-full w-full justify-between gap-3 md:w-auto md:justify-start">
-                  <button className="flex w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md" onClick={() => disptach(filterlistApplications({ name: search }))}>
-                    <img className="w-[20px]" src={filterIcon} alt="..." />
-                    <p className="mx-3 text-[16px] ">Filters</p>
-                  </button>
+                  <Menu>
+                    <MenuHandler>
+                      <button className="flex h-[57px] w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
+                        <img className="w-[20px]" src={filterIcon} alt="..." />
+                        <p className="mx-3 ">Filters</p>
+                      </button>
+                    </MenuHandler>
+                    <MenuList>
+                      <MenuItem
+                        onClick={() => {}}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
+                        Date
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {}}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
+                        Name
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {}}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
+                        Email
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
 
                   <Menu>
                     <MenuHandler>
@@ -183,10 +221,16 @@ export function Applications() {
                       </button>
                     </MenuHandler>
                     <MenuList>
-                      <MenuItem onClick={() => handleExportCsv()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                      <MenuItem
+                        onClick={() => handleExportCsv()}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
                         Export as .csv
                       </MenuItem>
-                      <MenuItem onClick={() => handleExportXlsx()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                      <MenuItem
+                        onClick={() => handleExportXlsx()}
+                        className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                      >
                         Export as .xlsx
                       </MenuItem>
                     </MenuList>
@@ -244,8 +288,15 @@ export function Applications() {
                   <tbody className="border-none">
                     {applicationsData?.data?.faqs?.map((ele, ind) => {
                       // Anasite - Edits (Set Colors and status)
-                      if ((localStorage.access === "adminBranch" || localStorage.access === "counselorBranch" || localStorage.access === "accountantBranch")) {
-                        if ((ele?.ApplicationDetail?.Branch?.role === localStorage.access))
+                      if (
+                        localStorage.access === "adminBranch" ||
+                        localStorage.access === "counselorBranch" ||
+                        localStorage.access === "accountantBranch"
+                      ) {
+                        if (
+                          ele?.ApplicationDetail?.Branch?.role ===
+                          localStorage.access
+                        )
                           return (
                             <tr key={ind + ele?.createdAt + "serf" + ele?.name}>
                               <td className="whitespace-nowrap py-3 pr-6">
@@ -267,20 +318,23 @@ export function Applications() {
                               </td>
                               <td>
                                 <p
-                                  className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                                  className="neumorphism mx-auto w-fit rounded-2xl bg-gray-100 p-6 px-5  py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                                   style={{
                                     color:
                                       ele?.ApplicationDetail
-                                        ?.ApplicationModuleStatus?.Color || "#333",
-                                    backgroundColor: `${ele?.ApplicationDetail
-                                      ?.ApplicationModuleStatus?.Color || "#333"
-                                      }1a`,
+                                        ?.ApplicationModuleStatus?.Color ||
+                                      "#333",
+                                    backgroundColor: `${
+                                      ele?.ApplicationDetail
+                                        ?.ApplicationModuleStatus?.Color ||
+                                      "#333"
+                                    }1a`,
                                   }}
                                 >
                                   {/* {ele?.status} */}
                                   {/* {applicationsData?.data?.applicantDetail[0].status} */}
-                                  {ele?.ApplicationDetail?.ApplicationModuleStatus
-                                    ?.name || "GD"}
+                                  {ele?.ApplicationDetail
+                                    ?.ApplicationModuleStatus?.name || "GD"}
                                 </p>
                               </td>
                               <td>
@@ -363,34 +417,44 @@ export function Applications() {
                                     // aria-labelledby="dropdownDefaultButton"
                                     aria-labelledby={`dropdownDefaultButton${ind}`}
                                   >
-                                    <li>
-                                      <button
-                                        className="btn btn-primary"
-                                        onClick={() =>
-                                          navigate(
-                                            `/dashboard/ApplicationModule/2/${ele?.id}`
-                                          )
-                                        }
-                                      >
-                                        Edit
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button
-                                        onClick={() => {
-                                          setShowModal(true);
-                                          setIdToDelete(ele?.id);
-                                        }}
-                                      >
-                                        Delete
-                                      </button>
-                                    </li>
+                                    {localStorage.access !== "accountant" &&
+                                      localStorage.access !==
+                                        "accountantBranch" && (
+                                        <li>
+                                          <button
+                                            className="btn btn-primary"
+                                            onClick={() =>
+                                              navigate(
+                                                `/dashboard/ApplicationModule/2/${ele?.id}`
+                                              )
+                                            }
+                                          >
+                                            Edit
+                                          </button>
+                                        </li>
+                                      )}
+                                    {localStorage.access !== "counselor" &&
+                                      localStorage.access !== "accountant" &&
+                                      localStorage.access !==
+                                        "counselorBranch" &&
+                                      localStorage.access !==
+                                        "accountantBranch" && (
+                                        <li>
+                                          <button
+                                            onClick={() => {
+                                              setShowModal(true);
+                                              setIdToDelete(ele?.id);
+                                            }}
+                                          >
+                                            Delete
+                                          </button>
+                                        </li>
+                                      )}
                                   </ul>
                                 </div>
                               </td>
                             </tr>
                           );
-
                       } else {
                         return (
                           <tr key={ind + ele?.createdAt + "serf" + ele?.name}>
@@ -413,14 +477,16 @@ export function Applications() {
                             </td>
                             <td>
                               <p
-                                className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                                className="neumorphism mx-auto  w-fit rounded-2xl  bg-gray-100 p-6 px-5  py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                                 style={{
                                   color:
                                     ele?.ApplicationDetail
-                                      ?.ApplicationModuleStatus?.Color || "#333",
-                                  backgroundColor: `${ele?.ApplicationDetail
-                                    ?.ApplicationModuleStatus?.Color || "#333"
-                                    }1a`,
+                                      ?.ApplicationModuleStatus?.Color ||
+                                    "#333",
+                                  backgroundColor: `${
+                                    ele?.ApplicationDetail
+                                      ?.ApplicationModuleStatus?.Color || "#333"
+                                  }1a`,
                                 }}
                               >
                                 {/* {ele?.status} */}
@@ -509,28 +575,38 @@ export function Applications() {
                                   // aria-labelledby="dropdownDefaultButton"
                                   aria-labelledby={`dropdownDefaultButton${ind}`}
                                 >
-                                  <li>
-                                    <button
-                                      className="btn btn-primary"
-                                      onClick={() =>
-                                        navigate(
-                                          `/dashboard/ApplicationModule/2/${ele?.id}`
-                                        )
-                                      }
-                                    >
-                                      Edit
-                                    </button>
-                                  </li>
-                                  <li>
-                                    <button
-                                      onClick={() => {
-                                        setShowModal(true);
-                                        setIdToDelete(ele?.id);
-                                      }}
-                                    >
-                                      Delete
-                                    </button>
-                                  </li>
+                                  {localStorage.access !== "accountant" &&
+                                    localStorage.access !==
+                                      "accountantBranch" && (
+                                      <li>
+                                        <button
+                                          className="btn btn-primary"
+                                          onClick={() =>
+                                            navigate(
+                                              `/dashboard/ApplicationModule/2/${ele?.id}`
+                                            )
+                                          }
+                                        >
+                                          Edit
+                                        </button>
+                                      </li>
+                                    )}
+                                  {localStorage.access !== "counselor" &&
+                                    localStorage.access !== "accountant" &&
+                                    localStorage.access !== "counselorBranch" &&
+                                    localStorage.access !==
+                                      "accountantBranch" && (
+                                      <li>
+                                        <button
+                                          onClick={() => {
+                                            setShowModal(true);
+                                            setIdToDelete(ele?.id);
+                                          }}
+                                        >
+                                          Delete
+                                        </button>
+                                      </li>
+                                    )}
                                 </ul>
                               </div>
                             </td>

@@ -12,7 +12,7 @@ export function InvoiceManagement() {
         content: <General />
     },]);
     React.useEffect(() => {
-        (localStorage.access !== "adminBranch" && localStorage.access !== "counselor" && localStorage.access !== "counselorBranch" && localStorage.access !== "accountantBranch")?
+        ( localStorage.access !== "counselor" && localStorage.access !== "counselorBranch" && localStorage.access !== "accountantBranch")?
             setTabsData([
                 {
                     label: 'Commission Invoice',

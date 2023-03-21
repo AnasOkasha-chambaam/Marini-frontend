@@ -165,7 +165,6 @@ export function AddNewApplication() {
   const [appDetailValues, setAppDetailValue] = useState(secondInitialValues);
 
   useEffect(() => {
-    // console.log("121212132", params);
     if (params.id) dispatch(viewApplication(params.id));
     if (params.action == 1) {
       setIsViewMode(true);
@@ -186,6 +185,7 @@ export function AddNewApplication() {
     if (!params.action || !params.id) return;
     if (applicationsData?.applicant?.programmeDetails)
       setAppDetailValue(applicationsData?.applicant?.programmeDetails);
+    applicationsData?.applicant?.fileUpload && setDocumentFile([applicationsData?.applicant?.fileUpload])
   }, [applicationsData?.applicant?.programmeDetails]);
 
   // ApplicationDetails
@@ -225,7 +225,7 @@ export function AddNewApplication() {
       releaseLetter,
       status,
     } = appDetailValues;
-    console.log("Front Image", file);
+    console.log("Front Image", file, programmeLevel);
     let formData = new FormData();
     formData.append("fullName", fullName);
     formData.append("email", email);
@@ -266,8 +266,7 @@ export function AddNewApplication() {
     };
 
     const apiCall = await axios[params.action == 2 ? "put" : "post"](
-      `${ENV.baseUrl}/applicants/${
-        params.action == 2 ? "edit" : "createApplicant"
+      `${ENV.baseUrl}/applicants/${params.action == 2 ? "edit" : "createApplicant"
       }`,
       formData,
       config
@@ -315,7 +314,7 @@ export function AddNewApplication() {
           console.log("newAppDetailValues KEY", key);
           newAppDetailValues[key] =
             (lead["programmeDetails"][key] !== undefined) &
-            (lead["programmeDetails"][key] !== null)
+              (lead["programmeDetails"][key] !== null)
               ? lead["programmeDetails"][key]
               : "";
           // ** See This   (applicant["programmeDetails"][key] !== undefined) &
@@ -351,16 +350,16 @@ export function AddNewApplication() {
             {params.action == 1
               ? "View Application"
               : params.action == 2
-              ? "Edit Application"
-              : "Create Application"}
+                ? "Edit Application"
+                : "Create Application"}
           </p>
           <p className=" font text-base text-[#9898A3]">
             {/* Create or edit application */}
             {params.action == 1
               ? "View Application"
               : params.action == 2
-              ? "Edit Application"
-              : "Create Application"}
+                ? "Edit Application"
+                : "Create Application"}
           </p>
         </div>
         <form onSubmit={handleSubmit}>
@@ -378,12 +377,12 @@ export function AddNewApplication() {
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Full Name"
                   name="id"
-                  value={formValues?.id}
+                  value={formValues?.id || formValues?.fullName}
                   disabled={isViewMode}
                   onChange={handleFullNameChange}
                   data-index={formValues?.index}
                 >
-                  <option value="">Select Option</option>
+                  <option value={formValues?.fullName || ""}>{formValues?.fullName || "Select Name"}</option>
                   {leads?.data?.faqs?.map((ele, ind) => (
                     <option
                       key={ele?.name + ind + ele?.id}
@@ -805,14 +804,14 @@ export function AddNewApplication() {
                     multiple={true}
                     handleChange={handlefileChange}
                     name="file"
-                    // disabled={isViewMode }
-                    // style={{border:"2px solid red"}}
-                    // types={fileTypes}
+                  // disabled={isViewMode }
+                  // style={{border:"2px solid red"}}
+                  // types={fileTypes}
                   >
                     <button className="w-[200px]">
                       <p
                         className="rounded-2xl border-[1px] border-[#cbd2dc]/50 py-3 text-sm font-semibold text-[#333333] shadow-md"
-                        // style={{ border: "none" }}
+                      // style={{ border: "none" }}
                       >
                         Upload
                       </p>
@@ -1258,6 +1257,8 @@ export function AddNewApplication() {
                   handleChange={handleDocumentFileChange}
                   name="documentFile"
                   types={fileTypes}
+                  disabled={isViewMode}
+
                 >
                   <img
                     className="h-full w-auto rounded-lg object-cover"
@@ -1281,8 +1282,23 @@ export function AddNewApplication() {
                   <div className="my-5">
                     {documentFile.length > 0 ? (
                       documentFile.map((files) => (
-                        <div className="my-7 flex flex-row items-center justify-between rounded-lg p-3 outline outline-1 outline-[#11AF22]">
+                        <div
+                          className="my-7 flex flex-row items-center justify-between rounded-lg p-3 outline outline-1 outline-[#11AF22]"
+                          
+                        >
                           <p className="text-xs text-black ">{files[0].name}</p>
+                          <input type="button" value={'X'} style={{height: 15, fontSize: 13}}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              !isViewMode &&
+                                setDocumentFile(prev => prev.filter((ele, i) => {
+                                  if (i < prev.length-1) {
+                                    return ele;
+                                  }
+                                }
+                                ))
+                            }}
+                          />
                         </div>
                       ))
                     ) : (

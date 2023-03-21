@@ -59,7 +59,7 @@ export function Sales() {
     formData.append("description", description);
     formData.append("date", date);
     formData.append("statusID", statusID);
-    if (ID) formData.append("ID", ID);
+    if (ID) formData.append("id", ID);
     if (params.id) formData.append("id", params.id);
 
     // console.log("Salllleee", sale);
@@ -87,7 +87,7 @@ export function Sales() {
       });
       setSalesState(true);
       setAction(0);
-      setAllFormsData({  });
+      setAllFormsData({});
       setIdToDelete();
       setIdToView();
       setDropdownID();
@@ -102,7 +102,14 @@ export function Sales() {
     return () => {
       // setAction(1);
       setSalesState(false);
-      setAllFormsData({ name, description, amount, date: new Date(date).toISOString().substr(0, 10), statusID, ID });
+      setAllFormsData({
+        name,
+        description,
+        amount,
+        date: new Date(date).toISOString().substr(0, 10),
+        statusID,
+        ID,
+      });
       setIdToView(ID);
     };
   };
@@ -128,7 +135,7 @@ export function Sales() {
       });
       setSalesState(true);
       setAction(0);
-      setAllFormsData({  });
+      setAllFormsData({});
       setIdToDelete();
       setIdToView();
     }
@@ -153,7 +160,7 @@ export function Sales() {
   const [salesState, setSalesState] = useState(true); // false: show inputs
   const [openSalesAddModal, setOpenSalesAddModal] = useState(false);
   const [SalesNewFields, setSalesNewFields] = useState([]);
-  const [allFormsData, setAllFormsData] = useState({  });
+  const [allFormsData, setAllFormsData] = useState({});
   const handleAllFormsDataChange = (e) => {
     let { name, value } = e.target;
     setAllFormsData({ ...allFormsData, [name]: value });
@@ -397,21 +404,19 @@ export function Sales() {
                                   Edit
                                 </button>
                               </li>
-                              <li>
-                                <button
-                                  onClick={
-                                    () => {
-                                      setIdToDelete(ID);
-                                      setShowModal(true);
-                                    }
-                                    // navigate(
-                                    //   `/dashboard/Leadsmodule/${ele?.id}`
-                                    // )
-                                  }
-                                >
-                                  Delete
-                                </button>
-                              </li>
+                              {localStorage.access !== "accountant" &&
+                                localStorage.access !== "adminBranch" && (
+                                  <li>
+                                    <button
+                                      onClick={() => {
+                                        setShowModal(true);
+                                        setIdToDelete(ID);
+                                      }}
+                                    >
+                                      Delete
+                                    </button>
+                                  </li>
+                                )}
                             </ul>
                           </div>
                         </td>
@@ -504,15 +509,26 @@ export function Sales() {
                   Name of Sale
                 </label>
                 <input
-                  type="text"
+                  list="browsers"
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
                   name="name"
+                  id="browser"
                   onChange={handleAllFormsDataChange}
                   placeholder="Sale Name"
                   value={allFormsData.name || ""}
                   disabled={isViewMode}
                   required
                 />
+                {
+                  <datalist id="browsers">
+                    {sales &&
+                      sales?.data?.faqs?.map((ele, ind) => (
+                        <option key={ind} value={ele.name}>
+                          {ele.name}
+                        </option>
+                      ))}
+                  </datalist>
+                }
               </div>
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#333333]">
@@ -563,10 +579,7 @@ export function Sales() {
                   //   new Date(allFormsData.date).toISOString().substr(0, 10) ||
                   //   ""
                   // }
-                  value={
-                    allFormsData?.date ||
-                    ""
-                  }
+                  value={allFormsData?.date || ""}
                   disabled={isViewMode}
                   required
                 />
@@ -663,7 +676,7 @@ export function Sales() {
           {"   "}
           <Button
             onClick={() => {
-              setAllFormsData({  });
+              setAllFormsData({});
               return setSalesState(true);
             }}
             className="rounded-[15px]  bg-[#280559]"

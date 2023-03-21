@@ -15,6 +15,7 @@ import {
   APPLICATION_DETAILS,
   VIEW_CURRENCY_DETAILS,
   LIST_ALL_BACKUPS,
+  LIST_ALL_List_LEADS,
   VIEW_ALL_BRANCH,
   LIST_CURRENT_USER,
   VIEW_ALL_USERS,
@@ -81,15 +82,6 @@ import {
   // Module: Accounting (DepitAndCredit)
   LIST_ALL_DEPIT_AND_CREDITS,
   VIEW_DEPIT_AND_CREDIT,
-  //
-  // Module: Reports (Assets)
-  LIST_ALL_ASSETS,
-  VIEW_ASSET,
-  //
-  // Module: Reports (liabilities)
-  LIST_ALL_LIABILITIES,
-  VIEW_LIABILITIE,
-  VIEW_DEFAULT_CURRENCY,
   //
 } from "./actionType";
 import axios from "axios";
@@ -669,56 +661,6 @@ export const viewDepitAndCredit = (id) => async (dispatch) => {
   });
 };
 //
-// Module: Report (Assets)
-export const listAssets = (qs) => async (dispatch) => {
-  console.log("api url in action file", ENV.baseUrl);
-  const data = await axios.get(`${ENV.baseUrl}/Assets/list?${qs}`);
-  console.log("data.data of list Assets in Accounting file", data);
-  dispatch({
-    type: LIST_ALL_ASSETS,
-    payload: data.data,
-  });
-};
-export const viewAsset = (id) => async (dispatch) => {
-  console.log(" Assets param id in accounting method", id);
-  // console.log(" Umni param action in action method", action);
-
-  const data = await axios.get(
-    `${ENV.baseUrl}/Assets/get/${id}`
-    //
-  );
-  console.log("data of view Assets in action", data);
-  dispatch({
-    type: VIEW_ASSET,
-    payload: data.data,
-  });
-};
-//
-// Module: Report (Liabilities)
-export const listLiabilities = (qs) => async (dispatch) => {
-  console.log("api url in action file", ENV.baseUrl);
-  const data = await axios.get(`${ENV.baseUrl}/Liabilities/list?${qs}`);
-  console.log("data.data of list Liabilities in Accounting file", data);
-  dispatch({
-    type: LIST_ALL_LIABILITIES,
-    payload: data.data,
-  });
-};
-export const viewLiabilitie = (id) => async (dispatch) => {
-  console.log(" Liabilities param id in accounting method", id);
-  // console.log(" Umni param action in action method", action);
-
-  const data = await axios.get(
-    `${ENV.baseUrl}/Liabilities/get/${id}`
-    //
-  );
-  console.log("data of view Liabilities in action", data);
-  dispatch({
-    type: VIEW_LIABILITIE,
-    payload: data.data,
-  });
-};
-//
 // END
 export const listUniversities = (qs) => async (dispatch) => {
   console.log("api url in action file", ENV.baseUrl);
@@ -766,6 +708,14 @@ export const listLeads = (qs) => async (dispatch) => {
   });
 };
 
+export const allListLeads = (qs) => async (dispatch) => {
+  const data = await axios.get(`${ENV.baseUrl}/lead/listLead?${qs}`);
+  dispatch({
+    type: LIST_ALL_List_LEADS,
+    payload: data.data,
+  });
+};
+
 export const filterListLeads = (qs) => async (dispatch) => {
   const data = await axios.post(`${ENV.baseUrl}/lead/search`, qs);
   dispatch({
@@ -803,7 +753,7 @@ export const listCurrencies = (qs) => async (dispatch) => {
 };
 
 export const listAllCurrencies = (qs) => async (dispatch) => {
-  const data = await axios.get(`${ENV.baseUrl}/currencies/list?${qs}`);
+  const data = await axios.get(`${ENV.baseUrl}/currencies/lists?${qs}`);
   console.log("dfd", data);
   dispatch({
     type: VIEW_ALL_CURRECY,
@@ -946,20 +896,6 @@ export const viewCurrency = (id) => async (dispatch) => {
     payload: data.data,
   });
 };
-export const viewDefaultCurrency = (id) => async (dispatch) => {
-  console.log(" currency param id in action method", id);
-  // console.log(" Umni param action in action method", action);
-
-  const data = await axios.get(
-    `${ENV.baseUrl}/currencies/get/${id}`
-    //
-  );
-  console.log("data of view currency in action", data);
-  dispatch({
-    type: VIEW_DEFAULT_CURRENCY,
-    payload: data.data,
-  });
-};
 
 export const viewBranch = (id) => async (dispatch) => {
   console.log(" branch param id in action method", id);
@@ -1081,13 +1017,13 @@ export const loginUser = (user) => async (dispatch) => {
       // type: LIST_ALL_USERS,
       // payload: data.data,
       type: LIST_CURRENT_USER,
-      payload: data.data,
+      payload: data,
     });
-    console.log("data from action", data);
-    localStorage.setItem("access", data.data.roles);
-    localStorage.setItem("name", data.data.username);
-    // localStorage.setItem("access", data.data.dataValues.role);
-    // localStorage.setItem("name", data.data.dataValues.name);
+    // console.log("data from action", data);
+    // localStorage.setItem("access", data.data.roles);
+    // localStorage.setItem("name", data.data.username);
+    localStorage.setItem("access", data.data.dataValues.role ? data.data.dataValues.role : "leads");
+    localStorage.setItem("name", data.data.dataValues.name);
     return { success: true };
   } catch (error) {
     console.log("Error on Action:", error);

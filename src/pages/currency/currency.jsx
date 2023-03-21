@@ -788,6 +788,7 @@ export function Currency() {
     name: "",
     exRate: "",
     status: "",
+    index: "",
   };
   // const [defaultCurrency, setDefaultCurrency] = useState({ ...initialValue });
   const [formValues, setFormValues] = useState(initialValue);
@@ -801,6 +802,16 @@ export function Currency() {
   //   console.log("this is default ", defaultCurrency);
   //   defaultCurrency?.currency && setDefaultCurrency(currencyData?.data?.faqs[0]);
   // }, [defaultCurrency]);
+
+  // React.useEffect(() => {
+  //   let state = 0;
+  //   allCurrencyData?.data?.faqs &&
+  //   allCurrencyData?.data?.faqs.map(item => {
+  //     if(item.status !== 0 && state === 0){
+  //       setDefaultCurrency(item);
+  //       state ++;
+  //   } });
+  // }, [allCurrencyData]);
 
   const handleDefaultCurrecyChange = (e) => {
     // console.log("value of new def curr", e.target.value);
@@ -868,7 +879,7 @@ export function Currency() {
     console.log(params.id);
     const data = await axios.delete(
       `${ENV.baseUrl}/currencies/delete/${idToDelete}`,
-      { Uname: localStorage.name, Urole: localStorage.access }
+      { Uname: localStorage.name, role: localStorage.access }
     );
     console.log("deleted data", data);
     // // alert("whppp");
@@ -1018,21 +1029,22 @@ export function Currency() {
                        */}
                         {allCurrencyData &&
                           allCurrencyData?.data?.faqs.map((currency, index) => {
-                            return (
-                              <option
-                                name={"defaultcurrency"}
-                                key={
-                                  currency.id +
-                                  currency.iso +
-                                  index +
-                                  currency.name
-                                }
-                                data-exrate={currency.exRate}
-                                value={currency.id}
-                              >
-                                {currency.name + " (" + currency.iso + ")"}
-                              </option>
-                            );
+                            if (currency.status !== 0)
+                              return (
+                                <option
+                                  name={"defaultcurrency"}
+                                  key={
+                                    currency.id +
+                                    currency.iso +
+                                    index +
+                                    currency.name
+                                  }
+                                  data-exrate={currency.exRate}
+                                  value={currency.id}
+                                >
+                                  {currency.name + " (" + currency.iso + ")"}
+                                </option>
+                              );
                           })}
                       </select>
                     </div>
@@ -1134,7 +1146,7 @@ export function Currency() {
                             <td
                               className={`whitespace-nowrap py-4 px-8 text-lg font-normal text-[#333]`}
                             >
-                              {ele?.exRate}
+                              {parseFloat(ele?.exRate).toFixed(2)}
                             </td>
                             <td className="px-8">
                               <p

@@ -12,42 +12,45 @@ import down from "../../../public/img/downIcon.svg";
 import dropdown from "../../../public/img/dropdown.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { listApplications } from "@/redux/actions/actions";
-import { read, utils, writeFile } from 'xlsx';
+import { read, utils, writeFile } from "xlsx";
 import Paginate from "@/paginate";
 
 export function ApplicationByDate() {
   // Anasite - Edits
   const dispatch = useDispatch();
-  const { applications } = useSelector((state) => state?.universitiesReducer);
+  const { applications, universities, interestedPrograms } = useSelector(
+    (state) => state?.universitiesReducer
+  );
   console.log("Leads from SystemReports ====>", applications);
   useEffect(() => {
     dispatch(listApplications());
   }, []);
 
-  
   const handleExportXlsx = () => {
-    const headings = [[
-      ...Object.keys(applications?.data?.faqs[0])
-    ]];
+    const headings = [[...Object.keys(applications?.data?.faqs[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, applications?.data?.faqs, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Movie Report.xlsx');
-  }
+    utils.sheet_add_json(ws, applications?.data?.faqs, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Movie Report.xlsx");
+  };
 
   const handleExportCsv = () => {
-    const headings = [[
-      ...Object.keys(applications?.data?.faqs[0])
-    ]];
+    const headings = [[...Object.keys(applications?.data?.faqs[0])]];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);
     utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, applications?.data?.faqs, { origin: 'A2', skipHeader: true });
-    utils.book_append_sheet(wb, ws, 'Report');
-    writeFile(wb, 'Movie Report.csv');
-  }
+    utils.sheet_add_json(ws, applications?.data?.faqs, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "Movie Report.csv");
+  };
   // END
   return (
     <div className="mt-[30px] w-full bg-[#E8E9EB] font-display">
@@ -92,10 +95,16 @@ export function ApplicationByDate() {
                   </button>
                 </MenuHandler>
                 <MenuList>
-                  <MenuItem onClick={() => handleExportCsv()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                  <MenuItem
+                    onClick={() => handleExportCsv()}
+                    className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                  >
                     Export as .csv
                   </MenuItem>
-                  <MenuItem onClick={() => handleExportXlsx()} className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]">
+                  <MenuItem
+                    onClick={() => handleExportXlsx()}
+                    className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                  >
                     Export as .xlsx
                   </MenuItem>
                 </MenuList>
@@ -177,17 +186,27 @@ export function ApplicationByDate() {
                         {application}
                       </td>
                       <td className="px-6 py-4 text-lg font-semibold text-[#333]">
-                        {ApplicationDetail?.interestedProgramme || ""}
+                        {/* {ApplicationDetail?.interestedProgramme || ""} */}
+                        {interestedPrograms?.data?.faqs.map(
+                          (ele) =>
+                            ele.ID == ApplicationDetail?.interestedProgramme &&
+                            ele.name
+                        )}
                       </td>
                       <td className="px-6 py-4 text-lg font-semibold text-[#333]">
-                        {ApplicationDetail?.selectUniversity || ""}
+                        {/* {ApplicationDetail?.selectUniversity || ""} */}
+                        {universities?.data?.faqs.map(
+                          (ele) =>
+                            ele.id == ApplicationDetail?.selectUniversity &&
+                            ele.name
+                        )}
                       </td>
                       <td className="px-6 py-4 text-lg font-normal text-[#333]">
                         {ApplicationDetail?.Branch?.name}
                       </td>
                       <td>
                         <p
-                          className="neumorphism mx-auto w-fit rounded-2xl rounded-lg bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                          className="neumorphism mx-auto w-fit  rounded-lg bg-gray-100 p-6 px-5 py-2 text-center text-xs font-medium normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                           style={{
                             color:
                               ApplicationDetail?.ApplicationModuleStatus?.Color,

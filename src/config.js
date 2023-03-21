@@ -1,6 +1,8 @@
 export const ENV = {
   baseUrl: "https://qetcbackend.projects.anasite.me/v1/front",
   imageUrl: "https://qetcbackend.projects.anasite.me/images/",
+  // baseUrl: "https://qetc-api.apextreasure.com/v1/front",
+  // imageUrl: "https://qetc-api.apextreasure.com/images/",
   // baseUrl: "http://localhost:8080/v1/front",
   // imageUrl: "http://localhost:8080/images/",
   decimalNumberValidator: function (e) {

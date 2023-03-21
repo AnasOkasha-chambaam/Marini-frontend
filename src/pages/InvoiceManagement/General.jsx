@@ -145,10 +145,46 @@ export function General() {
                 </div>
               </form>
               <div className="flex h-full w-full flex-wrap justify-center gap-3 sm:flex-nowrap lg:w-auto lg:justify-start">
-                <button className="flex h-[57px] w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
-                  <img className="w-[20px]" src={filterIcon} alt="..." />
-                  <p className="mx-3 text-[16px] ">Filters</p>
-                </button>
+                <Menu>
+                  <MenuHandler>
+                    <button className="flex h-[57px] w-[135px] flex-row items-center justify-center rounded-2xl border-[1px] border-[#cbd2dc]/50 bg-white shadow-md">
+                      <img className="w-[20px]" src={filterIcon} alt="..." />
+                      <p className="mx-3 ">Filters</p>
+                    </button>
+                  </MenuHandler>
+                  <MenuList>
+                    <MenuItem
+                      onClick={() => {}}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      ID Invoice
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {}}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      Date
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {}}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      Recipient
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {}}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      Email
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {}}
+                      className="text-base font-medium text-[#280559] hover:bg-[#F2F4F8] hover:text-[#280559]"
+                    >
+                      Items
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
 
                 <Menu>
                   <MenuHandler>
@@ -298,7 +334,7 @@ export function General() {
                         <td>
                           <p
                             // className="mx-auto w-fit rounded-2xl px-5 py-2 text-center text-xs font-medium normal-case"
-                            className="neumorphism mx-auto mx-auto w-fit w-fit rounded-2xl rounded-2xl rounded-lg bg-gray-100 p-6 px-5 px-5 py-2 py-2 text-center text-center text-xs text-xs font-medium font-medium normal-case normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
+                            className="neumorphism r  mx-auto w-fit rounded-2xl bg-gray-100 p-6 px-5  py-2 text-center  text-xs font-medium  normal-case text-gray-700 shadow-lg dark:bg-gray-800 dark:text-gray-400"
                             style={{
                               color: Status.Color,
                               backgroundColor: `${Status.Color}10`,
@@ -370,16 +406,19 @@ export function General() {
                                   Edit
                                 </button>
                               </li>
-                              <li>
-                                <button
-                                  onClick={() => {
-                                    setShowModal(true);
-                                    setIdToDelete(ID);
-                                  }}
-                                >
-                                  Delete
-                                </button>
-                              </li>
+                              {localStorage.access !== "accountant" &&
+                                localStorage.access !== "adminBranch" && (
+                                  <li>
+                                    <button
+                                      onClick={() => {
+                                        setShowModal(true);
+                                        setIdToDelete(ID);
+                                      }}
+                                    >
+                                      Delete
+                                    </button>
+                                  </li>
+                                )}
                             </ul>
                           </div>
                         </td>

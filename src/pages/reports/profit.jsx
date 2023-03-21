@@ -195,7 +195,7 @@ export function Profit({ revenue, totalRevenue, expenses, totalExpenses }) {
                 ${(+`${totalRevenue}`).toFixed(2)}
               </p>
             </div>
-            s
+            {/* s */}
           </div>
         </div>
         <div className=" mt-[30px] rounded-[34px] bg-white p-6 md:p-12">

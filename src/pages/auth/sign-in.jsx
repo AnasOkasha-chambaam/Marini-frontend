@@ -32,7 +32,7 @@ export function SignIn() {
       if(authType !== "applicant"){
         navigate("/dashboard");
       } else {
-        navigate("/applicant");
+        navigate("../applicant");
       }
     } else {
       toast(data.error);
@@ -51,7 +51,7 @@ export function SignIn() {
               {authType === "main" ? "Login" : "Applicant Login"}
             </p>
             <p className=" mb-14 text-[16px] font-normal text-[#667085]">
-              Please fill your detail to access your account.
+              Please fill your detail to access your accountss.
             </p>
 
             <p className=" mb-2 text-[14px] font-[500] text-[#344054]">Email</p>
