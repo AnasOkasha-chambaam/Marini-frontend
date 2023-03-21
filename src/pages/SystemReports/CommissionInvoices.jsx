@@ -158,7 +158,7 @@ export function CommissionInvoices() {
                     scope="col"
                     className="w-[150px] px-6 py-3 text-left text-base font-medium text-[#92929D]"
                   >
-                    Service
+                    No. of Items
                   </th>
                   <th
                     scope="col"
