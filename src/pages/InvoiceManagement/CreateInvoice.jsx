@@ -45,8 +45,28 @@ export function CreateInvoice() {
     dispatch(listInvoiceModuleStatuss("limit=10000"));
     dispatch(listBranches("limit=10000"));
   }, []);
+  const initialAllFormsData = {
+    billing: {
+      addressOne: "",
+      addressTwo: "",
+      country: "",
+      email: "",
+      phone: "",
+    },
+    mailing: {
+      addressOne: "",
+      country: "",
+      phone: "",
+      email: "",
+      addressTwo: "",
+    },
+    recipient: "",
+    statusID: "",
+    universityID: "",
+    branchID: "",
+  };
   const [isLoading, setLoading] = useState(false);
-  const [allFormsData, setAllFormsData] = useState({});
+  const [allFormsData, setAllFormsData] = useState({ ...initialAllFormsData });
   const [openInvoiceAddModal, setOpenInvoiceAddModal] = useState(false);
   const [openBillingAddModal, setOpenBillingAddModal] = useState(false);
   const [openInvoiceListAddModal, setOpenInvoiceListAddModal] = useState(false);
@@ -93,7 +113,19 @@ export function CreateInvoice() {
       recipient,
       ...invoice
     } = allFormsData;
+    console.log(
+      "Fuckn mailing",
+      !mailing ||
+        !Object.values(mailing).every((value) => {
+          // check if the value is not empty
 
+          if (typeof value === "string") {
+            value = value.trim();
+          }
+          console.log("single", value);
+          return value != "";
+        })
+    );
     if (
       !mailing ||
       !Object.values(mailing).every((value) => {
@@ -234,7 +266,7 @@ export function CreateInvoice() {
       );
       if (invoice?.data?.success === true) {
         toast.success(invoice?.data?.message, toasOptions);
-        setAllFormsData({});
+        setAllFormsData({ ...initialAllFormsData });
         setLoading(false);
         navigate(-1);
       }
@@ -283,7 +315,7 @@ export function CreateInvoice() {
       console.log("Create Invoice: ", error);
     }
   };
-  const initialSingleItem = { name: "", price: "", quantity: "", total: "" };
+  const initialSingleItem = { name: "", price: "", quantity: "", total: "NaN" };
   const [items, setItems] = useState([{ ...initialSingleItem }]);
   const handleItemsChange = (index, event) => {
     const values = [...items];
@@ -1543,7 +1575,7 @@ export function CreateInvoice() {
         )}{" "}
         <Button
           onClick={() => {
-            setAllFormsData({});
+            setAllFormsData({ ...initialAllFormsData });
             setItems([{ ...initialSingleItem }]);
             return navigate(-1);
           }}
