@@ -78,13 +78,55 @@ export function CreateInvoice() {
     });
   };
   const handleSubmit = async (e) => {
+    const toasOptions = {
+      position: toast.POSITION.TOP_RIGHT,
+      hideProgressBar: false,
+      autoClose: 3000,
+    };
+    // Anasite - Edits: Validations
+    const {
+      mailing,
+      billing,
+      branchID,
+      universityID,
+      statusID,
+      recipient,
+      ...invoice
+    } = allFormsData;
+
+    if (!mailing || Object.values(mailing).every((value) => !value)) {
+      return toast.error("Please fill in mailing information", toasOptions);
+    }
+    if (!billing || Object.values(billing).every((value) => !value)) {
+      return toast.error("Please fill in billing information", toasOptions);
+    }
+    if (!recipient) {
+      return toast.error("Please fill in recipient information", toasOptions);
+    }
+    if (!universityID) {
+      return toast.error("Please fill in university information", toasOptions);
+    }
+    if (!branchID) {
+      return toast.error("Please fill in branch information", toasOptions);
+    }
+    if (!statusID) {
+      return toast.error("Please fill in status information", toasOptions);
+    }
+    console.log("this is invoice data: ", allFormsData);
+
+    if (items.length === 0) {
+      return toast.error("Please add items to the invoice", toasOptions);
+    }
+    for (let i = 0; i < items.length; i++) {
+      const element = items[i];
+      if (Object.values(element).every((value) => !value)) {
+        return toast.error("Please fill in items information", toasOptions);
+      }
+    }
+
+    // END
     setLoading(true);
     try {
-      const toasOptions = {
-        position: toast.POSITION.TOP_RIGHT,
-        hideProgressBar: false,
-        autoClose: 3000,
-      };
       let type = params?.type || "";
       let action = params?.action || "";
       let id = params?.id || "";
