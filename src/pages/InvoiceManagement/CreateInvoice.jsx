@@ -94,22 +94,42 @@ export function CreateInvoice() {
       ...invoice
     } = allFormsData;
 
-    if (!mailing || Object.values(mailing).every((value) => !value)) {
+    if (
+      !mailing ||
+      !Object.values(mailing).every((value) => {
+        // check if the value is not empty
+
+        if (value != "") {
+          // console.log("this is it ", value);
+        }
+        return value != "";
+      })
+    ) {
       return toast.error("Please fill in mailing information", toasOptions);
     }
-    if (!billing || Object.values(billing).every((value) => !value)) {
+    if (
+      !billing ||
+      !Object.values(billing).every((value) => {
+        // check if the value is not empty
+
+        if (value != "") {
+          // console.log("this is it ", value);
+        }
+        return value != "";
+      })
+    ) {
       return toast.error("Please fill in billing information", toasOptions);
     }
-    if (!recipient) {
+    if (!recipient || recipient == "") {
       return toast.error("Please fill in recipient information", toasOptions);
     }
-    if (!universityID) {
+    if (!universityID || universityID == "") {
       return toast.error("Please fill in university information", toasOptions);
     }
-    if (!branchID) {
+    if (!branchID || branchID == "") {
       return toast.error("Please fill in branch information", toasOptions);
     }
-    if (!statusID) {
+    if (!statusID || statusID == "") {
       return toast.error("Please fill in status information", toasOptions);
     }
     console.log("this is invoice data: ", allFormsData);
@@ -119,7 +139,30 @@ export function CreateInvoice() {
     }
     for (let i = 0; i < items.length; i++) {
       const element = items[i];
-      if (Object.values(element).every((value) => !value)) {
+      element["total"] = "NaN";
+      console.log(
+        "for items data",
+        element,
+        Object.values(element),
+        !Object.values(element).every((value) => {
+          // check if the value is not empty
+
+          if (value != "") {
+            // console.log("this is it ", value);
+          }
+          return value != "";
+        })
+      );
+      if (
+        !Object.values(element).every((value) => {
+          // check if the value is not empty
+
+          if (value != "") {
+            // console.log("this is it ", value);
+          }
+          return value != "";
+        })
+      ) {
         return toast.error("Please fill in items information", toasOptions);
       }
     }
@@ -477,9 +520,9 @@ export function CreateInvoice() {
                   value={allFormsData?.mailing?.country || ""}
                   disabled={isViewMode}
                   onChange={handleMailingInfoChange}
-                  // value={""}
+                  // value=""
                 >
-                  <option>Select Country</option>
+                  <option value="">Select Country</option>
                   <option value="Afghanistan">Afghanistan</option>
                   <option value="Aland Islands">Åland Islands</option>
                   <option value="Albania">Albania</option>
@@ -790,7 +833,7 @@ export function CreateInvoice() {
                 value={allFormsData?.mailing?.country || ""}
                 onChange={handleMailingInfoChange}
               >
-                <option value={""}>Select Country</option>
+                <option value="">Select Country</option>
               </select> */}
               </div>
               <div>
@@ -886,9 +929,9 @@ export function CreateInvoice() {
                   value={allFormsData?.billing?.country || ""}
                   disabled={isViewMode}
                   onChange={handleBillingInfoChange}
-                  // value={""}
+                  // value=""
                 >
-                  <option>Select Country</option>
+                  <option value="">Select Country</option>
                   <option value="Afghanistan">Afghanistan</option>
                   <option value="Aland Islands">Åland Islands</option>
                   <option value="Albania">Albania</option>
@@ -1199,7 +1242,7 @@ export function CreateInvoice() {
                 value={allFormsData?.mailing?.country || ""}
                 onChange={handleMailingInfoChange}
               >
-                <option value={""}>Select Country</option>
+                <option value="">Select Country</option>
               </select> */}
               </div>
               <div>
@@ -1290,13 +1333,13 @@ export function CreateInvoice() {
                 </label>
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  // value={""}
+                  // value=""
                   name={"universityID"}
                   value={allFormsData?.universityID || ""}
                   disabled={isViewMode}
                   onChange={handleAllFormsDataChange}
                 >
-                  <option value={""}>Select University</option>
+                  <option value="">Select University</option>
                   {universities?.data?.faqs.map((university) => {
                     return (
                       <option
@@ -1321,13 +1364,13 @@ export function CreateInvoice() {
                 </label>
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  // value={""}
+                  // value=""
                   name={"branchID"}
                   value={allFormsData?.branchID || ""}
                   disabled={isViewMode}
                   onChange={handleAllFormsDataChange}
                 >
-                  <option value={""}>Select Branch</option>
+                  <option value="">Select Branch</option>
                   {branch?.data?.faqs.map((singleBranch) => {
                     return (
                       <option
@@ -1352,13 +1395,13 @@ export function CreateInvoice() {
                 </label>
                 <select
                   className="block w-full rounded-xl border-2 border-[#CBD2DC80] bg-white p-2.5 text-gray-900 placeholder:text-[#BEBFC3] focus:border-blue-500 focus:ring-blue-500"
-                  // value={""}
+                  // value=""
                   name={"statusID"}
                   value={allFormsData?.statusID || ""}
                   disabled={isViewMode}
                   onChange={handleAllFormsDataChange}
                 >
-                  <option value={""}>Select Status</option>
+                  <option value="">Select Status</option>
                   {invoiceModuleStatuss?.data?.faqs.map((status) => {
                     return (
                       <option
